@@ -1,10 +1,27 @@
-create table m_purchase_task(
-    id number(10),
-    ad_client_id number(10) ,
-    ad_org_id number(10) ,
-    ownerid number(10) ,
-    modifierid number(10) ,
-    creationdate date ,
-    modifieddate date ,
-    isactive char(1), 
-primary key (id));
+create table m_purchase_task
+(
+  id            number(10) not null,
+  ad_client_id  number(10),
+  ad_org_id     number(10),
+  ownerid       number(10),
+  modifierid    number(10),
+  creationdate  date,
+  modifieddate  date,
+  isactive      char(1) default 'y' not null,
+  docno         varchar2(20),
+  billdate      number(8),
+  c_supplier_id number(10),
+  mb_users_id   number(10),
+  description   varchar2(200),
+  tot_qty       number(10),
+  tot_qtyin     number(10),
+  tot_amt       number(14,2),
+  tot_amtin     number(14,2),
+  tot_spunum    number(10),
+  tot_spunumin  number(10),
+  status        number(1) default 1,
+  in_status     number(1) default 1,
+  intime        date,
+  statustime    date,
+  statuserid    date
+);

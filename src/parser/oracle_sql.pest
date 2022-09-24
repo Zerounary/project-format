@@ -2,19 +2,26 @@
 creat_table = {"create" ~ "table" ~ ident ~ 
 opening_paren ~ 
  ( pair ~ ("," ~ pair)* ) ~
- ("," ~ primary_key) ~
+ ("," ~ primary_key)? ~
 closing_paren ~ ";"}
 
-pair = { ident ~ db_type }
+pair = { ident ~ db_type  ~ (default)? ~ (nullable)? }
 primary_key = {"primary" ~ "key" ~ opening_paren ~ ident ~ closing_paren}
+nullable = { null | not_null }
+default = {"default" ~ (degit | string | sysdate)}
 
 // keywords
 sysdate = {"sysdate"}
+null = {"null"}
+not_null = {"not" ~ "null"}
 
 // column type
 db_type = { db_number | db_char | db_varchar | db_date | db_clob }
 
-db_number = { ("number" ~ opening_paren ~ (alpha_num)+ ~ closing_paren) | ("number" ~ opening_paren ~ (alpha_num)+ ~ "," ~ (alpha_num)+ ~ closing_paren) }
+db_number = { 
+  ("number" ~ opening_paren ~ (alpha_num)+ ~ closing_paren) | 
+  ("number" ~ opening_paren ~ (alpha_num)+ ~ "," ~ (alpha_num)+ ~ closing_paren)
+}
 db_char   = { "char" ~ opening_paren ~ (alpha_num)+ ~ closing_paren }
 db_varchar   = { "varchar2" ~ opening_paren ~ (alpha_num)+ ~ closing_paren }
 db_date = { "date" }
