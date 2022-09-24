@@ -1,0 +1,38 @@
+//create table
+creat_table = {"create" ~ "table" ~ ident ~ 
+opening_paren ~ 
+ ( pair ~ ("," ~ pair)* ) ~
+ ("," ~ primary_key) ~
+closing_paren ~ ";"}
+
+pair = { ident ~ db_type }
+primary_key = {"primary" ~ "key" ~ opening_paren ~ ident ~ closing_paren}
+
+// keywords
+sysdate = {"sysdate"}
+
+// column type
+db_type = { db_number | db_char | db_varchar | db_date | db_clob }
+
+db_number = { ("number" ~ opening_paren ~ (alpha_num)+ ~ closing_paren) | ("number" ~ opening_paren ~ (alpha_num)+ ~ "," ~ (alpha_num)+ ~ closing_paren) }
+db_char   = { "char" ~ opening_paren ~ (alpha_num)+ ~ closing_paren }
+db_varchar   = { "varchar2" ~ opening_paren ~ (alpha_num)+ ~ closing_paren }
+db_date = { "date" }
+db_clob = { "clob" }
+
+// common token
+degit = _{ '0'..'9' }
+alpha = _{ 'a'..'z' | 'A'..'Z' }
+alpha_num  = _{ alpha | '0'..'9' }
+ident = @{ ("_" | alpha) ~ ("_" | alpha_num)* }
+inner_str = @{ (!("\'" | "\\") ~ ANY)* }
+string = ${ single_quote ~ inner_str ~ single_quote }
+
+// common symbol
+single_quote   = _{ "'" }
+WHITESPACE = _{ " " | "\r\n" | "\n" | "\t" }
+
+opening_brace       = _{ "{" }
+closing_brace       = _{ "}" }
+opening_paren       = _{ "(" }
+closing_paren       = _{ ")" }
