@@ -2,7 +2,7 @@ use sqlparser::dialect::GenericDialect;
 use sqlparser::parser::Parser;
 
 fn main() {
-    let sql = include_str!("./test/select.sql");
+    let sql = include_str!("./test/create_table.sql");
 
     let dialect = GenericDialect {}; // or AnsiDialect, or your own dialect ...
 
