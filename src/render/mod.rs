@@ -10,13 +10,13 @@ pub struct Render<'a> {
 }
 
 impl<'a> Render<'a> {
-    fn new() -> Self {
+    pub fn new() -> Self {
         let h = Handlebars::new();
         let render: Render = Self { h };
         render
     }
 
-    fn copy_render(mut self, path_from: &str, path_to: &str, data: String) {
+    pub fn copy_render(mut self, path_from: &str, path_to: &str, data: String) {
         let from = Path::new(path_from);
         let to = Path::new(path_to);
         if !to.exists() {
@@ -53,9 +53,10 @@ impl<'a> Render<'a> {
                 // e = ./tempalte/a.hbs
                 // target = ./prj/a.hbs
                 println!("copy {:?} to {:?}", e.path(), target);
-                fs::copy(e.path(), target);
+                fs::copy(e.path(), target).expect("copy file error");
             }
-        });
+        })
+        .expect("visit dirs error");
     }
 }
 
