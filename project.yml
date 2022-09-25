@@ -1,0 +1,7 @@
+project:
+  template:
+    dir: "templates"
+    output: "output"
+    extension: "java"
+  data:
+    test: "test"

@@ -1,4 +1,6 @@
 use handlebars::Handlebars;
+use serde_yaml::Value;
+use std::collections::BTreeMap;
 use std::ffi::OsStr;
 use std::fs::{self, DirEntry};
 use std::io;
@@ -33,7 +35,7 @@ impl<'a> Render<'a> {
         self.extension = extension.to_string()
     }
 
-    pub fn copy_render(self, path_from: &str, path_to: &str, data: String) {
+    pub fn copy_render<T: serde::ser::Serialize>(self, path_from: &str, path_to: &str, data: &T) {
         let from = Path::new(path_from);
         let to = Path::new(path_to);
         if !to.exists() {
@@ -49,7 +51,7 @@ impl<'a> Render<'a> {
                 let result = fs::read_to_string(e.path());
                 match result {
                     Ok(template_string) => {
-                        let result = self.h.render_template(&template_string, &data);
+                        let result = self.h.render_template(&template_string, data);
                         println!("{:?}", result);
                         match result {
                             Ok(contents) => {
@@ -102,7 +104,9 @@ pub fn visit_dirs(dir: &Path, cb: &mut dyn FnMut(&DirEntry)) -> io::Result<()> {
 #[test]
 fn test_render() {
     let render = Render::new();
-    render.copy_render("./templates", "./output", "test".to_string());
+    let mut data = BTreeMap::new();
+    data.insert("test", "test");
+    render.copy_render("./templates", "./output", &data);
 }
 
 #[test]
