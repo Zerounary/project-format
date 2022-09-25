@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
+use serde_json::Value;
 use std::{collections::BTreeMap, fs};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]

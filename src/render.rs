@@ -1,11 +1,21 @@
-use handlebars::Handlebars;
-use serde_yaml::Value;
+use convert_case::{Case, Casing};
+use handlebars::{handlebars_helper, Handlebars};
+use serde_json::Value;
 use std::collections::BTreeMap;
 use std::ffi::OsStr;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::Path;
+
 // use similar_asserts::assert_eq;
+
+handlebars_helper!(upper: |s: String| s.to_case(Case::Upper));
+handlebars_helper!(lower: |s: String| s.to_case(Case::Lower));
+handlebars_helper!(snake: |s: String| s.to_case(Case::Snake));
+handlebars_helper!(upperSnake: |s: String| s.to_case(Case::UpperSnake));
+handlebars_helper!(camel: |s: String| s.to_case(Case::Camel));
+handlebars_helper!(upperCamel: |s: String| s.to_case(Case::UpperCamel));
+handlebars_helper!(kebab: |s: String| s.to_case(Case::Kebab));
 
 pub struct Render<'a> {
     pub extension: String,
@@ -23,7 +33,14 @@ impl<'a> Default for Render<'a> {
 
 impl<'a> Render<'a> {
     pub fn new() -> Self {
-        let h = Handlebars::new();
+        let mut h = Handlebars::new();
+        h.register_helper("upper", Box::new(upper));
+        h.register_helper("lower", Box::new(lower));
+        h.register_helper("snake", Box::new(snake));
+        h.register_helper("upperSnake", Box::new(upperSnake));
+        h.register_helper("camel", Box::new(camel));
+        h.register_helper("upperCamel", Box::new(upperCamel));
+        h.register_helper("kebab", Box::new(kebab));
         let render: Render = Self {
             h,
             ..Default::default()
@@ -35,7 +52,7 @@ impl<'a> Render<'a> {
         self.extension = extension.to_string()
     }
 
-    pub fn copy_render<T: serde::ser::Serialize>(self, path_from: &str, path_to: &str, data: &T) {
+    pub fn copy_render(self, path_from: &str, path_to: &str, data: &BTreeMap<String, Value>) {
         let from = Path::new(path_from);
         let to = Path::new(path_to);
         if !to.exists() {
@@ -52,12 +69,20 @@ impl<'a> Render<'a> {
                 match result {
                     Ok(template_string) => {
                         let result = self.h.render_template(&template_string, data);
-                        println!("{:?}", result);
                         match result {
                             Ok(contents) => {
-                                target.set_extension(self.extension.clone());
-                                println!("{:?}", target);
-                                fs::write(target, contents);
+                                // 某些文件是需要根据数据生成多个文件的
+                                let file_name = target.file_name().unwrap().to_str().unwrap();
+                                if file_name.contains("{{") {
+                                    // todo 拿到列表 循环渲染列表 到模板 data.tables
+                                    // data.get("tables").unwrap().as_sequence().
+                                    // let v = Value::from(data);
+
+                                    // println!("{:?}", target_file_name);
+                                } else {
+                                    target.set_extension(self.extension.clone());
+                                    fs::write(target, contents);
+                                }
                             }
                             Err(e) => {
                                 println!("{:?}", e);
@@ -75,7 +100,6 @@ impl<'a> Render<'a> {
                 // to = ./prj
                 // e = ./tempalte/a.hbs
                 // target = ./prj/a.hbs
-                println!("copy {:?} to {:?}", e.path(), target);
                 fs::copy(e.path(), target).expect("copy file error");
             }
         })
@@ -105,11 +129,28 @@ pub fn visit_dirs(dir: &Path, cb: &mut dyn FnMut(&DirEntry)) -> io::Result<()> {
 fn test_render() {
     let render = Render::new();
     let mut data = BTreeMap::new();
-    data.insert("test", "test");
+    data.insert("test".to_string(), Value::from("test"));
     render.copy_render("./templates", "./output", &data);
 }
 
 #[test]
 fn test_path() {
     let path = Path::new("./templates/a.hbs");
+}
+
+#[test]
+fn test_file_name() {
+    let file_name = "{{a.tables 'b.name'}}Bo.hbs";
+
+    // a.tables 生成 列表
+
+    // b.name 生
+
+    let file_name_temp = r#"
+      {{#each a.tables}}
+        {{this.b.name}}Bo.hbs
+      {{/each}}
+    "#;
+
+    // 获得一个数组，元素是每个文件的名字
 }
