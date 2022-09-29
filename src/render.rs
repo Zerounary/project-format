@@ -7,7 +7,7 @@ use std::fs::{self, DirEntry};
 use std::io;
 use std::path::Path;
 
-// use similar_asserts::assert_eq;
+use similar_asserts::assert_eq;
 
 handlebars_helper!(upper: |s: String| s.to_case(Case::Upper));
 handlebars_helper!(lower: |s: String| s.to_case(Case::Lower));
@@ -68,25 +68,53 @@ impl<'a> Render<'a> {
                 let result = fs::read_to_string(e.path());
                 match result {
                     Ok(template_string) => {
-                        let result = self.h.render_template(&template_string, data);
-                        match result {
-                            Ok(contents) => {
-                                // 某些文件是需要根据数据生成多个文件的
-                                let file_name = target.file_name().unwrap().to_str().unwrap();
-                                if file_name.contains("{{") {
-                                    // todo 拿到列表 循环渲染列表 到模板 data.tables
-                                    // data.get("tables").unwrap().as_sequence().
-                                    // let v = Value::from(data);
+                        let file_name = target.file_name().map(|x| x.to_str().unwrap()).unwrap();
+                        if file_name.contains("{") {
+                            let (list_key, item_key) = get_var_name(file_name);
+                            data.get(&list_key)
+                                .expect(&format!("project.data.{:?} 未找到", list_key))
+                                .as_array()
+                                .map(|list| {
+                                    for item in list {
+                                        let item_name = item
+                                            .get(&item_key)
+                                            .map(|v| v.as_str().unwrap().to_string());
+                                        let item_name = match item_name {
+                                            Some(name) => name.to_string(),
+                                            None => {
+                                                match item.as_str() {
+                                                    Some(name) => name.to_string(),
+                                                    None => {
+                                                        panic!("{:?}.{:?}不存在", list_key, item_key)
+                                                    },
+                                                }
+                                            },
+                                        };
+                                        let item_target = target
+                                            .parent()
+                                            .map(|p| {
+                                                p.join(replace_var(file_name, &item_name))
+                                            })
+                                            .unwrap();
 
-                                    // println!("{:?}", target_file_name);
-                                } else {
+                                        let contents = self.h.render_template(&template_string, item).expect(&format!("渲染对象{:?}", item));
+                                        fs::write(item_target, contents);
+                                    }
+                                })
+                                .expect(&format!("不能遍历对象{:?}", list_key))
+                        } else {
+                            let result = self.h.render_template(&template_string, data);
+                            match result {
+                                Ok(contents) => {
+                                    // 某些文件是需要根据数据生成多个文件的
+                                    let file_name = target.file_name().unwrap().to_str().unwrap();
                                     target.set_extension(self.extension.clone());
                                     fs::write(target, contents);
                                 }
-                            }
-                            Err(e) => {
-                                println!("{:?}", e);
-                                panic!("不能写入文件{:?}", target)
+                                Err(e) => {
+                                    println!("{:?}", e);
+                                    panic!("不能写入文件{:?}", target)
+                                }
                             }
                         }
                     }
@@ -125,6 +153,24 @@ pub fn visit_dirs(dir: &Path, cb: &mut dyn FnMut(&DirEntry)) -> io::Result<()> {
     Ok(())
 }
 
+/// '{tables;name}' => ('tables', 'name')
+pub fn get_var_name(s: &str) -> (String, String) {
+    let start = s.find('{').map(|x| x + 1).unwrap_or(0);
+    let end = s.find('}').unwrap_or(s.len());
+    let var = s.to_string().drain(start..end).collect::<String>();
+    var.split_once(';')
+        .map(|(a, b)| (a.to_string(), b.to_string()))
+        .unwrap_or_default()
+}
+
+pub fn replace_var(s: &str, v: &str) -> String {
+    let start = s.find('{').map(|x| x).unwrap_or(0);
+    let end = s.find('}').map(|x| x + 1).unwrap_or(s.len());
+    let mut x = s.to_string();
+    x.replace_range(start..end, v);
+    x
+}
+
 #[test]
 fn test_render() {
     let render = Render::new();
@@ -140,7 +186,24 @@ fn test_path() {
 
 #[test]
 fn test_file_name() {
-    let file_name = "{{a.tables 'b.name'}}Bo.hbs";
+    // let file_name = "{{a.tables:b.name}}Bo.hbs";
+    let file_name = "I{tables;name}Bo.hbs";
+
+    let get_vars = |s: &str| -> (String, String) {
+        let start = s.find('{').map(|x| x + 1).unwrap_or(0);
+        let end = s.find('}').unwrap_or(s.len());
+        let var = s.to_string().drain(start..end).collect::<String>();
+        var.split_once(';')
+            .map(|(a, b)| (a.to_string(), b.to_string()))
+            .unwrap_or_default()
+    };
+
+    assert_eq!(
+        ("tables".to_string(), "name".to_string()),
+        get_vars(file_name)
+    );
+
+    assert_eq!("IbookBo.hbs".to_string(), replace_var(file_name, "book"));
 
     // a.tables 生成 列表
 
