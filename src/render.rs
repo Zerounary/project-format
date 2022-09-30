@@ -1,6 +1,6 @@
 use convert_case::{Case, Casing};
 use handlebars::{handlebars_helper, Handlebars};
-use serde_json::Value;
+use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::ffi::OsStr;
 use std::fs::{self, DirEntry};
@@ -52,7 +52,7 @@ impl<'a> Render<'a> {
         self.extension = extension.to_string()
     }
 
-    pub fn copy_render(self, path_from: &str, path_to: &str, data: &BTreeMap<String, Value>) {
+    pub fn copy_render(self, path_from: &str, path_to: &str, data: &Value) {
         let from = Path::new(path_from);
         let to = Path::new(path_to);
         if !to.exists() {
@@ -174,8 +174,9 @@ pub fn replace_var(s: &str, v: &str) -> String {
 #[test]
 fn test_render() {
     let render = Render::new();
-    let mut data = BTreeMap::new();
-    data.insert("test".to_string(), Value::from("test"));
+    let mut data = json!({
+        "test": "test"
+    });
     render.copy_render("./templates", "./output", &data);
 }
 

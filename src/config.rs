@@ -10,7 +10,7 @@ pub struct Config {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Project {
     pub template: Option<Template>,
-    pub data: BTreeMap<String, Value>,
+    pub data: Value,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
