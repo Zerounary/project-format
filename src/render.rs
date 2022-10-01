@@ -1,7 +1,7 @@
 use convert_case::{Case, Casing};
 use handlebars::{handlebars_helper, Handlebars};
-use serde_json::{Value, json};
-use std::collections::BTreeMap;
+use jsonpath_rust::JsonPathQuery;
+use serde_json::{json, Value};
 use std::ffi::OsStr;
 use std::fs::{self, DirEntry};
 use std::io;
@@ -71,33 +71,45 @@ impl<'a> Render<'a> {
                         let file_name = target.file_name().map(|x| x.to_str().unwrap()).unwrap();
                         if file_name.contains("{") {
                             let (list_key, item_key) = get_var_name(file_name);
-                            data.get(&list_key)
-                                .expect(&format!("project.data.{:?} 未找到", list_key))
+                            data.clone()
+                                .path(&format!("$.{:}", list_key))
+                                .map(|v| match v.get(0) {
+                                    Some(l) => l.to_owned(),
+                                    None => json!([]),
+                                })
+                                .expect(&format!("project.data.{:} 未找到", list_key))
                                 .as_array()
                                 .map(|list| {
                                     for item in list {
+                                        println!("{:}", item.to_string());
                                         let item_name = item
-                                            .get(&item_key)
-                                            .map(|v| v.as_str().unwrap().to_string());
+                                            .clone()
+                                            .path(&format!("$.{:}", item_key))
+                                            .map(|v| match v.get(0) {
+                                                Some(name) => name.to_owned(),
+                                                None => item.clone(),
+                                            })
+                                            .expect(&format!("{:}.{:}不存在", list_key, item_key))
+                                            .as_str()
+                                            .map(|v| v.to_string());
                                         let item_name = match item_name {
                                             Some(name) => name.to_string(),
-                                            None => {
-                                                match item.as_str() {
-                                                    Some(name) => name.to_string(),
-                                                    None => {
-                                                        panic!("{:?}.{:?}不存在", list_key, item_key)
-                                                    },
+                                            None => match item.as_str() {
+                                                Some(name) => name.to_string(),
+                                                None => {
+                                                    panic!("{:?}.{:?}不存在", list_key, item_key)
                                                 }
                                             },
                                         };
                                         let item_target = target
                                             .parent()
-                                            .map(|p| {
-                                                p.join(replace_var(file_name, &item_name))
-                                            })
+                                            .map(|p| p.join(replace_var(file_name, &item_name)))
                                             .unwrap();
 
-                                        let contents = self.h.render_template(&template_string, item).expect(&format!("渲染对象{:?}", item));
+                                        let contents = self
+                                            .h
+                                            .render_template(&template_string, &item)
+                                            .expect(&format!("渲染对象{:?}", item));
                                         fs::write(item_target, contents);
                                     }
                                 })

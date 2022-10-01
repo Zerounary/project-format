@@ -5,6 +5,12 @@ project:
     extension: "rs"
   data:
     project_name: "demandwall"
+    obj:
+      a:
+        names:
+          - {id: 1, name: {b: book1}}
+          - {id: 1, name: {b: book2}}
+          - {id: 1, name: {b: book3}}
     table_ddls:
       - "create table book(id int8);"
     table_names:
