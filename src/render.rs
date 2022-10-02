@@ -103,11 +103,12 @@ impl<'a> Render<'a> {
                                                 }
                                             },
                                         };
-                                        let item_target = target
+                                        let mut item_target = target
                                             .parent()
                                             .map(|p| p.join(replace_var(file_name, &item_name)))
                                             .unwrap();
 
+                                        item_target.set_extension(self.extension.clone());
                                         let contents = self
                                             .h
                                             .render_template(&template_string, &item)
