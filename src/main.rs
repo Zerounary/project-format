@@ -5,6 +5,7 @@ pub mod render;
 use clap::Parser;
 use render::Render;
 // use itertools::Itertools;
+use ansi_term::Colour::{Green, Red, Blue};
 use crate::config::{read_yaml_file, Template};
 
 extern crate pest;
@@ -23,7 +24,8 @@ fn main() {
     let config = args.config.unwrap_or("./project.yml".to_string());
 
     let yaml = read_yaml_file(&config);
-    println!("{:?}", yaml);
+    let success = Green.paint("[OK]");
+    println!("{} 读取配置文件 {}", success, Green.paint(config));
 
     let mut render = Render::new();
 
@@ -45,4 +47,6 @@ fn main() {
     render.set_template_extension(&extension);
 
     render.copy_render(&input, &output, &yaml.project.data);
+
+    println!("{} 所有文件生成", success);
 }

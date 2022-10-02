@@ -6,6 +6,7 @@ use std::ffi::OsStr;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::Path;
+use ansi_term::Colour::{Green, Red, Blue};
 
 use similar_asserts::assert_eq;
 
@@ -55,13 +56,13 @@ impl<'a> Render<'a> {
     }
 
     pub fn copy_render(self, path_from: &str, path_to: &str, data: &Value) {
+        let success = Green.paint("[OK]");
         let from = Path::new(path_from);
         let to = Path::new(path_to);
         if !to.exists() {
             fs::create_dir(to);
         }
         visit_dirs(from, &mut |e| {
-            println!("{:?}", e.path());
             let mut target = to.join(e.path().strip_prefix(from.to_str().unwrap()).unwrap());
             if e.path().extension() == Some(OsStr::new("hbs")) {
                 if !target.parent().unwrap().exists() {
@@ -83,7 +84,6 @@ impl<'a> Render<'a> {
                                 .as_array()
                                 .map(|list| {
                                     for item in list {
-                                        println!("{:}", item.to_string());
                                         let item_name = item
                                             .clone()
                                             .path(&format!("$.{:}", item_key))
@@ -113,7 +113,8 @@ impl<'a> Render<'a> {
                                             .h
                                             .render_template(&template_string, &item)
                                             .expect(&format!("渲染对象{:?}", item));
-                                        fs::write(item_target, contents);
+                                        fs::write(&item_target, contents);
+                                        println!("{} 生成文件 {}", success, Green.paint(item_target.as_os_str().to_str().unwrap()));
                                     }
                                 })
                                 .expect(&format!("不能遍历对象{:?}", list_key))
@@ -122,9 +123,10 @@ impl<'a> Render<'a> {
                             match result {
                                 Ok(contents) => {
                                     // 某些文件是需要根据数据生成多个文件的
-                                    let file_name = target.file_name().unwrap().to_str().unwrap();
+                                    // let file_name = target.file_name().unwrap().to_str().unwrap();
                                     target.set_extension(self.extension.clone());
-                                    fs::write(target, contents);
+                                    fs::write(&target, contents);
+                                    println!("{} 生成文件 {}", success, Green.paint(target.as_os_str().to_str().unwrap()));
                                 }
                                 Err(e) => {
                                     println!("{:?}", e);
@@ -184,7 +186,6 @@ pub fn replace_var(s: &str, v: &str) -> String {
         Some(case) => v.to_case(case),
         None => v.to_string(),
     };
-    println!("{:?}", replace_value);
     x.replace_range(start..end, &replace_value);
     x
 }
