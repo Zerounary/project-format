@@ -1,3 +1,4 @@
+use convert_case::Case;
 use pest::Parser;
 use similar_asserts::assert_eq;
 
@@ -10,6 +11,20 @@ pub struct FileNameExpr {
     pub case: String,
     pub list_path: String,
     pub item_path: String,
+}
+
+pub fn to_case(name: &str) -> Option<Case> {
+    match name {
+        "upper" => Some(Case::Upper),
+        "lower" => Some(Case::Lower),
+        "snake" => Some(Case::Snake),
+        "upperSnake" => Some(Case::UpperSnake),
+        "camel" => Some(Case::Camel),
+        "upperCamel" => Some(Case::UpperCamel),
+        "kebab" => Some(Case::Kebab),
+        "upperKebab" => Some(Case::UpperKebab),
+        _ => None,
+    }
 }
 
 pub fn parse_file_name(file_name: &str) -> FileNameExpr {

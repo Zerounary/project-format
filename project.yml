@@ -11,19 +11,19 @@ project:
           - {
               id: 1,
               name: {
-                b: book1
+                b: purchase_task
               }
             }
           - {
               id: 1,
               name: {
-                b: book2
+                b: purchase task2
               }
             }
           - {
               id: 1,
               name: {
-                b: book3
+                b: purchase task3
               }
             }
     table_ddls:

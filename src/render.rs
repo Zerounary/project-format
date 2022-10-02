@@ -9,6 +9,8 @@ use std::path::Path;
 
 use similar_asserts::assert_eq;
 
+use crate::parser::gen_file_name::{parse_file_name, to_case};
+
 handlebars_helper!(upper: |s: String| s.to_case(Case::Upper));
 handlebars_helper!(lower: |s: String| s.to_case(Case::Lower));
 handlebars_helper!(snake: |s: String| s.to_case(Case::Snake));
@@ -167,19 +169,22 @@ pub fn visit_dirs(dir: &Path, cb: &mut dyn FnMut(&DirEntry)) -> io::Result<()> {
 
 /// '{tables;name}' => ('tables', 'name')
 pub fn get_var_name(s: &str) -> (String, String) {
-    let start = s.find('{').map(|x| x + 1).unwrap_or(0);
-    let end = s.find('}').unwrap_or(s.len());
-    let var = s.to_string().drain(start..end).collect::<String>();
-    var.split_once(';')
-        .map(|(a, b)| (a.to_string(), b.to_string()))
-        .unwrap_or_default()
+    let expr = parse_file_name(s);
+    (expr.list_path, expr.item_path)
 }
 
+/// '{upperCamel obj.a.names;name.b}' => {{upperCamel this}} => Book
 pub fn replace_var(s: &str, v: &str) -> String {
+    let expr = parse_file_name(s);
     let start = s.find('{').map(|x| x).unwrap_or(0);
     let end = s.find('}').map(|x| x + 1).unwrap_or(s.len());
     let mut x = s.to_string();
-    x.replace_range(start..end, v);
+    let replace_value = match to_case(&expr.case) {
+        Some(case) => v.to_case(case),
+        None => v.to_string(),
+    };
+    println!("{:?}", replace_value);
+    x.replace_range(start..end, &replace_value);
     x
 }
 
@@ -195,6 +200,12 @@ fn test_render() {
 #[test]
 fn test_path() {
     let path = Path::new("./templates/a.hbs");
+}
+
+#[test]
+fn test_replace_var() {
+    let file_name = "I{upperCamel obj.a.names;name.b}Bo.hbs";
+    assert_eq!("IBookBo.hbs".to_string(), replace_var(file_name, "book"));
 }
 
 #[test]
@@ -216,7 +227,8 @@ fn test_file_name() {
         get_vars(file_name)
     );
 
-    assert_eq!("IbookBo.hbs".to_string(), replace_var(file_name, "book"));
+    let file_name = "I{upperCamel tables;name}Bo.hbs";
+    assert_eq!("IBookBo.hbs".to_string(), replace_var(file_name, "book"));
 
     // a.tables 生成 列表
 
