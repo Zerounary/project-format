@@ -1,0 +1,25 @@
+file_name = _{(!("{") ~ ANY)* ~"{" ~ (case)? ~ namepath ~ "}" ~ (ANY)? }
+
+// keywords
+namepath = _{ list_path ~ ";" ~ item_path }
+list_path = { jsonpath }
+item_path = { jsonpath }
+jsonpath = _{ ( alpha_num | "." | "[" | "]" )* }
+case = {"snake" | "upperSnake"  | "camel" | "upperCamel" | "kebab" | "upper" | "lower"}
+
+// common token
+degit = _{ '0'..'9' }
+alpha = _{ 'a'..'z' | 'A'..'Z' }
+alpha_num  = _{ alpha | '0'..'9' }
+ident = @{ ("_" | alpha) ~ ("_" | alpha_num)* }
+inner_str = @{ (!("\'" | "\\") ~ ANY)* }
+string = ${ single_quote ~ inner_str ~ single_quote }
+
+// common symbol
+single_quote   = _{ "'" }
+WHITESPACE = _{ " " | "\r\n" | "\n" | "\t" }
+
+opening_brace       = _{ "{" }
+closing_brace       = _{ "}" }
+opening_paren       = _{ "(" }
+closing_paren       = _{ ")" }
