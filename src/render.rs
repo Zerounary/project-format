@@ -6,9 +6,7 @@ use std::ffi::OsStr;
 use std::fs::{self, DirEntry};
 use std::io;
 use std::path::Path;
-use ansi_term::Colour::{Green, Red, Blue};
-
-use similar_asserts::assert_eq;
+use ansi_term::Colour::{Green};
 
 use crate::parser::gen_file_name::{parse_file_name, to_case};
 
@@ -60,13 +58,13 @@ impl<'a> Render<'a> {
         let from = Path::new(path_from);
         let to = Path::new(path_to);
         if !to.exists() {
-            fs::create_dir(to);
+            fs::create_dir(to).expect("创建目录失败");
         }
         visit_dirs(from, &mut |e| {
             let mut target = to.join(e.path().strip_prefix(from.to_str().unwrap()).unwrap());
             if e.path().extension() == Some(OsStr::new("hbs")) {
                 if !target.parent().unwrap().exists() {
-                    fs::create_dir(target.parent().unwrap());
+                    fs::create_dir(target.parent().unwrap()).expect("创建父目录失败");
                 }
                 let result = fs::read_to_string(e.path());
                 match result {
@@ -113,7 +111,7 @@ impl<'a> Render<'a> {
                                             .h
                                             .render_template(&template_string, &item)
                                             .expect(&format!("渲染对象{:?}", item));
-                                        fs::write(&item_target, contents);
+                                        fs::write(&item_target, contents).expect("生成表达式文件失败");
                                         println!("{} 生成文件 {}", success, Green.paint(item_target.as_os_str().to_str().unwrap()));
                                     }
                                 })
@@ -125,7 +123,7 @@ impl<'a> Render<'a> {
                                     // 某些文件是需要根据数据生成多个文件的
                                     // let file_name = target.file_name().unwrap().to_str().unwrap();
                                     target.set_extension(self.extension.clone());
-                                    fs::write(&target, contents);
+                                    fs::write(&target, contents).expect("生成文件失败");
                                     println!("{} 生成文件 {}", success, Green.paint(target.as_os_str().to_str().unwrap()));
                                 }
                                 Err(e) => {

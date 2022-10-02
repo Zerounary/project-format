@@ -1,6 +1,5 @@
 use convert_case::Case;
 use pest::Parser;
-use similar_asserts::assert_eq;
 
 #[derive(Parser)]
 #[grammar = "parser/gen_file_name.pest"]

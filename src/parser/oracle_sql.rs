@@ -1,5 +1,4 @@
 use pest::Parser;
-use similar_asserts::assert_eq;
 
 #[derive(Parser)]
 #[grammar = "parser/oracle_sql.pest"]

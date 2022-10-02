@@ -5,7 +5,7 @@ pub mod render;
 use clap::Parser;
 use render::Render;
 // use itertools::Itertools;
-use ansi_term::Colour::{Green, Red, Blue};
+use ansi_term::Colour::{Green};
 use crate::config::{read_yaml_file, Template};
 
 extern crate pest;
@@ -20,7 +20,7 @@ struct Args {
 }
 
 fn main() {
-    let mut args = Args::parse();
+    let args = Args::parse();
     let config = args.config.unwrap_or("./project.yml".to_string());
 
     let yaml = read_yaml_file(&config);

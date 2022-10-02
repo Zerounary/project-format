@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::{collections::BTreeMap, fs};
+use std::{fs};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Config {
