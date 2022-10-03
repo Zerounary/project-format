@@ -17,7 +17,6 @@ pub struct Project {
 pub struct Template {
     pub dir: String,
     pub output: String,
-    pub extension: String,
 }
 
 pub fn read_yaml_file(yaml_path: &str) -> Config {

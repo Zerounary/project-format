@@ -27,24 +27,19 @@ fn main() {
     let yaml = read_yaml_file(&config);
     log_path_ok("读取配置文件", &config);
 
-    let mut render = Render::new();
+    let render = Render::new();
 
     let mut input = "templates".to_string();
     let mut output = "output".to_string();
-    let mut extension = "rs".to_string();
 
     if let Some(Template {
         dir,
         output: temp_out,
-        extension: out_extension,
     }) = yaml.project.template
     {
         input = dir;
         output = temp_out;
-        extension = out_extension;
     }
-
-    render.set_template_extension(&extension);
 
     render.copy_render(&input, &output, &yaml.project.data);
 

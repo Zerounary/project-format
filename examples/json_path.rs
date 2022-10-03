@@ -4,14 +4,14 @@ use serde_json::json;
 fn main() {
     let data = json!({
       "data": {
-        "table_names": [
+        "tables": [
           "book",
           "demand"
         ]
       }
     });
 
-    let tables = &data.path("$.data.table_names").unwrap();
+    let tables = &data.path("$.data.tables").unwrap();
     println!("{:?}", tables.to_string());
 
     let data = json!({"id":1,"name":{"b":"book1"}});

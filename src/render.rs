@@ -2,7 +2,6 @@ use convert_case::{Case, Casing};
 use handlebars::{handlebars_helper, Handlebars};
 use jsonpath_rust::JsonPathQuery;
 use serde_json::{json, Value};
-use std::ffi::OsStr;
 use std::fs::{self, create_dir_all, DirEntry};
 use std::io;
 use std::path::Path;
@@ -19,14 +18,12 @@ handlebars_helper!(upperCamel: |s: String| s.to_case(Case::UpperCamel));
 handlebars_helper!(kebab: |s: String| s.to_case(Case::Kebab));
 
 pub struct Render<'a> {
-    pub extension: String,
     pub h: Handlebars<'a>,
 }
 
 impl<'a> Default for Render<'a> {
     fn default() -> Self {
         Self {
-            extension: "rs".to_string(),
             h: Default::default(),
         }
     }
@@ -49,15 +46,11 @@ impl<'a> Render<'a> {
         render
     }
 
-    pub fn set_template_extension(&mut self, extension: &str) {
-        self.extension = extension.to_string()
-    }
-
     pub fn copy_render(self, path_from: &str, path_to: &str, data: &Value) {
         let from = Path::new(path_from);
         let to = Path::new(path_to);
         visit_dirs(from, &mut |e| {
-            let mut target = to.join(e.path().strip_prefix(from.to_str().unwrap()).unwrap());
+            let target = to.join(e.path().strip_prefix(from.to_str().unwrap()).unwrap());
             if !target.parent().unwrap().exists() {
                 create_dir_all(target.parent().unwrap()).expect("创建父目录失败");
             }
@@ -96,7 +89,7 @@ impl<'a> Render<'a> {
                                             }
                                         },
                                     };
-                                    let mut item_target = target
+                                    let item_target = target
                                         .parent()
                                         .map(|p| p.join(replace_var(file_name, &item_name)))
                                         .unwrap();
@@ -129,9 +122,9 @@ impl<'a> Render<'a> {
                         }
                     }
                 }
-                Err(e) => {
-                    println!("{:?}", e);
-                    panic!("不能读取文件{:?}", target)
+                Err(_e) => {
+                    fs::copy(e.path(), &target).expect("copy file error");
+                    log_path_ok("复制文件(UTF8不可读)", target.as_os_str().to_str().unwrap());
                 }
             }
         })
