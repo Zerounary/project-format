@@ -3,11 +3,11 @@ use handlebars::{handlebars_helper, Handlebars};
 use jsonpath_rust::JsonPathQuery;
 use serde_json::{json, Value};
 use std::ffi::OsStr;
-use std::fs::{self, DirEntry};
+use std::fs::{self, DirEntry, create_dir_all};
 use std::io;
 use std::path::Path;
-use ansi_term::Colour::{Green};
 
+use crate::log::{log_path_ok, log_fail};
 use crate::parser::gen_file_name::{parse_file_name, to_case};
 
 handlebars_helper!(upper: |s: String| s.to_case(Case::Upper));
@@ -54,17 +54,13 @@ impl<'a> Render<'a> {
     }
 
     pub fn copy_render(self, path_from: &str, path_to: &str, data: &Value) {
-        let success = Green.paint("[OK]");
         let from = Path::new(path_from);
         let to = Path::new(path_to);
-        if !to.exists() {
-            fs::create_dir(to).expect("创建目录失败");
-        }
         visit_dirs(from, &mut |e| {
             let mut target = to.join(e.path().strip_prefix(from.to_str().unwrap()).unwrap());
             if e.path().extension() == Some(OsStr::new("hbs")) {
                 if !target.parent().unwrap().exists() {
-                    fs::create_dir(target.parent().unwrap()).expect("创建父目录失败");
+                    create_dir_all(target.parent().unwrap()).expect("创建父目录失败");
                 }
                 let result = fs::read_to_string(e.path());
                 match result {
@@ -112,7 +108,7 @@ impl<'a> Render<'a> {
                                             .render_template(&template_string, &item)
                                             .expect(&format!("渲染对象{:?}", item));
                                         fs::write(&item_target, contents).expect("生成表达式文件失败");
-                                        println!("{} 生成文件 {}", success, Green.paint(item_target.as_os_str().to_str().unwrap()));
+                                        log_path_ok("生成文件", item_target.as_os_str().to_str().unwrap());
                                     }
                                 })
                                 .expect(&format!("不能遍历对象{:?}", list_key))
@@ -124,11 +120,11 @@ impl<'a> Render<'a> {
                                     // let file_name = target.file_name().unwrap().to_str().unwrap();
                                     target.set_extension(self.extension.clone());
                                     fs::write(&target, contents).expect("生成文件失败");
-                                    println!("{} 生成文件 {}", success, Green.paint(target.as_os_str().to_str().unwrap()));
+                                    log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
                                 }
-                                Err(e) => {
-                                    println!("{:?}", e);
-                                    panic!("不能写入文件{:?}", target)
+                                Err(_e) => {
+                                    // println!("{:?}", e);
+                                    log_fail("不能生成文件", e.path().to_str().unwrap());
                                 }
                             }
                         }
@@ -187,6 +183,7 @@ pub fn replace_var(s: &str, v: &str) -> String {
     x.replace_range(start..end, &replace_value);
     x
 }
+
 
 #[test]
 fn test_render() {

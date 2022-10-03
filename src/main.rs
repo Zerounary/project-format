@@ -1,12 +1,13 @@
+pub mod log;
 pub mod config;
 pub mod parser;
 pub mod render;
 
 use clap::Parser;
+use log::log_text_ok;
 use render::Render;
 // use itertools::Itertools;
-use ansi_term::Colour::{Green};
-use crate::config::{read_yaml_file, Template};
+use crate::{config::{read_yaml_file, Template}, log::log_path_ok};
 
 extern crate pest;
 #[macro_use]
@@ -24,8 +25,7 @@ fn main() {
     let config = args.config.unwrap_or("./project.yml".to_string());
 
     let yaml = read_yaml_file(&config);
-    let success = Green.paint("[OK]");
-    println!("{} 读取配置文件 {}", success, Green.paint(config));
+    log_path_ok("读取配置文件", &config);
 
     let mut render = Render::new();
 
@@ -48,5 +48,5 @@ fn main() {
 
     render.copy_render(&input, &output, &yaml.project.data);
 
-    println!("{} 所有文件生成", success);
+    log_text_ok("所有文件生成");
 }
