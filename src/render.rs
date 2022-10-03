@@ -3,11 +3,11 @@ use handlebars::{handlebars_helper, Handlebars};
 use jsonpath_rust::JsonPathQuery;
 use serde_json::{json, Value};
 use std::ffi::OsStr;
-use std::fs::{self, DirEntry, create_dir_all};
+use std::fs::{self, create_dir_all, DirEntry};
 use std::io;
 use std::path::Path;
 
-use crate::log::{log_path_ok, log_fail};
+use crate::log::{log_fail, log_path_ok};
 use crate::parser::gen_file_name::{parse_file_name, to_case};
 
 handlebars_helper!(upper: |s: String| s.to_case(Case::Upper));
@@ -58,88 +58,81 @@ impl<'a> Render<'a> {
         let to = Path::new(path_to);
         visit_dirs(from, &mut |e| {
             let mut target = to.join(e.path().strip_prefix(from.to_str().unwrap()).unwrap());
-            if e.path().extension() == Some(OsStr::new("hbs")) {
-                if !target.parent().unwrap().exists() {
-                    create_dir_all(target.parent().unwrap()).expect("创建父目录失败");
-                }
-                let result = fs::read_to_string(e.path());
-                match result {
-                    Ok(template_string) => {
-                        let file_name = target.file_name().map(|x| x.to_str().unwrap()).unwrap();
-                        if file_name.contains("{") {
-                            let (list_key, item_key) = get_var_name(file_name);
-                            data.clone()
-                                .path(&format!("$.{:}", list_key))
-                                .map(|v| match v.get(0) {
-                                    Some(l) => l.to_owned(),
-                                    None => json!([]),
-                                })
-                                .expect(&format!("project.data.{:} 未找到", list_key))
-                                .as_array()
-                                .map(|list| {
-                                    for item in list {
-                                        let item_name = item
-                                            .clone()
-                                            .path(&format!("$.{:}", item_key))
-                                            .map(|v| match v.get(0) {
-                                                Some(name) => name.to_owned(),
-                                                None => item.clone(),
-                                            })
-                                            .expect(&format!("{:}.{:}不存在", list_key, item_key))
-                                            .as_str()
-                                            .map(|v| v.to_string());
-                                        let item_name = match item_name {
+            if !target.parent().unwrap().exists() {
+                create_dir_all(target.parent().unwrap()).expect("创建父目录失败");
+            }
+            let result = fs::read_to_string(e.path());
+            match result {
+                Ok(template_string) => {
+                    let file_name = target.file_name().map(|x| x.to_str().unwrap()).unwrap();
+                    if file_name.contains("{") {
+                        let (list_key, item_key) = get_var_name(file_name);
+                        data.clone()
+                            .path(&format!("$.{:}", list_key))
+                            .map(|v| match v.get(0) {
+                                Some(l) => l.to_owned(),
+                                None => json!([]),
+                            })
+                            .expect(&format!("project.data.{:} 未找到", list_key))
+                            .as_array()
+                            .map(|list| {
+                                for item in list {
+                                    let item_name = item
+                                        .clone()
+                                        .path(&format!("$.{:}", item_key))
+                                        .map(|v| match v.get(0) {
+                                            Some(name) => name.to_owned(),
+                                            None => item.clone(),
+                                        })
+                                        .expect(&format!("{:}.{:}不存在", list_key, item_key))
+                                        .as_str()
+                                        .map(|v| v.to_string());
+                                    let item_name = match item_name {
+                                        Some(name) => name.to_string(),
+                                        None => match item.as_str() {
                                             Some(name) => name.to_string(),
-                                            None => match item.as_str() {
-                                                Some(name) => name.to_string(),
-                                                None => {
-                                                    panic!("{:?}.{:?}不存在", list_key, item_key)
-                                                }
-                                            },
-                                        };
-                                        let mut item_target = target
-                                            .parent()
-                                            .map(|p| p.join(replace_var(file_name, &item_name)))
-                                            .unwrap();
+                                            None => {
+                                                panic!("{:?}.{:?}不存在", list_key, item_key)
+                                            }
+                                        },
+                                    };
+                                    let mut item_target = target
+                                        .parent()
+                                        .map(|p| p.join(replace_var(file_name, &item_name)))
+                                        .unwrap();
 
-                                        item_target.set_extension(self.extension.clone());
-                                        let contents = self
-                                            .h
-                                            .render_template(&template_string, &item)
-                                            .expect(&format!("渲染对象{:?}", item));
-                                        fs::write(&item_target, contents).expect("生成表达式文件失败");
-                                        log_path_ok("生成文件", item_target.as_os_str().to_str().unwrap());
-                                    }
-                                })
-                                .expect(&format!("不能遍历对象{:?}", list_key))
-                        } else {
-                            let result = self.h.render_template(&template_string, data);
-                            match result {
-                                Ok(contents) => {
-                                    // 某些文件是需要根据数据生成多个文件的
-                                    // let file_name = target.file_name().unwrap().to_str().unwrap();
-                                    target.set_extension(self.extension.clone());
-                                    fs::write(&target, contents).expect("生成文件失败");
-                                    log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
+                                    let contents = self
+                                        .h
+                                        .render_template(&template_string, &item)
+                                        .expect(&format!("渲染对象{:?}", item));
+                                    fs::write(&item_target, contents).expect("生成表达式文件失败");
+                                    log_path_ok(
+                                        "生成文件",
+                                        item_target.as_os_str().to_str().unwrap(),
+                                    );
                                 }
-                                Err(_e) => {
-                                    // println!("{:?}", e);
-                                    log_fail("不能生成文件", e.path().to_str().unwrap());
-                                }
+                            })
+                            .expect(&format!("不能遍历对象{:?}", list_key))
+                    } else {
+                        let result = self.h.render_template(&template_string, data);
+                        match result {
+                            Ok(contents) => {
+                                // 某些文件是需要根据数据生成多个文件的
+                                // let file_name = target.file_name().unwrap().to_str().unwrap();
+                                fs::write(&target, contents).expect("生成文件失败");
+                                log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
+                            }
+                            Err(_e) => {
+                                // println!("{:?}", e);
+                                log_fail("不能生成文件", e.path().to_str().unwrap());
                             }
                         }
                     }
-                    Err(e) => {
-                        println!("{:?}", e);
-                        panic!("不能读取文件{:?}", target)
-                    }
                 }
-            } else {
-                // from = ./tempalte
-                // to = ./prj
-                // e = ./tempalte/a.hbs
-                // target = ./prj/a.hbs
-                fs::copy(e.path(), target).expect("copy file error");
+                Err(e) => {
+                    println!("{:?}", e);
+                    panic!("不能读取文件{:?}", target)
+                }
             }
         })
         .expect("visit dirs error");
@@ -183,7 +176,6 @@ pub fn replace_var(s: &str, v: &str) -> String {
     x.replace_range(start..end, &replace_value);
     x
 }
-
 
 #[test]
 fn test_render() {
