@@ -9,6 +9,7 @@ use std::path::Path;
 use crate::log::{log_fail, log_path_ok};
 use crate::parser::gen_file_name::{parse_file_name, to_case};
 
+// case convert
 handlebars_helper!(upper: |s: String| s.to_case(Case::Upper));
 handlebars_helper!(lower: |s: String| s.to_case(Case::Lower));
 handlebars_helper!(snake: |s: String| s.to_case(Case::Snake));
@@ -16,6 +17,9 @@ handlebars_helper!(upperSnake: |s: String| s.to_case(Case::UpperSnake));
 handlebars_helper!(camel: |s: String| s.to_case(Case::Camel));
 handlebars_helper!(upperCamel: |s: String| s.to_case(Case::UpperCamel));
 handlebars_helper!(kebab: |s: String| s.to_case(Case::Kebab));
+
+// test
+handlebars_helper!(isId: |s: String| s.to_lowercase().eq("id"));
 
 pub struct Render<'a> {
     pub h: Handlebars<'a>,
@@ -39,6 +43,8 @@ impl<'a> Render<'a> {
         h.register_helper("camel", Box::new(camel));
         h.register_helper("upperCamel", Box::new(upperCamel));
         h.register_helper("kebab", Box::new(kebab));
+        h.register_helper("isId", Box::new(isId));
+
         let render: Render = Self {
             h,
             ..Default::default()
