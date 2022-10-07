@@ -9,7 +9,7 @@ use crate::{
     drivers::db::{init_db, migrate},
     server::api::commands::{
         {{#each tables}}
-        {{this.name}}_controller::{find_{{ this.name }}_list, delete_{{ this.name }}_ids, find_{{ this.name }}_by_id, update_{{ this.name }}, create_{{ this.name }}, create_{{ this.name }}_batch},
+        {{this.name}}_controller::{find_{{ this.name }}_page, find_{{ this.name }}_list, delete_{{ this.name }}_ids, find_{{ this.name }}_by_id, update_{{ this.name }}, create_{{ this.name }}, create_{{ this.name }}_batch},
         {{/each}}
     },
     service::Service,
@@ -46,6 +46,7 @@ async fn main() -> anyhow::Result<()> {
 
         {{#each tables}}
         .route("/api/{{ this.name }}/list", post(find_{{ this.name }}_list))
+        .route("/api/{{ this.name }}/page", post(find_{{ this.name }}_page))
         .route(
             "/api/{{ this.name }}/:id",
             get(find_{{ this.name }}_by_id).delete(delete_{{ this.name }}_ids).patch(update_{{ this.name }}),

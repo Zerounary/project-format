@@ -227,6 +227,25 @@ macro_rules! impl_repo_select_list {
     };
 }
 
+macro_rules! impl_repo_select_page {
+    ($table:ty{$fn_name:ident($($param_key:ident:$param_type:ty$(,)?)*) => $sql:expr}) => {
+        impl Repository{
+            pub async fn $fn_name(&self, mut rb: &DB, $($param_key:$param_type,)* page_num: i64, page_size: i64)->Result<Vec<$table>, rbatis::Error>{
+                #[rbatis::py_sql("`select ${table_column} from ${table_name} `", $sql)]
+                async fn $fn_name(rb: &mut dyn rbatis::executor::Executor,table_column:&str,table_name:&str,$($param_key:$param_type,)* page_start: i64, page_size: i64) -> Result<Vec<$table>,rbatis::rbdc::Error> {impled!()}
+                let table_column = "*".to_string();
+                let table_name = crate::macros::repository::to_sql_table_name(stringify!($table));
+                let start = (page_num - 1) * page_size;
+                let result = $fn_name(&mut rb,&table_column,&table_name,$($param_key ,)* start, page_size).await;
+                match result {
+                    Ok(bo_vec) => Ok(bo_vec),
+                    Err(_) => Err(rbatis::Error::E("Not Found!".to_string())),
+                }
+            }
+        }
+    };
+}
+
 macro_rules! impl_repo_delete {
     ($table:ty{$fn_name:ident}) => {
         impl Repository {
@@ -250,6 +269,7 @@ macro_rules! impl_repo_delete {
 pub(crate) use impl_repo_select;
 pub(crate) use impl_repo_select_one;
 pub(crate) use impl_repo_select_list;
+pub(crate) use impl_repo_select_page;
 pub(crate) use impl_repo_update;
 pub(crate) use impl_repo_insert;
 pub(crate) use impl_repo_delete;

@@ -43,6 +43,13 @@ impl Service {
         }
     }
 
+    pub async fn find_{{lower this.name}}_page(&self, bo: {{upperCamel this.name}}OptionBO, page_num: i64, page_size: i64) -> Result<Vec<{{upperCamel this.name}}BO>, {{upperCamel this.name}}RepoError> {
+        let result = self.repo.select_{{lower this.name}}_page(&self.db, bo, page_num, page_size).await;
+        match result {
+            Ok(result_list) => Ok(result_list),
+            Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound)
+        }
+    }
     pub async fn find_{{lower this.name}}_by_id_no_cache(&self, id: i64) -> Result<{{upperCamel this.name}}BO, {{upperCamel this.name}}RepoError> {
         let result = self.repo.select_{{lower this.name}}_by_id(&self.db, id).await;
         match result {

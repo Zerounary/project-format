@@ -44,6 +44,17 @@ pub async fn find_{{lower this.name}}_list(
 }
 // read!({{upperCamel this.name}}OptionVO > find_{{lower this.name}}_list > Vec<{{upperCamel this.name}}VO>);
 
+pub async fn find_{{lower this.name}}_page(
+    Json(params): Json<{{upperCamel this.name}}OptionVO>,
+    Extension(state): State,
+) -> AppResult<Vec<{{upperCamel this.name}}VO>> {
+    let page_num = params.page_num.unwrap_or(1);
+    let page_size = params.page_size.unwrap_or(10);
+    let result = state.service.find_{{lower this.name}}_page(params.into(), page_num, page_size).await?;
+    let vos = result.into_iter().map(|x| x.into()).collect_vec();
+    Resp::ok(vos)
+}
+
 pub async fn create_{{lower this.name}}(
     Json(params): Json<Create{{upperCamel this.name}}VO>,
     Extension(state): State,
