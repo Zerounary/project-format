@@ -1,6 +1,6 @@
 project:
   template:
-    dir: "templates"
+    dir: "templates/guava"
     output: "../pt-test"
   data:
     project_name: "demandwall"
