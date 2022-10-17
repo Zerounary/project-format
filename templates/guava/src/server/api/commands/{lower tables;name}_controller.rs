@@ -3,8 +3,8 @@ use crate::{
     server::api::model::{{lower this.name}}_vo::{{upperCamel this.name}}VO,
     server::api::model::{{lower this.name}}_opt_vo::{{upperCamel this.name}}OptionVO,
     server::api::model::{{lower this.name}}_create_vo::Create{{upperCamel this.name}}VO,
-    server::api::model::{{lower this.name}}_update_vo::Update{{upperCamel this.name}}VO,
-    service::{{lower this.name}}_service::{Create{{upperCamel this.name}}Input, Update{{upperCamel this.name}}Input}
+    server::api::model::{{lower this.name}}_update_vo::{Update{{upperCamel this.name}}VO, Update{{upperCamel this.name}}OptionVO},
+    service::{{lower this.name}}_service::{Create{{upperCamel this.name}}Input, Update{{upperCamel this.name}}Input, Update{{upperCamel this.name}}OptionInput}
 };
 use axum::{
     extract::Path,
@@ -87,6 +87,17 @@ pub async fn update_{{lower this.name}}(
     Resp::ok(bo.into())
 }
 // update!(Update{{upperCamel this.name}}VO -> update_{{lower this.name}}(Update{{upperCamel this.name}}Input) -> {{upperCamel this.name}}VO);
+
+pub async fn update_{{lower this.name}}_opt(
+    Path(id): Path<i64>,
+    Json(mut params): Json<Update{{upperCamel this.name}}OptionVO>,
+    Extension(state): State,
+) -> AppResult<{{upperCamel this.name}}VO> {
+    params.id = Some(id);
+    let service_input: Update{{upperCamel this.name}}OptionInput = params.into();
+    let bo = state.service.update_{{lower this.name}}_opt(service_input).await?;
+    Resp::ok(bo.into())
+}
 
 pub async fn delete_{{lower this.name}}_ids(
     Path(ids): Path<String>,

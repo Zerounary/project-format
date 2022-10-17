@@ -33,6 +33,18 @@ pub struct Update{{upperCamel this.name}}Input {
     {{/each}}
 }
 
+#[derive(Debug, Default, Deserialize)]
+pub struct Update{{upperCamel this.name}}OptionInput {
+    {{#each columns}}
+    {{#if (isId name) }}
+    pub {{name}}: {{type}},
+    {{/if}}
+    {{#unless (isId name) }}
+    pub {{name}}: Option<{{type}}>,
+    {{/unless}}
+    {{/each}}
+}
+
 impl Service {
 
     pub async fn find_{{lower this.name}}_list(&self, bo: {{upperCamel this.name}}OptionBO) -> Result<Vec<{{upperCamel this.name}}BO>, {{upperCamel this.name}}RepoError> {
@@ -120,6 +132,28 @@ impl Service {
             ..{{upperCamel this.name}}BO::default()
         };
         let result = self.repo.update_{{lower this.name}}_by_id(&self.db, &bo, bo.id).await;
+
+        match result {
+            Ok(_) => {
+                self.cache.invalidate(&input.id);
+                self.find_{{lower this.name}}_by_id(input.id).await
+            },
+            Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
+        }
+    }
+    pub async fn update_{{lower this.name}}_opt(&self, input: Update{{upperCamel this.name}}OptionInput) -> Result<{{upperCamel this.name}}BO, {{upperCamel this.name}}RepoError> {
+        let bo = {{upperCamel this.name}}OptionBO {
+            {{#each columns}}
+            {{#if (isId name) }}
+            {{name}}: Some(input.{{name}}.clone()),
+            {{/if}}
+            {{#unless (isId name) }}
+            {{name}}: input.{{name}}.clone(),
+            {{/unless}}
+            {{/each}}
+            ..{{upperCamel this.name}}OptionBO::default()
+        };
+        let result = self.repo.update_{{lower this.name}}_opt_by_id(&self.db, &bo, input.id).await;
 
         match result {
             Ok(_) => {

@@ -53,6 +53,8 @@ where:
 
 impl_repo_update!({{upperCamel this.name}}BO{update_{{lower this.name}}_by_id(id: i64) => "`where id = #{id}`"});
 
+impl_repo_update!({{upperCamel this.name}}OptionBO{update_{{lower this.name}}_opt_by_id(id: i64) => "`where id = #{id}`"});
+
 impl_repo_insert!({{upperCamel this.name}}BO, create_{{lower this.name}}, create_{{lower this.name}}_batch);
 
 impl_repo_delete!({{upperCamel this.name}}BO{delete_{{lower this.name}}_ids});
