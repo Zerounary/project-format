@@ -17,7 +17,9 @@ pub struct {{upperCamel this.name}}VO {
     {{#if (isId name) }}
     pub {{name}}: String,
     {{else}}
+    {{#if skip.[3]}}
     pub {{name}}: {{type}},
+    {{/if}}
     {{/if}}
     {{/each}}
 }

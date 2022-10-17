@@ -15,7 +15,9 @@ use crate::{
 pub struct {{upperCamel this.name}}OptionVO {
     #[convert_field(ignore)]
     {{#each columns}}
+    {{#if skip.[2]}}
     pub {{name}}: Option<{{type}}>,
+    {{/if}}
     {{/each}}
     #[convert_field(ignore)]
     pub page_num: Option<i64>,

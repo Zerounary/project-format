@@ -16,7 +16,9 @@ pub struct Update{{upperCamel this.name}}VO {
     pub id: Option<i64>,
     {{#each columns}}
     {{#unless (isId name) }}
+    {{#if skip.[1]}}
     pub {{name}}: {{type}},
+    {{/if}}
     {{/unless}}
     {{/each}}
 }

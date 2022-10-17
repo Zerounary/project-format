@@ -15,7 +15,9 @@ use crate::{
 pub struct Create{{upperCamel this.name}}VO {
     {{#each columns}}
     {{#unless (isId name)}}
+    {{#if skip.[0]}}
     pub {{name}}: {{type}},
+    {{/if}}
     {{/unless}}
     {{/each}}
 }
