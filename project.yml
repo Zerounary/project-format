@@ -1,20 +1,19 @@
 project:
   template:
     dir: "templates/guava"
-    output: "../pt-test"
+    output: "../guava-erp"
   data:
-    project_name: "pt-test"
-    table_ddls:
-      - "create table demand(id int8, name text, description text, dlike int8, status int4 );"
+    project_name: "guava-erp"
     tables:
       - {
-          name: "demand",
+          name: "category",
+          ddls: [
+           "create table category(id int8, name text, pid int8);"
+          ],
           columns:
             [
               { name: "id", type: "i64", skip: [1, 1, 1, 1] },
               { name: "name", type: "String", skip: [1, 1, 1, 1] },
-              { name: "description", type: "String", skip: [1, 1, 1, 1] },
-              { name: "dlike", type: "i64", skip: [0, 1, 0, 1] },
-              { name: "status", type: "i32", skip: [0, 1, 1, 1] },
+              { name: "pid", type: "i64", skip: [1, 1, 1, 1] },
             ],
         }
