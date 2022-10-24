@@ -23,10 +23,14 @@ pub enum {{upperCamel this.name}}RepoError {
 pub struct Create{{upperCamel this.name}}Input {
     {{#each columns}}
     {{#unless (isId name) }}
+    {{#if skip.[4]}}
+    pub {{name}}: Option<{{type}}>,
+    {{else}}
     {{#if default}}
     #[default(_code = "{{default}}")]
     {{/if}}
     pub {{name}}: {{type}},
+    {{/if}}
     {{/unless}}
     {{/each}}
 }
@@ -94,7 +98,11 @@ impl Service {
         let bo = {{upperCamel this.name}}BO {
             {{#each columns}}
             {{#unless (isId name) }}
+            {{#if skip.[4]}}
+            {{name}}: input.{{name}}.unwrap_or({{default}}),
+            {{else}}
             {{name}}: input.{{name}},
+            {{/if}}
             {{/unless}}
             {{/each}}
             ..{{upperCamel this.name}}BO::default()
@@ -115,7 +123,11 @@ impl Service {
             {{upperCamel this.name}}BO {
             {{#each columns}}
             {{#unless (isId name) }}
+            {{#if skip.[4]}}
+                {{name}}: e.{{name}}.clone().unwrap_or({{default}}),
+            {{else}}
                 {{name}}: e.{{name}}.clone(),
+            {{/if}}
             {{/unless}}
             {{/each}}
                 ..{{upperCamel this.name}}BO::default()

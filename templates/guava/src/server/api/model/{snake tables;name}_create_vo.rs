@@ -17,7 +17,11 @@ pub struct Create{{upperCamel this.name}}VO {
     {{#each columns}}
     {{#unless (isId name)}}
     {{#if skip.[0]}}
+    {{#if skip.[4]}}
+    pub {{name}}: Option<{{type}}>,
+    {{else}}
     pub {{name}}: {{type}},
+    {{/if}}
     {{/if}}
     {{/unless}}
     {{/each}}
