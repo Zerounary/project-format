@@ -53,3 +53,70 @@ project:
               { name: "description", type: "String", skip: [1, 1, 1, 1] },
             ],
         }
+      - {
+          name: "brand",
+          ddls: [
+           "create table brand(id int8, code text, name text, description text);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1] },
+            ],
+        }
+      # 仓库
+      - {
+          name: "warehouse",
+          ddls: [
+           "create table warehouse(id int8, code text, name text, contacts text, phone text, address text, description text);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1] },
+              { name: "contacts", type: "String", skip: [1, 1, 1, 1] },
+              { name: "phone", type: "String", skip: [1, 1, 1, 1] },
+              { name: "address", type: "String", skip: [1, 1, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1] },
+            ],
+        }
+      # 门店
+      - {
+          name: "merchant",
+          ddls: [
+           "create table merchant(id int8, code text, name text, contacts text, phone text, address text, tax text, bank text, account text, description text);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1] },
+              { name: "contacts", type: "String", skip: [1, 1, 1, 1] },
+              { name: "phone", type: "String", skip: [1, 1, 1, 1] },
+              { name: "address", type: "String", skip: [1, 1, 1, 1] },
+              { name: "tax", type: "String", skip: [1, 1, 1, 1] },
+              { name: "bank", type: "String", skip: [1, 1, 1, 1] },
+              { name: "account", type: "String", skip: [1, 1, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1] },
+            ],
+        }
+      # 结算账户
+      - {
+          name: "account",
+          ddls: [
+           "create table account(id int8, code text, name text, create_date date, initial decimal(14,4), balance decimal(14,4), description text);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1] },
+              { name: "create_date", type: "Date", default: "Date(fastdate::DateTime::now().into())", skip: [1, 1, 1, 1] },
+              { name: "initial", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1] },
+              { name: "balance", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 0, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1] },
+            ],
+        }

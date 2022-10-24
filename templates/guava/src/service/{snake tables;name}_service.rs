@@ -1,5 +1,7 @@
 // use cached::proc_macro::cached;
 use serde::Deserialize;
+use smart_default::SmartDefault;
+use rbatis::rbdc::{decimal::Decimal, date::Date};
 
 use crate::{
     drivers::{cache::ServiceResult}, cache_value, cache,
@@ -16,24 +18,30 @@ pub enum {{upperCamel this.name}}RepoError {
     NotFound,
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, SmartDefault, Deserialize)]
 #[allow(dead_code)]
 pub struct Create{{upperCamel this.name}}Input {
     {{#each columns}}
     {{#unless (isId name) }}
+    {{#if default}}
+    #[default(_code = "{{default}}")]
+    {{/if}}
     pub {{name}}: {{type}},
     {{/unless}}
     {{/each}}
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, SmartDefault, Deserialize)]
 pub struct Update{{upperCamel this.name}}Input {
     {{#each columns}}
+    {{#if default}}
+    #[default(_code = "{{default}}")]
+    {{/if}}
     pub {{name}}: {{type}},
     {{/each}}
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, SmartDefault, Deserialize)]
 pub struct Update{{upperCamel this.name}}OptionInput {
     {{#each columns}}
     {{#if (isId name) }}

@@ -6,6 +6,8 @@ use crate::{server::error::AppError, AppState};
 use axum::{response::Json, Extension};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use smart_default::SmartDefault;
+use rbatis::rbdc::{decimal::Decimal, date::Date};
 
 // TODO 用 serde_json::Value 来接所有不知道类型的，又要存起来的数据。 也可以看是否可以用Box
 
@@ -15,14 +17,14 @@ pub type State = Extension<Arc<AppState>>;
 
 pub type AppResult<T> = Result<Json<Resp<T>>, AppError>;
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, SmartDefault, Serialize, Deserialize)]
 pub struct Resp<T> {
     code: i32,
     msg: String,
     data: Option<T>,
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, SmartDefault, Serialize, Deserialize)]
 pub struct Empty;
 
 impl<T> Resp<T> {

@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use struct_convert::Convert;
+use rbatis::rbdc::{decimal::Decimal, date::Date};
 
 
 use crate::{

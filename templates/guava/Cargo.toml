@@ -29,6 +29,8 @@ dotenv = { version = "0.15.0"}
 itertools = "0.10.2"  
 struct-convert = "1.2.1"
 url = "2.3.1"
+smart-default = "0.6.0"
+fastdate = "0.1.29"
 
 moka = "0.9.3"
 

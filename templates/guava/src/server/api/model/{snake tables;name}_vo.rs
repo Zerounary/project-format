@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 use struct_convert::Convert;
+use smart_default::SmartDefault;
+use rbatis::rbdc::{decimal::Decimal, date::Date};
 
 
 use crate::{
@@ -8,7 +10,7 @@ use crate::{
     service::{{snake this.name}}_service::{Create{{upperCamel this.name}}Input, Update{{upperCamel this.name}}Input},
 };
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, SmartDefault, Serialize, Deserialize)]
 #[derive(Convert)]
 #[convert(from = "{{upperCamel this.name}}BO")]
 pub struct {{upperCamel this.name}}VO {
@@ -18,6 +20,9 @@ pub struct {{upperCamel this.name}}VO {
     pub {{name}}: String,
     {{else}}
     {{#if skip.[3]}}
+    {{#if default}}
+    #[default(_code = "{{default}}")]
+    {{/if}}
     pub {{name}}: {{type}},
     {{/if}}
     {{/if}}

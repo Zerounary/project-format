@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use struct_convert::Convert;
+use rbatis::rbdc::{decimal::Decimal, date::Date};
 
 
 use crate::{
@@ -9,7 +10,7 @@ use crate::{
 };
 
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[derive(Convert)]
 #[convert(into = "{{upperCamel this.name}}OptionBO")]
 pub struct {{upperCamel this.name}}OptionVO {
