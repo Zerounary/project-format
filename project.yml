@@ -17,3 +17,39 @@ project:
               { name: "pid", type: "i64", skip: [1, 1, 1, 1] },
             ],
         }
+      - {
+          name: "attribute",
+          ddls: [
+           "create table attribute(id int8, name text);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1] },
+            ],
+        }
+      - {
+          name: "attribute_value",
+          ddls: [
+           "create table attribute_value(id int8, name text, attribute_id int8);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1] },
+              { name: "attribute_id", type: "i64", skip: [1, 1, 1, 1] },
+            ],
+        }
+      - {
+          name: "unit",
+          ddls: [
+           "create table unit(id int8, code text, name text, description text);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1] },
+            ],
+        }
