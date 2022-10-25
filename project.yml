@@ -143,3 +143,28 @@ project:
               { name: "description", type: "String", skip: [1, 1, 1, 1, 1] },
             ],
         }
+      # 客户
+      - {
+          name: "customer",
+          ddls: [
+           "create table customer(id int8, code text, name text, contacts text, phone text, email text, address text, tax text, bank text, account text, integral decimal(14,4), discount decimal(14,4), arrears decimal(14,4), begin_arrears decimal(14,4), description text);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "contacts", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "phone", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "email", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "address", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "tax", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "bank", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "account", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "discount", type: "Decimal", default: "Decimal(1.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "integral", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "arrears", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "begin_arrears", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1, 1] },
+            ],
+        }
