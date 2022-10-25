@@ -192,9 +192,29 @@ project:
               { name: "stocktip", type: "i64", skip: [1, 1, 1, 1, 1] },
               { name: "retail_name", type: "String", skip: [1, 1, 1, 1, 1] },
               { name: "is_multi_price", type: "i8", skip: [1, 1, 1, 1, 1] },
-              { name: "buy", type: "Decimal", default: "Decimal(1.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "buy", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
               { name: "sell", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
               { name: "retail", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
               { name: "integral", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "is_active", type: "i8", skip: [1, 1, 1, 1, 1] },
+            ],
+        }
+      # 条码
+      - {
+          name: "sku",
+          ddls: [
+           "create table sku( id int8, code text, name text, nod text, product_id int8, buy decimal(14,4), sell decimal(14,4), retail decimal(14,4));"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "nod", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "product_id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "is_active", type: "i8", default: "1", skip: [1, 1, 1, 1, 1] },
+              { name: "buy", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "sell", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "retail", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
             ],
         }
