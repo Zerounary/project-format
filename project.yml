@@ -115,8 +115,8 @@ project:
               { name: "code", type: "String", skip: [1, 1, 1, 1] },
               { name: "name", type: "String", skip: [1, 1, 1, 1] },
               { name: "create_date", type: "Date", default: "Date(fastdate::DateTime::now().into())", skip: [1, 1, 1, 1, 1] },
-              { name: "initial", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1] },
-              { name: "balance", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 0, 1, 1] },
-              { name: "description", type: "String", skip: [1, 1, 1, 1] },
+              { name: "initial", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "balance", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 0, 1, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1, 1] },
             ],
         }

@@ -99,7 +99,11 @@ impl Service {
             {{#each columns}}
             {{#unless (isId name) }}
             {{#if skip.[4]}}
-            {{name}}: input.{{name}}.unwrap_or({{default}}),
+                {{#if default}}
+                {{name}}: input.{{name}}.clone().unwrap_or({{default}}),
+                {{else}}
+                {{name}}: input.{{name}}.clone().unwrap_or_default(),
+                {{/if}}
             {{else}}
             {{name}}: input.{{name}},
             {{/if}}
@@ -124,7 +128,11 @@ impl Service {
             {{#each columns}}
             {{#unless (isId name) }}
             {{#if skip.[4]}}
+                {{#if default}}
                 {{name}}: e.{{name}}.clone().unwrap_or({{default}}),
+                {{else}}
+                {{name}}: e.{{name}}.clone().unwrap_or_default(),
+                {{/if}}
             {{else}}
                 {{name}}: e.{{name}}.clone(),
             {{/if}}
