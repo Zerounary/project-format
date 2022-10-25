@@ -120,3 +120,26 @@ project:
               { name: "description", type: "String", skip: [1, 1, 1, 1, 1] },
             ],
         }
+      # 供应商
+      - {
+          name: "supplier",
+          ddls: [
+           "create table supplier(id int8, code text, name text, contacts text, phone text, email text, address text, tax text, bank text, account text, arrears decimal(14,4), begin_arrears decimal(14,4), description text);"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "contacts", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "phone", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "email", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "address", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "tax", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "bank", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "account", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "arrears", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "begin_arrears", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1, 1] },
+            ],
+        }
