@@ -168,3 +168,33 @@ project:
               { name: "description", type: "String", skip: [1, 1, 1, 1, 1] },
             ],
         }
+      # 商品
+      - {
+          name: "product",
+          ddls: [
+           "create table product( id int8, code text, name text, serialno text, spec text, category_id int8, brand_id int8, unit_id int8, is_multi_unit bool, multi_unit_list text, description text, warehouse_id int8, location text, stocktip int8, retail_name text, details text, is_multi_price bool, buy decimal(14,4), sell decimal(14,4), retail decimal(14,4), integral decimal(14,4));"
+          ],
+          columns:
+            [
+              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
+              { name: "code", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "name", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "serialno", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "spec", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "category_id", type: "i64", skip: [1, 1, 1, 1, 1] },
+              { name: "brand_id", type: "i64", skip: [1, 1, 1, 1, 1] },
+              { name: "unit_id", type: "i64", skip: [1, 1, 1, 1, 1] },
+              { name: "is_multi_unit", type: "i8", skip: [1, 1, 1, 1, 1] },
+              { name: "multi_unit_list", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "description", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "warehouse_id", type: "i64", skip: [1, 1, 1, 1, 1] },
+              { name: "location", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "stocktip", type: "i64", skip: [1, 1, 1, 1, 1] },
+              { name: "retail_name", type: "String", skip: [1, 1, 1, 1, 1] },
+              { name: "is_multi_price", type: "i8", skip: [1, 1, 1, 1, 1] },
+              { name: "buy", type: "Decimal", default: "Decimal(1.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "sell", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "retail", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+              { name: "integral", type: "Decimal", default: "Decimal(0.to_string())", skip: [1, 1, 1, 1, 1] },
+            ],
+        }
