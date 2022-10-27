@@ -5,10 +5,8 @@
         xmlns:pro="http://www.liquibase.org/xml/ns/pro"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
-
-    <includeAll path="classpath*:/db/**"
+  <includeAll path="classpath*:/db/up/**"
                 relativeToChangelogFile="false"
                 resourceComparator="com.cp.melon.config.db.ChangeLogComparator"
                 filter="com.cp.melon.config.db.ChangeLogFilter"/>
-
 </databaseChangeLog>
