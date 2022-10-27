@@ -1,4 +1,4 @@
-package com.cp.melon.config.db;
+package com.cp.melon.adapter.db.migrate;
 
 import liquibase.changelog.IncludeAllFilter;
 

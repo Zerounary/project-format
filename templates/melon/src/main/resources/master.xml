@@ -7,6 +7,6 @@
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
   <includeAll path="classpath*:/db/up/**"
                 relativeToChangelogFile="false"
-                resourceComparator="com.cp.melon.config.db.ChangeLogComparator"
-                filter="com.cp.melon.config.db.ChangeLogFilter"/>
+                resourceComparator="com.cp.melon.adapter.db.migrate.ChangeLogComparator"
+                filter="com.cp.melon.adapter.db.migrate.ChangeLogFilter"/>
 </databaseChangeLog>

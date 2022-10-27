@@ -1,4 +1,4 @@
-package com.cp.melon.config.db;
+package com.cp.melon.adapter.db.migrate;
 
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
