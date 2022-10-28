@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,7 +14,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @TableName("{{prefix}}{{snake name}}")
+@KeySequence(value ="{{prefix}}{{snake name}}")
 public class {{upperCamel name}}BO{
+    @TableId(type = IdType.INPUT)
     {{#each columns}}
     private {{type}} {{camel name}};
     {{/each}}
