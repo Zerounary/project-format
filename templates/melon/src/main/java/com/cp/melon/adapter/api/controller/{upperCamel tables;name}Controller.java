@@ -30,40 +30,40 @@ import javax.websocket.server.PathParam;
 public class {{upperCamel name}}Controller{
 
     @Autowired
-    private I{{upperCamel name}}Service {{upperCamel name}}Service;
+    private I{{upperCamel name}}Service {{camel name}}Service;
 
 
     @GetMapping("/{id}")
     public Resp<{{upperCamel name}}VO> find{{upperCamel name}}ById( @PathVariable("id") Long id){
-        {{upperCamel name}}BO bo = {{upperCamel name}}Service.getById(id);
+        {{upperCamel name}}BO bo = {{camel name}}Service.getById(id);
         {{upperCamel name}}VO vo = {{upperCamel name}}VO.fromBO(bo);
         return Resp.ok(vo);
     }
 
     @PostMapping("/one")
     public Resp<{{upperCamel name}}VO> find{{upperCamel name}}One(@RequestBody {{upperCamel name}}QueryVO queryVO){
-        QueryChainWrapper<{{upperCamel name}}BO> query = {{upperCamel name}}Service.query();
+        QueryChainWrapper<{{upperCamel name}}BO> query = {{camel name}}Service.query();
         AbstractWrapper<{{upperCamel name}}BO, String, QueryWrapper<{{upperCamel name}}BO>> wrapper = queryVO.toWrapper(query);
-        {{upperCamel name}}BO bo = {{upperCamel name}}Service.getOne(wrapper);
+        {{upperCamel name}}BO bo = {{camel name}}Service.getOne(wrapper);
         {{upperCamel name}}VO vo = {{upperCamel name}}VO.fromBO(bo);
         return Resp.ok(vo);
     }
 
     @PostMapping("/list")
     public Resp<List<{{upperCamel name}}VO>> find{{upperCamel name}}List(@RequestBody {{upperCamel name}}QueryVO queryVO){
-        QueryChainWrapper<{{upperCamel name}}BO> query = {{upperCamel name}}Service.query();
+        QueryChainWrapper<{{upperCamel name}}BO> query = {{camel name}}Service.query();
         AbstractWrapper<{{upperCamel name}}BO, String, QueryWrapper<{{upperCamel name}}BO>> wrapper = queryVO.toWrapper(query);
-        List<{{upperCamel name}}BO> bos = {{upperCamel name}}Service.list(wrapper);
+        List<{{upperCamel name}}BO> bos = {{camel name}}Service.list(wrapper);
         List<{{upperCamel name}}VO> vos = bos.stream().map(bo -> {{upperCamel name}}VO.fromBO(bo)).collect(Collectors.toList());
         return Resp.ok(vos);
     }
 
     @PostMapping("/page")
     public RespPage<{{upperCamel name}}VO> find{{upperCamel name}}Page(@RequestBody {{upperCamel name}}QueryVO queryVO, @RequestParam("current") Long currentPage, @RequestParam("size") Long pageSize){
-        QueryChainWrapper<{{upperCamel name}}BO> query = {{upperCamel name}}Service.query();
+        QueryChainWrapper<{{upperCamel name}}BO> query = {{camel name}}Service.query();
         AbstractWrapper<{{upperCamel name}}BO, String, QueryWrapper<{{upperCamel name}}BO>> wrapper = queryVO.toWrapper(query);
         Page<{{upperCamel name}}BO> page = new Page(currentPage, pageSize);
-        Page<{{upperCamel name}}BO> pageResult = {{upperCamel name}}Service.page(page, wrapper);
+        Page<{{upperCamel name}}BO> pageResult = {{camel name}}Service.page(page, wrapper);
         List<{{upperCamel name}}VO> vos = pageResult.getRecords().stream().map(bo -> {{upperCamel name}}VO.fromBO(bo)).collect(Collectors.toList());
         return RespPage.ok(currentPage, pageSize, pageResult.getTotal(), vos);
     }
@@ -71,7 +71,7 @@ public class {{upperCamel name}}Controller{
     @PostMapping
     public Resp<{{upperCamel name}}VO> create{{upperCamel name}}(@RequestBody {{upperCamel name}}CreateVO createVO){
         {{upperCamel name}}BO {{upperCamel name}}BO = createVO.toBO();
-        boolean result = {{upperCamel name}}Service.save({{upperCamel name}}BO);
+        boolean result = {{camel name}}Service.save({{upperCamel name}}BO);
         if(result){
             return Resp.ok({{upperCamel name}}VO.fromBO({{upperCamel name}}BO));
         }else {
@@ -83,7 +83,7 @@ public class {{upperCamel name}}Controller{
     public Resp<List<Long>> create{{upperCamel name}}Batch(@RequestBody List<{{upperCamel name}}CreateVO> createVOList){
         if(CollUtil.isNotEmpty(createVOList)){
             List<{{upperCamel name}}BO> bos = createVOList.stream().map({{upperCamel name}}CreateVO::toBO).collect(Collectors.toList());
-            boolean result = {{upperCamel name}}Service.saveBatch(bos, 100);
+            boolean result = {{camel name}}Service.saveBatch(bos, 100);
             if(result){
                 List<Long> ids = bos.stream().map(e -> e.getId()).collect(Collectors.toList());
                 return Resp.ok(ids);
@@ -96,7 +96,7 @@ public class {{upperCamel name}}Controller{
 
     @PatchMapping
     public Resp<{{upperCamel name}}VO> update{{upperCamel name}}Any(@RequestBody {{upperCamel name}}UpdateVO updateVO){
-        boolean result = {{upperCamel name}}Service.updateById(updateVO.toBO());
+        boolean result = {{camel name}}Service.updateById(updateVO.toBO());
         if(result) {
             return find{{upperCamel name}}ById(updateVO.getId());
         }else {
@@ -111,7 +111,7 @@ public class {{upperCamel name}}Controller{
             long[] longs = StrUtil.splitToLong(ids, ",");
             List<Long> idList = CollUtil.newArrayList();
             CollUtil.addAll(idList, longs);
-            boolean result = {{upperCamel name}}Service.removeBatchByIds(idList);
+            boolean result = {{camel name}}Service.removeBatchByIds(idList);
             return Resp.ok(result);
         }else {
             return Resp.fail(1, "ids参数异常");
