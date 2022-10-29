@@ -257,6 +257,38 @@ project:
               },
             ],
         }
+      - {
+          prefix: "b_",
+          name: "dept",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "pid",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
       # 结算账户
       - {
           prefix: "b_",
@@ -864,7 +896,184 @@ project:
                 dbType: "VARCHAR2(120)",
                 skip: [1, 1, 1, 1],
               },
+              {
+                name: "password",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "dept_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
             ],
           ddls: ["create index idx_user_name on sys_user(name);"],
         }
+      - {
+          prefix: "sys_",
+          name: "role",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "sys_",
+          name: "menu",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "pid",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "menu_name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "path",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "component",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "perms",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "icon",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "type",
+                type: "String",
+                dbType: "CHAR(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "sys_",
+          name: "user_role",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "user_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "sys_",
+          name: "role_menu",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "menu_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+
     ddls: [""]

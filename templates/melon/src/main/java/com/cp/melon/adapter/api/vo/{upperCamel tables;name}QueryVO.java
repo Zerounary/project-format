@@ -22,7 +22,6 @@ public class {{upperCamel name}}QueryVO{
     {{/each}}
 
     public AbstractWrapper<{{upperCamel name}}BO, String, QueryWrapper<{{upperCamel name}}BO>> toWrapper(QueryChainWrapper<{{upperCamel name}}BO> query) {
-        query.like("name", name);
         return query.getWrapper();
     }
 }
