@@ -21,10 +21,8 @@ public class SqlMapperController {
     //列表查询接口
     @PutMapping("/{table}/list")
     public RespPage<JSONObject> query(@RequestBody(required = false) JSONObject request, @PathVariable("table") String table) {
-        log.info("/{}/list接收到请求", table);
         String fileName = table + "-list";
         RespPage<JSONObject> list = sqlMapper.list(fileName, request);
-        log.info("/{}/list返回响应结果", table);
         return list;
     }
 

@@ -49,29 +49,20 @@ public class SqlMapperService {
     public RespPage<JSONObject> list(String fileName, boolean isNoPage, JSONObject request) {
         UserBO user = Const.getUser(session);
         request.put("user", user);
-        log.info("SqlMapperServiceImpl.list开始执行");
         RespPage<JSONObject> resultList = new RespPage<JSONObject>();
-        log.info("获取sql文件{}开始", fileName);
         String sqlContent = getFileContent(fileName);
-        log.info("获取sql文件{}结束", fileName);
         Long total = 0L;
         if (StringUtils.isNotBlank(sqlContent)) {
-            log.info("获取totalSql文件开始");
             String totalSql = getListTotalSql(sqlContent);
-            log.info("获取totalSql文件结束");
             // 判断是否有需要预加载到请求参数中的sql语句
             String refReportName = StrUtil.subAfter(fileName, ".", true);
             if (StrUtil.isNotBlank(refReportName)) {
-                log.info("获取recordsSql文件开始");
                 String recordsSql = getCleanSqlContent(getFileContent(refReportName));
-                log.info("获取recordsSql文件结束");
                 List<JSONObject> maps = sqlMapper.selectList(recordsSql, request, JSONObject.class);
                 request.put("_" + StrUtil.removeSuffix(refReportName, "-list"), maps);
-                log.info("查询recordsSql依赖数据结束");
             }
             JSONObject sumResult = sqlMapper.selectOne(totalSql, request, JSONObject.class);
             total = sumResult.getLongValue("total");
-            log.info("结果 <-- " + sumResult);
             resultList.setSumResult(sumResult);
             resultList.setTotal(total);
             if (isNoPage) {
@@ -81,14 +72,10 @@ public class SqlMapperService {
             request = pageHandle(request);
             resultList.setCurrentPage(request.getLongValue("currentPage"));
             resultList.setPageSize(request.getLongValue("pageSize"));
-            log.info("total统计结束");
         }
         if (!total.equals(0L)) {
             String recordsSql = getListRecordsSql(sqlContent);
-            log.info("读取sqlContent结束");
-            log.info("recordsSql --> " + recordsSql);
             List<LinkedHashMap> records = sqlMapper.selectList(recordsSql, request, LinkedHashMap.class); // 为了前端key和sql顺序一致
-            log.info("结果 <-- " + JSONObject.toJSONString(records));
             List<JSONObject> collect = CollUtil.newArrayList();
             for (LinkedHashMap record : records) {
                 JSONObject js = new JSONObject();
