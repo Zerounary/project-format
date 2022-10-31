@@ -1,0 +1,1079 @@
+project:
+  template:
+    dir: "templates/melon"
+    output: "../../Java/melon"
+  data:
+    project_name: "melon"
+    tables:
+      - {
+          prefix: "b_",
+          name: "category",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "pid",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                dbTypeWith: "constraint FK_category_pid references b_category(id)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_category_pid on b_category(pid);"],
+        }
+      - {
+          prefix: "b_",
+          name: "attribute",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "b_",
+          name: "attribute_value",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "attribute_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "unit",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "brand",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      # 仓库
+      - {
+          prefix: "b_",
+          name: "warehouse",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      # 门店
+      - {
+          prefix: "b_",
+          name: "merchant",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "tax",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bank",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "account",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "dept",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "pid",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      # 结算账户
+      - {
+          prefix: "b_",
+          name: "account",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "create_date",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "init_balance",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "balance",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 0, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 供应商
+      - {
+          prefix: "b_",
+          name: "supplier",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "email",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "tax",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "bank",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "account",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "arrears",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "begin_arrears",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 客户
+      - {
+          prefix: "b_",
+          name: "customer",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "email",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "tax",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "bank",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "account",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "discount",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "integral",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "arrears",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "begin_arrears",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 商品
+      - {
+          prefix: "b_",
+          name: "product",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "serialno",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "spec",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "category_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "brand_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "unit_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "is_multi_unit",
+                type: "String",
+                dbType: "CHAR(1)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "multi_unit_list",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "warehouse_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "location",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "stocktip",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "retail_name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "is_multi_price",
+                type: "String",
+                dbType: "CHAR(1)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "buy",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "sell",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "retail",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "integral",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # asi
+      - {
+          prefix: "b_",
+          name: "asi",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "nod",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "product_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+        # sku
+      - {
+          prefix: "b_",
+          name: "sku",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "product_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "asi_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "buy",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "sell",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "retail",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 多单位
+      - {
+          prefix: "b_",
+          name: "multi_unit",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "product_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "unit_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "qty",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 多单位价格
+      - {
+          prefix: "b_",
+          name: "sku_unit_price",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "product_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "asi_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "unit_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "buy",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "sell",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "retail",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,4)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "sys_",
+          name: "tenant",
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_tenant_name on sys_tenant(name);"],
+        }
+      - {
+          prefix: "sys_",
+          name: "user",
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "password",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "dept_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_user_name on sys_user(name);"],
+        }
+      - {
+          prefix: "sys_",
+          name: "role",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "sys_",
+          name: "menu",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "pid",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "menu_name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "path",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "component",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "perms",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "icon",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "type",
+                type: "String",
+                dbType: "CHAR(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "sys_",
+          name: "user_role",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "user_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "sys_",
+          name: "role_menu",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "menu_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+
+    ddls: [""]

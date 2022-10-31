@@ -43,6 +43,10 @@ refinery = { version = "0.8.6", features = ["mysql", "tokio-postgres"]}
 tokio-postgres = "0.7.7"
 mysql = "22.2.0"
 
+redis = "0.22.1"
+deadpool = "0.9.5"
+deadpool-redis = "0.11.0"
+
 
 log = "0.4.17"
 fast_log = "1.5"

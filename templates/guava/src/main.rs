@@ -6,7 +6,7 @@ pub mod service;
 pub mod macros;
 
 use crate::{
-    drivers::db::{init_db, migrate},
+    drivers::{db::{init_db, migrate}, redis::init_redis},
     server::api::commands::{
         {{#each tables}}
         {{this.name}}_controller::{find_{{ this.name }}_page, find_{{ this.name }}_list, delete_{{ this.name }}_ids, find_{{ this.name }}_by_id, update_{{ this.name }}, update_{{ this.name }}_opt, create_{{ this.name }}, create_{{ this.name }}_batch},
@@ -18,12 +18,15 @@ use axum::{
     routing::{get, post},
     Extension, Router,
 };
+use deadpool::managed::{Pool};
+use deadpool_redis::{ Manager, Connection};
 use tower_http::{trace::TraceLayer};
 use std::{env, net::SocketAddr, sync::Arc};
 use tokio::signal;
 
 pub struct AppState {
     service: Service,
+    redis: Pool<Manager, Connection>,
 }
 
 
@@ -35,10 +38,13 @@ async fn main() -> anyhow::Result<()> {
 
     let db = init_db();
 
+    let redis = init_redis();
+
     // Inject a `AppState` into our handlers via a trait object. This could be
     // the live implementation or just a mock for testing.
     let service = Arc::new(AppState {
         service: Service::new(db),
+        redis,
     });
 
     // build our application with a route
