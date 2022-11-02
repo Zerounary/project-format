@@ -6,7 +6,7 @@ pub mod service;
 pub mod macros;
 
 use crate::{
-    drivers::{db::{init_db, migrate}, redis::init_redis},
+    drivers::{db::{init_db, migrate}, log::{init_log}, redis::init_redis},
     server::api::commands::{
         {{#each tables}}
         {{this.name}}_controller::{find_{{ this.name }}_page, find_{{ this.name }}_list, delete_{{ this.name }}_ids, find_{{ this.name }}_by_id, update_{{ this.name }}, update_{{ this.name }}_opt, create_{{ this.name }}, create_{{ this.name }}_batch},
@@ -33,6 +33,8 @@ pub struct AppState {
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     dotenv::dotenv().ok();
+
+    init_log();
 
     migrate().await;
 

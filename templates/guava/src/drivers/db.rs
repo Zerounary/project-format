@@ -55,7 +55,6 @@ pub fn init_db() -> Rbatis {
         DB_TYPE::Sqlite => db.init(SqliteDriver {}, DATABASE_URL.as_str()).unwrap(),
     };
 
-    // fast_log::init(fast_log::Config::new().console()).expect("rbatis init fail");
 
     db
 }
