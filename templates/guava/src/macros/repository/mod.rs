@@ -103,11 +103,6 @@ macro_rules! impl_repo_insert {
                     ));
                 }
                 let mut insert_ids = Vec::new();
-                for table in tables.iter_mut() {
-                    let id = rbatis::plugin::snowflake::new_snowflake_id();
-                    table.id = id;
-                    insert_ids.push(id);
-                }
                 let table_name = $table_name.to_string();
                 let mut result = rbatis::rbdc::db::ExecResult {
                     rows_affected: 0,
@@ -121,6 +116,11 @@ macro_rules! impl_repo_insert {
                         table_name.as_str(),
                     )
                     .await?;
+                    for i in 0..exec_result.rows_affected {
+                        if let rbs::Value::U64(id) = exec_result.last_insert_id {
+                            insert_ids.push((id + i) as i64);
+                        }
+                    }
                     result.rows_affected += exec_result.rows_affected;
                     result.last_insert_id = exec_result.last_insert_id;
                 }

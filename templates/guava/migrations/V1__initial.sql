@@ -6,7 +6,11 @@
 create table {{prefix}}{{name}} (
 {{#each columns }}
 {{#unless dbSkip }}
+{{#if (isId name)}}
+    {{name}} {{dbType}} {{dbTypeWith}} AUTO_INCREMENT,
+{{else}}
     {{name}} {{dbType}} {{dbTypeWith}},
+{{/if}}
 {{/unless}}
 {{/each}}
     tenant_id int8,
