@@ -94,7 +94,7 @@ impl Service {
         }
     }
 
-    pub async fn create_{{snake this.name}}(&self, input: Create{{upperCamel this.name}}Input) -> Result<{{upperCamel this.name}}BO, {{upperCamel this.name}}RepoError> {
+    pub async fn create_{{snake this.name}}(&self, input: Create{{upperCamel this.name}}Input) -> Result<i64, {{upperCamel this.name}}RepoError> {
         let bo = {{upperCamel this.name}}BO {
             {{#each columns}}
             {{#unless (isId name) }}
@@ -114,7 +114,7 @@ impl Service {
         let result = self.repo.create_{{snake this.name}}(&self.db, bo).await;
 
         match result {
-            Ok(id) => self.find_{{snake this.name}}_by_id(id).await,
+            Ok(id) => Ok(id),
             Err(e) => {
                 dbg!(e);
                 Err({{upperCamel this.name}}RepoError::NotFound)
@@ -152,7 +152,7 @@ impl Service {
         }
     }
 
-    pub async fn update_{{snake this.name}}(&self, input: Update{{upperCamel this.name}}Input) -> Result<{{upperCamel this.name}}BO, {{upperCamel this.name}}RepoError> {
+    pub async fn update_{{snake this.name}}(&self, input: Update{{upperCamel this.name}}Input) -> Result<(), {{upperCamel this.name}}RepoError> {
         let bo = {{upperCamel this.name}}BO {
             {{#each columns}}
             {{name}}: input.{{name}}.clone(),
@@ -164,12 +164,12 @@ impl Service {
         match result {
             Ok(_) => {
                 self.cache.invalidate(&input.id);
-                self.find_{{snake this.name}}_by_id(input.id).await
+                Ok(())
             },
             Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
         }
     }
-    pub async fn update_{{snake this.name}}_opt(&self, input: Update{{upperCamel this.name}}OptionInput) -> Result<{{upperCamel this.name}}BO, {{upperCamel this.name}}RepoError> {
+    pub async fn update_{{snake this.name}}_opt(&self, input: Update{{upperCamel this.name}}OptionInput) -> Result<(), {{upperCamel this.name}}RepoError> {
         let bo = {{upperCamel this.name}}OptionBO {
             {{#each columns}}
             {{#if (isId name) }}
@@ -186,7 +186,7 @@ impl Service {
         match result {
             Ok(_) => {
                 self.cache.invalidate(&input.id);
-                self.find_{{snake this.name}}_by_id(input.id).await
+                Ok(())
             },
             Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
         }

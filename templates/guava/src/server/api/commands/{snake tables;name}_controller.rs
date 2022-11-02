@@ -21,7 +21,8 @@ pub async fn find_{{snake this.name}}_by_id(
     Extension(state): State,
 ) -> AppResult<{{upperCamel this.name}}VO> {
     let res = state.service.find_{{snake this.name}}_by_id(id).await?;
-    Resp::ok(res.into())
+    let mut vo: {{upperCamel this.name}}VO = res.into();
+    Resp::ok(vo)
 }
 // read!(find_{{snake this.name}}_by_id > {{upperCamel this.name}}VO);
 
@@ -30,7 +31,8 @@ pub async fn find_{{snake this.name}}_by_id_no_cache(
     Extension(state): State,
 ) -> AppResult<{{upperCamel this.name}}VO> {
     let res = state.service.find_{{snake this.name}}_by_id_no_cache(id).await?;
-    Resp::ok(res.into())
+    let mut vo: {{upperCamel this.name}}VO = res.into();
+    Resp::ok(vo)
 }
 // read!(find_{{snake this.name}}_by_id_no_cache > {{upperCamel this.name}}VO);
 
@@ -58,10 +60,10 @@ pub async fn find_{{snake this.name}}_page(
 pub async fn create_{{snake this.name}}(
     Json(params): Json<Create{{upperCamel this.name}}VO>,
     Extension(state): State,
-) -> AppResult<{{upperCamel this.name}}VO> {
+) -> AppResult<i64> {
     let service_input: Create{{upperCamel this.name}}Input = params.into();
-    let bo = state.service.create_{{snake this.name}}(service_input).await?;
-    Resp::ok(bo.into())
+    let id = state.service.create_{{snake this.name}}(service_input).await?;
+    Resp::ok(id)
 }
 // create!(Create{{upperCamel this.name}}VO > create_{{snake this.name}}(Create{{upperCamel this.name}}Input)  > {{upperCamel this.name}}VO);
 
@@ -80,11 +82,11 @@ pub async fn update_{{snake this.name}}(
     Path(id): Path<i64>,
     Json(mut params): Json<Update{{upperCamel this.name}}VO>,
     Extension(state): State,
-) -> AppResult<{{upperCamel this.name}}VO> {
+) -> AppResult<bool> {
     params.id = Some(id);
     let service_input: Update{{upperCamel this.name}}Input = params.into();
-    let bo = state.service.update_{{snake this.name}}(service_input).await?;
-    Resp::ok(bo.into())
+    state.service.update_{{snake this.name}}(service_input).await?;
+    Resp::ok(true)
 }
 // update!(Update{{upperCamel this.name}}VO -> update_{{snake this.name}}(Update{{upperCamel this.name}}Input) -> {{upperCamel this.name}}VO);
 
@@ -92,11 +94,11 @@ pub async fn update_{{snake this.name}}_opt(
     Path(id): Path<i64>,
     Json(mut params): Json<Update{{upperCamel this.name}}OptionVO>,
     Extension(state): State,
-) -> AppResult<{{upperCamel this.name}}VO> {
+) -> AppResult<bool> {
     params.id = Some(id);
     let service_input: Update{{upperCamel this.name}}OptionInput = params.into();
-    let bo = state.service.update_{{snake this.name}}_opt(service_input).await?;
-    Resp::ok(bo.into())
+    state.service.update_{{snake this.name}}_opt(service_input).await?;
+    Resp::ok(true)
 }
 
 pub async fn delete_{{snake this.name}}_ids(
