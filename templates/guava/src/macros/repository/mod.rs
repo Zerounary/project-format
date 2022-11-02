@@ -19,7 +19,7 @@ macro_rules! impl_repo_update {
                 #[rbatis::py_sql("`update ${table_name} set  `
                                 trim ',':
                                   for k,v in table:
-                                    if k == column || v== null:
+                                    if k == 'id' || v== null:
                                         continue:
                                     `${k}=#{v},`
                                 ` `",$sql_where)]
