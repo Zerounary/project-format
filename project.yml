@@ -6,6 +6,7 @@ project:
     project_name: "guava-erp"
     tables:
       - {
+          prefix: "b_",
           name: "category",
           columns:
             [

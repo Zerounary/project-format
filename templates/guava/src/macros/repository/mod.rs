@@ -279,6 +279,14 @@ use crate::drivers::db::get_db_type;
 
 pub fn to_sql_table_name(table_name: &str) -> String {
     let name = rbatis::utils::string_util::to_snake_name(&table_name).trim_end_matches("_option_bo").trim_end_matches("_bo").to_string();
+    let name = match name.as_str() {
+{{#each tables }}
+{{#if prefix}}
+        "{{name}}" => String::from("{{prefix}}{{name}}"),
+{{/if}}
+{{/each}}
+        _ => name,
+    };
     match get_db_type() {
         crate::drivers::db::DB_TYPE::Mysql => format!(r#"`{}`"#, name),
         crate::drivers::db::DB_TYPE::Pg => format!(r#""{}""#, name),
