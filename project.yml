@@ -22,6 +22,7 @@ project:
           ddls: [],
         }
       - {
+          prefix: "b_",
           name: "attribute",
           columns:
             [
@@ -36,6 +37,7 @@ project:
           ddls: [],
         }
       - {
+          prefix: "b_",
           name: "attribute_value",
           columns:
             [
@@ -56,6 +58,7 @@ project:
           ddls: [],
         }
       - {
+          prefix: "b_",
           name: "unit",
           columns:
             [
@@ -82,6 +85,7 @@ project:
           ddls: [],
         }
       - {
+          prefix: "b_",
           name: "brand",
           ddls: [],
           columns:
@@ -109,6 +113,7 @@ project:
         }
       # 仓库
       - {
+          prefix: "b_",
           name: "warehouse",
           ddls: [],
           columns:
@@ -154,6 +159,7 @@ project:
         }
       # 门店
       - {
+          prefix: "b_",
           name: "merchant",
           ddls: [],
           columns:
@@ -217,6 +223,7 @@ project:
         }
       # 结算账户
       - {
+          prefix: "b_",
           name: "account",
           ddls: [],
           columns:
@@ -265,6 +272,7 @@ project:
         }
       # 供应商
       - {
+          prefix: "b_",
           name: "supplier",
           ddls: [],
           columns:
@@ -348,6 +356,7 @@ project:
         }
       # 客户
       - {
+          prefix: "b_",
           name: "customer",
           ddls: [],
           columns:
@@ -445,6 +454,7 @@ project:
         }
       # 商品
       - {
+          prefix: "b_",
           name: "product",
           ddls: [],
           columns:
@@ -579,6 +589,7 @@ project:
         }
       # asi
       - {
+          prefix: "b_",
           name: "asi",
           ddls: [],
           columns:
@@ -620,6 +631,7 @@ project:
         }
         # sku
       - {
+          prefix: "b_",
           name: "sku",
           ddls: [],
           columns:
@@ -682,6 +694,7 @@ project:
         }
       # 多单位
       - {
+          prefix: "b_",
           name: "multi_unit",
           ddls: [],
           columns:
@@ -730,6 +743,7 @@ project:
         }
       # 多单位价格
       - {
+          prefix: "b_",
           name: "sku_unit_price",
           ddls: [],
           columns:
@@ -802,3 +816,191 @@ project:
               },
             ],
         }
+      - {
+          prefix: "sys_",
+          name: "tenant",
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_tenant_name on sys_tenant(name);"],
+        }
+      - {
+          prefix: "sys_",
+          name: "user",
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "password",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "dept_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_user_name on sys_user(name);"],
+        }
+      - {
+          prefix: "sys_",
+          name: "role",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "sys_",
+          name: "menu",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "menu_name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "path",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "component",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "perms",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "icon",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "ty",
+                type: "String",
+                dbType: "CHAR(2)",
+                skip: [1, 1, 1, 1],
+              },
+              { name: "sort", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_menu_pid on sys_menu(pid);"],
+        }
+      - {
+          prefix: "sys_",
+          name: "user_role",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "user_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_user_role_user_id on sys_user_role(user_id);",
+              "create index idx_user_role_role_id on sys_user_role(role_id);",
+            ],
+        }
+      - {
+          prefix: "sys_",
+          name: "role_menu",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "menu_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_role_menu_user_id on sys_role_menu(menu_id);",
+              "create index idx_role_menu_role_id on sys_role_menu(role_id);",
+            ],
+        }
+
+    ddls: []
