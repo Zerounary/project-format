@@ -4,7 +4,7 @@ use smart_default::SmartDefault;
 use rbatis::rbdc::{decimal::Decimal, date::Date};
 
 use crate::{
-    drivers::{cache::ServiceResult}, cache_value, cache,
+    drivers::{cache::ServiceResult}, cache_value, cache, cache_invalidate,
     entities::{{snake this.name}}_bo::{{upperCamel this.name}}BO,
     entities::{{snake this.name}}_opt_bo::{{upperCamel this.name}}OptionBO,
 };
@@ -163,7 +163,7 @@ impl Service {
 
         match result {
             Ok(_) => {
-                self.cache.invalidate(&input.id);
+                cache_invalidate!(self(&input.id));
                 Ok(())
             },
             Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
@@ -185,7 +185,7 @@ impl Service {
 
         match result {
             Ok(_) => {
-                self.cache.invalidate(&input.id);
+                cache_invalidate!(self(&input.id));
                 Ok(())
             },
             Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
@@ -196,7 +196,7 @@ impl Service {
 
         match result {
             Ok(_) => {
-                self.cache.invalidate(&id);
+                cache_invalidate!(self(&id));
                 Ok(())
             },
             Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
@@ -208,7 +208,7 @@ impl Service {
         match result {
             Ok(_) => {
                 for id in ids {
-                    self.cache.invalidate(&id);
+                    cache_invalidate!(self(&id));
                 }
                 Ok(())
             },

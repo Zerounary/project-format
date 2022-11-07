@@ -14,7 +14,7 @@ pub enum ServiceResult {
     {{/each}}
 }
 
-pub type ServiceCache = Arc<Cache<i64, ServiceResult>>;
+pub type ServiceCache = Arc<Cache<String, ServiceResult>>;
 
 #[macro_export]
 macro_rules! cache_value {
@@ -42,7 +42,9 @@ macro_rules! cache_value {
 #[macro_export]
 macro_rules! cache {
     ($self:ident($key:ident) -> Result<$bo:ident, $err:ident> $block:block) => {
-        match $self.cache.get(&$key) {
+        let table_name = crate::macros::repository::to_sql_table_name(stringify!($bo));
+        let key = format!("{}:{}", table_name, &$key.to_string());
+        match $self.cache.get(&key) {
             Some(e) => {
                 let x = cache_value!(e as Result<$bo, $err>);
                 x
@@ -51,9 +53,18 @@ macro_rules! cache {
                 let result: Result<$bo, $err> = $block;
                 $self
                     .cache
-                    .insert($key, ServiceResult::$bo(result.clone()));
+                    .insert(key, ServiceResult::$bo(result.clone()));
                 result
             }
         }
     };
+}
+
+#[macro_export]
+macro_rules! cache_invalidate {
+    ($self:ident($key:expr)) => {
+        let table_name = crate::macros::repository::to_sql_table_name(stringify!($bo));
+        let key = format!("{}:{}", table_name, &$key.to_string());
+        $self.cache.invalidate(&key);
+    }
 }
