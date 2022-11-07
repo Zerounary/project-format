@@ -43,9 +43,9 @@ macro_rules! impl_repo_update {
                         }
                     },
                     Err(e) => {
-                        dbg!(e);
-                        Err(rbatis::Error::E("Not found".to_string()))
-                    }
+                        log::error!("{:}", e);
+                        Err(rbatis::Error::E("Not Found!".to_string()))
+                    } 
                 }
             }
         }
@@ -182,7 +182,10 @@ macro_rules! impl_repo_select_one {
                             None => Err(rbatis::Error::E("Not Found!".to_string())),
                         }
                     }
-                    Err(_) => Err(rbatis::Error::E("Not Found!".to_string())),
+                    Err(e) => {
+                        log::error!("{:}", e);
+                        Err(rbatis::Error::E("Not Found!".to_string()))
+                    } 
                 }
             }
         }
@@ -202,7 +205,10 @@ macro_rules! impl_repo_select_one {
                             None => Err(rbatis::Error::E("Not Found!".to_string())),
                         }
                     }
-                    Err(_) => Err(rbatis::Error::E("Not Found!".to_string())),
+                    Err(e) => {
+                        log::error!("{:}", e);
+                        Err(rbatis::Error::E("Not Found!".to_string()))
+                    } 
                 }
             }
         }
@@ -220,7 +226,10 @@ macro_rules! impl_repo_select_list {
                 let result = $fn_name(&mut rb,&table_column,&table_name,$($param_key ,)*).await;
                 match result {
                     Ok(bo_vec) => Ok(bo_vec),
-                    Err(_) => Err(rbatis::Error::E("Not Found!".to_string())),
+                    Err(e) => {
+                        log::error!("{:}", e);
+                        Err(rbatis::Error::E("Not Found!".to_string()))
+                    } 
                 }
             }
         }
@@ -239,7 +248,10 @@ macro_rules! impl_repo_select_page {
                 let result = $fn_name(&mut rb,&table_column,&table_name,$($param_key ,)* start, page_size).await;
                 match result {
                     Ok(bo_vec) => Ok(bo_vec),
-                    Err(_) => Err(rbatis::Error::E("Not Found!".to_string())),
+                    Err(e) => {
+                        log::error!("{:}", e);
+                        Err(rbatis::Error::E("Not Found!".to_string()))
+                    } 
                 }
             }
         }
