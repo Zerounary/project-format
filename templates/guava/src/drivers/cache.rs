@@ -42,18 +42,17 @@ macro_rules! cache_value {
 #[macro_export]
 macro_rules! cache {
     ($self:ident($key:ident) -> Result<$bo:ident, $err:ident> $block:block) => {
-        let table_name = crate::macros::repository::to_sql_table_name(stringify!($bo));
-        let key = format!("{}:{}", table_name, &$key.to_string());
-        match $self.cache.get(&key) {
+        let table_name = crate::macros::repository::pure_name(stringify!($bo));
+        let key = $key.to_string();
+        let cache = $self.cache.get(&table_name).unwrap();
+        match cache.get(&key) {
             Some(e) => {
                 let x = cache_value!(e as Result<$bo, $err>);
                 x
             }
             None => {
                 let result: Result<$bo, $err> = $block;
-                $self
-                    .cache
-                    .insert(key, ServiceResult::$bo(result.clone()));
+                cache.insert(key, ServiceResult::$bo(result.clone()));
                 result
             }
         }
@@ -62,9 +61,10 @@ macro_rules! cache {
 
 #[macro_export]
 macro_rules! cache_invalidate {
-    ($self:ident($key:expr)) => {
-        let table_name = crate::macros::repository::to_sql_table_name(stringify!($bo));
-        let key = format!("{}:{}", table_name, &$key.to_string());
-        $self.cache.invalidate(&key);
+    ($self:ident($key:expr => $bo:ident)) => {
+        let table_name = crate::macros::repository::pure_name(stringify!($bo));
+        let key = $key.to_string();
+        let cache = $self.cache.get(&table_name).unwrap();
+        cache.invalidate(&key);
     }
 }

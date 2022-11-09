@@ -163,7 +163,7 @@ impl Service {
 
         match result {
             Ok(_) => {
-                cache_invalidate!(self(&input.id));
+                cache_invalidate!(self(&input.id => {{upperCamel name}}));
                 Ok(())
             },
             Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
@@ -185,7 +185,7 @@ impl Service {
 
         match result {
             Ok(_) => {
-                cache_invalidate!(self(&input.id));
+                cache_invalidate!(self(&input.id => {{upperCamel name}}));
                 Ok(())
             },
             Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
@@ -196,7 +196,7 @@ impl Service {
 
         match result {
             Ok(_) => {
-                cache_invalidate!(self(&id));
+                cache_invalidate!(self(&id => {{upperCamel name}}));
                 Ok(())
             },
             Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound),
@@ -208,7 +208,7 @@ impl Service {
         match result {
             Ok(_) => {
                 for id in ids {
-                    cache_invalidate!(self(&id));
+                    cache_invalidate!(self(&id => {{upperCamel name}}));
                 }
                 Ok(())
             },

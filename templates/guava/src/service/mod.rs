@@ -1,4 +1,4 @@
-use std::sync::{Arc};
+use std::{sync::{Arc}, collections::HashMap};
 
 use moka::sync::Cache;
 
@@ -12,13 +12,17 @@ pub mod {{name}}_service;
 pub struct Service {
     repo: Repository,
     db: DB, // 为了调用事物
-    cache: ServiceCache
+    cache: Arc<HashMap<String, ServiceCache>>
 }
 
 impl Service {
     pub fn new(db: DB ) -> Service {
         let repo = Repository::new();
-        let cache = Arc::new(Cache::new(10_000));
+        let cache = Arc::new(HashMap::from([
+            {{#each tables}}
+            ("{{name}}".to_string(), Arc::new(Cache::new(10_000))),
+            {{/each}}
+        ]));
         Service {
             db,
             repo,

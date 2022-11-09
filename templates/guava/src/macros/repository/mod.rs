@@ -289,8 +289,14 @@ pub(crate) use impl_repo_delete;
 
 use crate::drivers::db::get_db_type;
 
+pub fn pure_name(bo_name: &str) -> String {
+    let name = rbatis::utils::string_util::to_snake_name(&bo_name).trim_end_matches("_option_bo").trim_end_matches("_bo").to_string();
+    name
+}
+
+
 pub fn to_sql_table_name(table_name: &str) -> String {
-    let name = rbatis::utils::string_util::to_snake_name(&table_name).trim_end_matches("_option_bo").trim_end_matches("_bo").to_string();
+    let name = pure_name(table_name);
     let name = match name.as_str() {
 {{#each tables }}
 {{#if prefix}}
