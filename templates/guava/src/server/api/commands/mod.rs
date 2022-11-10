@@ -31,7 +31,7 @@ impl<T> Resp<T> {
     pub fn ok(data: T) -> AppResult<T> {
         Ok(Json(Self {
             code: 0,
-            msg: "success".to_string(),
+            msg: "ok".to_string(),
             data: Some(data),
         }))
     }
