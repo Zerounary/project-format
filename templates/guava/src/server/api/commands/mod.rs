@@ -21,6 +21,7 @@ pub type AppResult<T> = Result<Json<Resp<T>>, AppError>;
 pub struct Resp<T> {
     code: i32,
     msg: String,
+    total: Option<i64>,
     data: Option<T>,
 }
 
@@ -28,11 +29,20 @@ pub struct Resp<T> {
 pub struct Empty;
 
 impl<T> Resp<T> {
+    pub fn page(total: i64, data: T) -> AppResult<T> {
+        Ok(Json(Self {
+            code: 0,
+            msg: "ok".to_string(),
+            data: Some(data),
+            total: Some(total)
+        }))
+    }
     pub fn ok(data: T) -> AppResult<T> {
         Ok(Json(Self {
             code: 0,
             msg: "ok".to_string(),
             data: Some(data),
+            total: None
         }))
     }
 }
@@ -42,5 +52,6 @@ pub fn resp_err(code: i32, msg: String) -> Json<Resp<Empty>> {
         code,
         msg,
         data: None,
+        total: None,
     })
 }

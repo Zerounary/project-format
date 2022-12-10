@@ -67,6 +67,13 @@ impl Service {
         }
     }
 
+    pub async fn count_{{snake name}}(&self) -> Result<i64, {{upperCamel this.name}}RepoError> {
+        match self.repo.count_{{snake name}}(&self.db).await {
+            Ok(count) => Ok(count),
+            Err(_e) => Err({{upperCamel this.name}}RepoError::NotFound)
+        }
+    }
+
     pub async fn find_{{snake this.name}}_page(&self, bo: {{upperCamel this.name}}OptionBO, page_num: i64, page_size: i64) -> Result<Vec<{{upperCamel this.name}}BO>, {{upperCamel this.name}}RepoError> {
         let result = self.repo.select_{{snake this.name}}_page(&self.db, bo, page_num, page_size).await;
         match result {

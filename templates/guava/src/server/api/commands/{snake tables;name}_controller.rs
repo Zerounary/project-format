@@ -52,9 +52,10 @@ pub async fn find_{{snake this.name}}_page(
 ) -> AppResult<Vec<{{upperCamel this.name}}VO>> {
     let page_num = params.page_num.unwrap_or(1);
     let page_size = params.page_size.unwrap_or(10);
+    let total = state.service.count_{{snake this.name}}().await?;
     let result = state.service.find_{{snake this.name}}_page(params.into(), page_num, page_size).await?;
     let vos = result.into_iter().map(|x| x.into()).collect_vec();
-    Resp::ok(vos)
+    Resp::page(total, vos)
 }
 
 pub async fn create_{{snake this.name}}(
