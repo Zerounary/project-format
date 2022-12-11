@@ -10,8 +10,8 @@ pub mod {{name}}_service;
 
 #[derive(Debug)]
 pub struct Service {
-    repo: Repository,
-    db: DB, // 为了调用事物
+    pub repo: Repository,
+    pub db: DB, // 为了调用事物
     cache: Arc<HashMap<String, ServiceCache>>
 }
 

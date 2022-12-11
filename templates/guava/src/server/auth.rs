@@ -7,19 +7,11 @@ use axum::{
     Extension, TypedHeader,
 };
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+use smart_default::SmartDefault;
+use super::api::commands::State;
 
-pub enum UserSession {
-    FoundUser(UserId),
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-pub struct UserId(Uuid);
-
-impl UserId {
-    fn new() -> Self {
-        Self(Uuid::new_v4())
-    }
+pub enum GuavaSession {
+    FoundUser(SessionUser),
 }
 
 const AXUM_SESSION_COOKIE_NAME: &str = "axum_session";
@@ -31,24 +23,40 @@ pub struct LoginParams {
     password: String,
 }
 
+
+#[derive(Debug, SmartDefault, Clone, Serialize, Deserialize)]
+pub struct SessionUser {
+    pub id: i64,
+    pub name: String,
+    pub password: String,
+    pub store_id: i64,
+    pub dept_id: i64,
+    pub tenant_id: i64,
+}
+
+
 pub async fn login(
     Query(params): Query<LoginParams>,
+    Extension(state): State,
     Extension(store): Extension<MemoryStore>,
 ) -> impl IntoResponse {
-    if params.username.eq("123") && params.password.eq("123") {
-        let user_id = UserId::new();
-        let mut session = Session::new();
-        session.insert("user_id", user_id).unwrap();
-        let cookie = store.store_session(session).await.unwrap().unwrap();
-        let mut headers = HeaderMap::new();
-        let cookie =
-            HeaderValue::from_str(format!("{}={}", AXUM_SESSION_COOKIE_NAME, cookie).as_str())
-                .unwrap();
-        headers.insert(http::header::SET_COOKIE, cookie);
-        (headers, StatusCode::OK)
-    } else {
-        (HeaderMap::new(), StatusCode::UNAUTHORIZED)
+    let result = state.service.repo.select_session_user_by_name(&state.service.db, &params.username).await;
+    if let Ok(user) = result  {
+        if params.password.eq(&user.password) {
+            let mut session = Session::new();
+            session.insert("user_bo", user).unwrap();
+            let cookie = store.store_session(session).await.unwrap().unwrap();
+            let mut headers = HeaderMap::new();
+            let cookie =
+                HeaderValue::from_str(format!("{}={}", AXUM_SESSION_COOKIE_NAME, cookie).as_str())
+                    .unwrap();
+            headers.insert(http::header::SET_COOKIE, cookie);
+            return (headers, StatusCode::OK)
+        }
+
     }
+    (HeaderMap::new(), StatusCode::UNAUTHORIZED)
+
 }
 
 pub async fn logout(
@@ -69,13 +77,13 @@ pub async fn logout(
     StatusCode::OK
 }
 
-pub async fn check_auth(UserSession::FoundUser(user): UserSession) -> impl IntoResponse {
+pub async fn check_auth(GuavaSession::FoundUser(user): GuavaSession) -> impl IntoResponse {
     println!("{:?}", format!("{:?}", user));
     "ok"
 }
 
 #[async_trait]
-impl<B> FromRequest<B> for UserSession
+impl<B> FromRequest<B> for GuavaSession
 where
     B: Send,
 {
@@ -105,21 +113,21 @@ where
             session_cookie.unwrap()
         );
         // continue to decode the session cookie
-        let user_id = if let Some(session) = store
+        let user_bo = if let Some(session) = store
             .load_session(session_cookie.unwrap().to_owned())
             .await
             .unwrap()
         {
-            if let Some(user_id) = session.get::<UserId>("user_id") {
+            if let Some(user_bo) = session.get::<SessionUser>("user_bo") {
                 log::debug!(
-                    "UserIdFromSession: session decoded success, user_id={:?}",
-                    user_id
+                    "UserIdFromSession: session decoded success, user_bo={:?}",
+                    user_bo
                 );
-                user_id
+                user_bo
             } else {
                 return Err((
                     StatusCode::INTERNAL_SERVER_ERROR,
-                    "No `user_id` found in session",
+                    "No `user_bo` found in session",
                 ));
             }
         } else {
@@ -131,6 +139,6 @@ where
             return Err((StatusCode::UNAUTHORIZED, "No session found for cookie"));
         };
 
-        Ok(Self::FoundUser(user_id))
+        Ok(Self::FoundUser(user_bo))
     }
 }

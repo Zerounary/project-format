@@ -303,6 +303,9 @@ pub fn to_sql_table_name(table_name: &str) -> String {
         "{{name}}" => String::from("{{prefix}}{{name}}"),
 {{/if}}
 {{/each}}
+{{#if auth}}
+        "session_user" => String::from("sys_user"),
+{{/if}}
         _ => name,
     };
     match get_db_type() {

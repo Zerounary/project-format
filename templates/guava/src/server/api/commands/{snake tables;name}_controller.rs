@@ -1,5 +1,6 @@
 
 use crate::{
+    server::auth::GuavaSession,
     server::api::model::{{snake this.name}}_vo::{{upperCamel this.name}}VO,
     server::api::model::{{snake this.name}}_opt_vo::{{upperCamel this.name}}OptionVO,
     server::api::model::{{snake this.name}}_create_vo::Create{{upperCamel this.name}}VO,
@@ -18,6 +19,9 @@ use super::{AppResult, Resp, State};
 
 pub async fn find_{{snake this.name}}_by_id(
     Path(id): Path<i64>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Extension(state): State,
 ) -> AppResult<{{upperCamel this.name}}VO> {
     let res = state.service.find_{{snake this.name}}_by_id(id).await?;
@@ -28,6 +32,9 @@ pub async fn find_{{snake this.name}}_by_id(
 
 pub async fn find_{{snake this.name}}_by_id_no_cache(
     Path(id): Path<i64>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Extension(state): State,
 ) -> AppResult<{{upperCamel this.name}}VO> {
     let res = state.service.find_{{snake this.name}}_by_id_no_cache(id).await?;
@@ -38,6 +45,9 @@ pub async fn find_{{snake this.name}}_by_id_no_cache(
 
 pub async fn find_{{snake this.name}}_list(
     Json(params): Json<{{upperCamel this.name}}OptionVO>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Extension(state): State,
 ) -> AppResult<Vec<{{upperCamel this.name}}VO>> {
     let result = state.service.find_{{snake this.name}}_list(params.into()).await?;
@@ -48,6 +58,9 @@ pub async fn find_{{snake this.name}}_list(
 
 pub async fn find_{{snake this.name}}_page(
     Json(params): Json<{{upperCamel this.name}}OptionVO>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Extension(state): State,
 ) -> AppResult<Vec<{{upperCamel this.name}}VO>> {
     let page_num = params.page_num.unwrap_or(1);
@@ -60,6 +73,9 @@ pub async fn find_{{snake this.name}}_page(
 
 pub async fn create_{{snake this.name}}(
     Json(params): Json<Create{{upperCamel this.name}}VO>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Extension(state): State,
 ) -> AppResult<i64> {
     let service_input: Create{{upperCamel this.name}}Input = params.into();
@@ -70,6 +86,9 @@ pub async fn create_{{snake this.name}}(
 
 pub async fn create_{{snake this.name}}_batch(
     Json(params): Json<Vec<Create{{upperCamel this.name}}VO>>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Extension(state): State,
 ) -> AppResult<Vec<String>> {
     let service_input: Vec<Create{{upperCamel this.name}}Input> = params.into_iter().map(|x| x.into()).collect();
@@ -81,6 +100,9 @@ pub async fn create_{{snake this.name}}_batch(
 
 pub async fn update_{{snake this.name}}(
     Path(id): Path<i64>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Json(mut params): Json<Update{{upperCamel this.name}}VO>,
     Extension(state): State,
 ) -> AppResult<bool> {
@@ -93,6 +115,9 @@ pub async fn update_{{snake this.name}}(
 
 pub async fn update_{{snake this.name}}_opt(
     Path(id): Path<i64>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Json(mut params): Json<Update{{upperCamel this.name}}OptionVO>,
     Extension(state): State,
 ) -> AppResult<bool> {
@@ -104,6 +129,9 @@ pub async fn update_{{snake this.name}}_opt(
 
 pub async fn delete_{{snake this.name}}_ids(
     Path(ids): Path<String>,
+{{#if auth}}
+    GuavaSession::FoundUser(user): GuavaSession,
+{{/if}}
     Extension(state): State
 ) -> impl IntoResponse {
     let ids: Vec<i64> = ids.split(",").into_iter().map(|x| x.trim().parse().unwrap_or(-1)).collect();

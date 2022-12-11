@@ -55,9 +55,12 @@ async fn main() -> anyhow::Result<()> {
 
     // build our application with a route
     let app = Router::new()
+
+{{#if auth}}
         .route("/api/login", get(login))
         .route("/api/logout", get(logout))
         .route("/api/auth", get(check_auth))
+{{/if}}
         {{#each tables}}
         .route("/api/{{ this.name }}/list", post(find_{{ this.name }}_list))
         .route("/api/{{ this.name }}/page", post(find_{{ this.name }}_page))

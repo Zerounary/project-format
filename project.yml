@@ -4,10 +4,12 @@ project:
     output: "../guava-erp"
   data:
     project_name: "guava-erp"
+    auth: 1,
     tables:
       - {
           prefix: "b_",
           name: "category",
+          auth: 1,
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
