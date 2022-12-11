@@ -12,8 +12,10 @@ use crate::{
         {{this.name}}_controller::{find_{{ this.name }}_page, find_{{ this.name }}_list, delete_{{ this.name }}_ids, find_{{ this.name }}_by_id, update_{{ this.name }}, update_{{ this.name }}_opt, create_{{ this.name }}, create_{{ this.name }}_batch},
         {{/each}}
     },
+    server::auth::{login, logout, check_auth},
     service::Service,
 };
+use async_session::{ MemoryStore,};
 use axum::{
     routing::{get, post},
     Extension, Router,
@@ -49,9 +51,13 @@ async fn main() -> anyhow::Result<()> {
         redis,
     });
 
+    let session_store = MemoryStore::new();
+
     // build our application with a route
     let app = Router::new()
-
+        .route("/api/login", get(login))
+        .route("/api/logout", get(logout))
+        .route("/api/auth", get(check_auth))
         {{#each tables}}
         .route("/api/{{ this.name }}/list", post(find_{{ this.name }}_list))
         .route("/api/{{ this.name }}/page", post(find_{{ this.name }}_page))
@@ -63,6 +69,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/{{ this.name }}/batch", post(create_{{ this.name }}_batch))
         {{/each}}
         .merge(axum_extra::routing::SpaRouter::new("/assets", "dist/assets").index_file("../index.html")) // 静态页面直接复制dist目录到guava同级目录 会匹配首页
+        .layer(Extension(session_store))
         .layer(Extension(service))
         .layer(TraceLayer::new_for_http());
 

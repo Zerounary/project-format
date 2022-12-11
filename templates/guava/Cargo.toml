@@ -15,7 +15,7 @@ readme = "README.md"
 
 
 [dependencies]
-axum = "0.5.15"
+axum = { version = "0.5.15", features = ["headers"]}
 axum-extra = { version =  "0.3.7", features = ["spa"]}
 tokio = { version =  "1.20.1", features = ["full"]}
 tower-http = { version = "0.3.0", features = ["fs", "trace"] }
@@ -33,6 +33,7 @@ smart-default = "0.6.0"
 fastdate = "0.1.29"
 
 moka = "0.9.3"
+async-session = "3.0.0"
 
 rbs = "0.1.11"
 rbatis = "4.0.39"
