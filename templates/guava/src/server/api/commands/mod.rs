@@ -2,7 +2,7 @@
 pub mod {{name}}_controller;
 {{/each}}
 
-use crate::{server::error::AppError, AppState};
+use crate::{server::error::AppError, AppState, service::Service};
 use axum::{response::Json, Extension};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -13,7 +13,7 @@ use rbatis::rbdc::{decimal::Decimal, date::Date};
 
 // TODO 用 type 别名来收缩复杂的类型
 
-pub type State = Extension<Arc<AppState>>;
+pub type State = Extension<Arc<Service>>;
 
 pub type AppResult<T> = Result<Json<Resp<T>>, AppError>;
 

@@ -26,10 +26,13 @@ use tower_http::{trace::TraceLayer};
 use std::{env, net::SocketAddr, sync::Arc};
 use tokio::signal;
 
+pub type Redis = Pool<Manager, Connection>;
+
 pub struct AppState {
     service: Service,
-    redis: Pool<Manager, Connection>,
+    // redis: Pool<Manager, Connection>,
 }
+
 
 
 #[tokio::main]
@@ -46,10 +49,7 @@ async fn main() -> anyhow::Result<()> {
 
     // Inject a `AppState` into our handlers via a trait object. This could be
     // the live implementation or just a mock for testing.
-    let service = Arc::new(AppState {
-        service: Service::new(db),
-        redis,
-    });
+    let service = Arc::new(Service::new(db.clone()));
 
     let session_store = MemoryStore::new();
 
@@ -73,7 +73,9 @@ async fn main() -> anyhow::Result<()> {
         {{/each}}
         .merge(axum_extra::routing::SpaRouter::new("/assets", "dist/assets").index_file("../index.html")) // 静态页面直接复制dist目录到guava同级目录 会匹配首页
         .layer(Extension(session_store))
+        .layer(Extension(db.clone()))
         .layer(Extension(service))
+        .layer(Extension(redis))
         .layer(TraceLayer::new_for_http());
 
     // run it

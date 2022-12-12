@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use async_session::{async_trait, MemoryStore, Session, SessionStore};
 use axum::{
     extract::{FromRequest, Query, RequestParts},
@@ -8,10 +10,12 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
-use super::api::commands::State;
+use crate::{drivers::db::DB, server::api::commands::Resp, service::Service, AppState};
+
+use super::api::commands::{State, AppResult};
 
 pub enum GuavaSession {
-    FoundUser(SessionUser),
+    FoundUser((SessionUser, Service)),
 }
 
 const AXUM_SESSION_COOKIE_NAME: &str = "axum_session";
@@ -37,10 +41,10 @@ pub struct SessionUser {
 
 pub async fn login(
     Query(params): Query<LoginParams>,
-    Extension(state): State,
+    Extension(service): State,
     Extension(store): Extension<MemoryStore>,
 ) -> impl IntoResponse {
-    let result = state.service.repo.select_session_user_by_name(&state.service.db, &params.username).await;
+    let result = service.repo.select_session_user_by_name(&service.db, &params.username).await;
     if let Ok(user) = result  {
         if params.password.eq(&user.password) {
             let mut session = Session::new();
@@ -77,9 +81,10 @@ pub async fn logout(
     StatusCode::OK
 }
 
-pub async fn check_auth(GuavaSession::FoundUser(user): GuavaSession) -> impl IntoResponse {
-    println!("{:?}", format!("{:?}", user));
-    "ok"
+pub async fn check_auth(GuavaSession::FoundUser((user, service2)): GuavaSession, Extension(service): Extension<Arc<Service>>) -> AppResult<i64> {
+    // println!("{:?}", format!("{:?}", user));
+    let result = service.count_category().await?;
+    Resp::ok(result)
 }
 
 #[async_trait]
@@ -93,6 +98,10 @@ where
         let Extension(store) = Extension::<MemoryStore>::from_request(req)
             .await
             .expect("`MemoryStore` extension missing");
+
+        let Extension(db) = Extension::<DB>::from_request(req)
+            .await
+            .expect("`DB` extension missing");
 
         let cookie = Option::<TypedHeader<Cookie>>::from_request(req)
             .await
@@ -139,6 +148,6 @@ where
             return Err((StatusCode::UNAUTHORIZED, "No session found for cookie"));
         };
 
-        Ok(Self::FoundUser(user_bo))
+        Ok(Self::FoundUser((user_bo.clone(), Service::new_scope(db.clone(), user_bo.clone()))))
     }
 }
