@@ -1,5 +1,14 @@
-use std::{sync::Arc, collections::HashMap};
+use std::{collections::HashMap, sync::Arc};
 
+use crate::{
+    drivers::{
+        cache::ServiceCache,
+        db::{get_db_type, DB},
+    },
+    server::api::commands::Resp,
+    service::Service,
+    AppState,
+};
 use async_session::{async_trait, MemoryStore, Session, SessionStore};
 use axum::{
     extract::{FromRequest, Query, RequestParts},
@@ -11,9 +20,8 @@ use axum::{
 use rbatis::{intercept::SqlIntercept, Rbatis};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
-use crate::{drivers::{db::DB, cache::ServiceCache}, server::api::commands::Resp, service::Service, AppState};
 
-use super::api::commands::{State, AppResult};
+use super::api::commands::{AppResult, State};
 
 pub enum GuavaSession {
     FoundUser((SessionUser, Service)),
@@ -28,7 +36,6 @@ pub struct LoginParams {
     password: String,
 }
 
-
 #[derive(Debug, SmartDefault, Clone, Serialize, Deserialize)]
 pub struct SessionUser {
     pub id: i64,
@@ -39,14 +46,16 @@ pub struct SessionUser {
     pub tenant_id: i64,
 }
 
-
 pub async fn login(
     Query(params): Query<LoginParams>,
     Extension(service): State,
     Extension(store): Extension<MemoryStore>,
 ) -> impl IntoResponse {
-    let result = service.repo.select_session_user_by_name(&service.db, &params.username).await;
-    if let Ok(user) = result  {
+    let result = service
+        .repo
+        .select_session_user_by_name(&service.db, &params.username)
+        .await;
+    if let Ok(user) = result {
         if params.password.eq(&user.password) {
             let mut session = Session::new();
             session.insert("user_bo", user).unwrap();
@@ -56,12 +65,10 @@ pub async fn login(
                 HeaderValue::from_str(format!("{}={}", AXUM_SESSION_COOKIE_NAME, cookie).as_str())
                     .unwrap();
             headers.insert(http::header::SET_COOKIE, cookie);
-            return (headers, StatusCode::OK)
+            return (headers, StatusCode::OK);
         }
-
     }
     (HeaderMap::new(), StatusCode::UNAUTHORIZED)
-
 }
 
 pub async fn logout(
@@ -82,7 +89,10 @@ pub async fn logout(
     StatusCode::OK
 }
 
-pub async fn check_auth(GuavaSession::FoundUser((user, service2)): GuavaSession, Extension(service): Extension<Arc<Service>>) -> AppResult<i64> {
+pub async fn check_auth(
+    GuavaSession::FoundUser((user, service2)): GuavaSession,
+    Extension(service): Extension<Arc<Service>>,
+) -> AppResult<i64> {
     // println!("{:?}", format!("{:?}", user));
     let result = service.count_category().await?;
     Resp::ok(result)
@@ -154,29 +164,106 @@ where
         };
 
         let mut db = db.clone();
-        db.set_sql_intercepts(vec![Box::new(UserIntercept{
-            user: user_bo.clone()
+        db.set_sql_intercepts(vec![Box::new(UserIntercept {
+            user: user_bo.clone(),
         })]);
-        Ok(Self::FoundUser((user_bo.clone(), Service::new_scope(db, user_bo.clone(), cache))))
+        Ok(Self::FoundUser((
+            user_bo.clone(),
+            Service::new_scope(db, user_bo.clone(), cache),
+        )))
     }
 }
 
-
 #[derive(Debug)]
-pub struct UserIntercept{
+pub struct UserIntercept {
     user: SessionUser,
 }
 
-impl SqlIntercept for UserIntercept{
+use regex::Regex;
+
+impl SqlIntercept for UserIntercept {
     /// do intercept sql/args
     /// is_prepared_sql: if is run in prepared_sql=ture
-    fn do_intercept(&self, rb: &Rbatis, sql: &mut String, args: &mut Vec<rbs::Value>, is_prepared_sql: bool) -> Result<(), rbatis::Error>{
-        println!("sql=>{}",sql);
-        println!("args=>{:?}",args);
-        // args.push(to_value!(self.userId));
-        sql.push_str(&format!(" and tenant_id = {} ", self.user.tenant_id));
-        println!("args=>{:?}",args);
-        println!("[LogicDeletePlugin] after=> {}", sql);
-        Ok(())
+    fn do_intercept(
+        &self,
+        rb: &Rbatis,
+        sql: &mut String,
+        args: &mut Vec<rbs::Value>,
+        is_prepared_sql: bool,
+    ) -> Result<(), rbatis::Error> {
+        let plugin_name = "[UserIntercept]: ";
+        let upper_sql = sql.clone().to_uppercase().trim().to_string();
+        if upper_sql.contains("SELECT") {
+            let regex = match get_db_type() {
+                crate::drivers::db::DB_TYPE::Mysql => Regex::new("`[a-zA-Z0-9_]+`").unwrap(),
+                crate::drivers::db::DB_TYPE::Pg => Regex::new("\"[a-zA-Z0-9_]+\"").unwrap(),
+                crate::drivers::db::DB_TYPE::Sqlite => Regex::new("\"[a-zA-Z0-9_]+\"").unwrap(),
+            };
+            if let Some(_captures) = regex.captures(&sql.clone()) {
+                for (i, caps) in regex.captures_iter(&sql.clone()).enumerate() {
+                    let table_name = caps[0].to_string();
+                    let limit_table_name = format!(
+                        "(select * from {} where tenant_id = {})",
+                        table_name, self.user.tenant_id
+                    );
+                    *sql = sql.replace(&table_name, &limit_table_name);
+                }
+                Ok(())
+            } else {
+                log::error!("{}表名未使用符号包裹, sql => {} ", plugin_name, sql);
+                Err(rbatis::Error::E(format!(
+                    "{}表名未使用符号包裹",
+                    plugin_name
+                )))
+            }
+        } else if upper_sql.contains("DELETE FROM") {
+            if upper_sql.contains("WHERE") {
+                sql.push_str(&format!(" and tenant_id = {}", self.user.tenant_id));
+                Ok(())
+            } else {
+                Err(rbatis::Error::E(format!(
+                    "{}删除时不可没有条件",
+                    plugin_name
+                )))
+            }
+        } else if upper_sql.contains("UPDATE") {
+            if upper_sql.contains("WHERE") {
+                sql.push_str(&format!(" and tenant_id = {}", self.user.tenant_id));
+                Ok(())
+            } else {
+                Err(rbatis::Error::E(format!(
+                    "{}更新时不可没有条件",
+                    plugin_name
+                )))
+            }
+        } else if upper_sql.contains("INSERT INTO") {
+            let regex = Regex::new(r"\(.+?\)").unwrap();
+            if let Some(_captures) = regex.captures(&sql.clone()) {
+                for (i, caps) in regex.captures_iter(&sql.clone()).enumerate() {
+                    let matched_str = caps[0].to_string();
+                    let matched_content = matched_str
+                        .clone()
+                        .trim_start_matches("(")
+                        .trim_end_matches(")")
+                        .to_string();
+                    let result_str = if i == 0 {
+                        format!("({}, tenant_id)", matched_content)
+                    } else {
+                        format!("({}, {})", matched_content, self.user.tenant_id)
+                    };
+                    *sql = sql.replace(&matched_str, &result_str);
+                }
+                Ok(())
+            } else {
+                log::error!("{}不能识别的新增语句, sql => {} ", plugin_name, sql);
+                Err(rbatis::Error::E(format!(
+                    "{}不能识别的新增语句",
+                    plugin_name
+                )))
+            }
+        } else {
+            log::error!("{}未知SQL, sql => {} ", plugin_name, sql);
+            Err(rbatis::Error::E(format!("{}未知SQL", plugin_name)))
+        }
     }
 }

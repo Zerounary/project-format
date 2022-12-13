@@ -156,7 +156,7 @@ macro_rules! impl_repo_select {
     ($table:ty{$fn_name:ident($($param_key:ident:$param_type:ty$(,)?)*) -> $container:tt => $sql:expr}) => {
         impl Repository{
             pub async fn $fn_name(&self, mut rb: &DB, $($param_key:$param_type,)*)->Result<$container<$table>, rbatis::rbdc::Error>{
-                #[rbatis::py_sql("`select ${table_column} from ${table_name} `",$sql)]
+                #[rbatis::py_sql("`select ${table_column} from ${table_name} t `",$sql)]
                 async fn $fn_name(rb: &mut dyn rbatis::executor::Executor,table_column:&str,table_name:&str,$($param_key:$param_type,)*) -> Result<$container<$table>,rbatis::rbdc::Error> {impled!()}
                 let mut table_column = "*".to_string();
                 let mut table_name = crate::macros::repository::to_sql_table_name(stringify!($table));
@@ -170,7 +170,7 @@ macro_rules! impl_repo_select_one {
     ($table:ty{$fn_name:ident}) => {
         impl Repository{
             pub async fn $fn_name(&self, mut rb: &DB, id: i64)->Result<$table, rbatis::Error>{
-                #[rbatis::py_sql("`select ${table_column} from ${table_name} `", "`where id = #{id}`")]
+                #[rbatis::py_sql("`select ${table_column} from ${table_name} t `", "`where id = #{id}`")]
                 async fn $fn_name(rb: &mut dyn rbatis::executor::Executor,table_column:&str,table_name:&str, id: i64) -> Result<Option<$table>,rbatis::rbdc::Error> {impled!()}
                 let table_column = "*".to_string();
                 let table_name = crate::macros::repository::to_sql_table_name(stringify!($table));
@@ -193,7 +193,7 @@ macro_rules! impl_repo_select_one {
     ($table:ty{$fn_name:ident($($param_key:ident:$param_type:ty$(,)?)*) => $sql:expr}) => {
         impl Repository{
             pub async fn $fn_name(&self, mut rb: &DB, $($param_key:$param_type,)*)->Result<$table, rbatis::Error>{
-                #[rbatis::py_sql("`select ${table_column} from ${table_name} `", $sql)]
+                #[rbatis::py_sql("`select ${table_column} from ${table_name} t `", $sql)]
                 async fn $fn_name(rb: &mut dyn rbatis::executor::Executor,table_column:&str,table_name:&str,$($param_key:$param_type,)*) -> Result<Option<$table>,rbatis::rbdc::Error> {impled!()}
                 let table_column = "*".to_string();
                 let table_name = crate::macros::repository::to_sql_table_name(stringify!($table));
@@ -219,7 +219,7 @@ macro_rules! impl_repo_select_list {
     ($table:ty{$fn_name:ident($($param_key:ident:$param_type:ty$(,)?)*) => $sql:expr}) => {
         impl Repository{
             pub async fn $fn_name(&self, mut rb: &DB, $($param_key:$param_type,)*)->Result<Vec<$table>, rbatis::Error>{
-                #[rbatis::py_sql("`select ${table_column} from ${table_name} `", $sql)]
+                #[rbatis::py_sql("`select ${table_column} from ${table_name} t `", $sql)]
                 async fn $fn_name(rb: &mut dyn rbatis::executor::Executor,table_column:&str,table_name:&str,$($param_key:$param_type,)*) -> Result<Vec<$table>,rbatis::rbdc::Error> {impled!()}
                 let table_column = "*".to_string();
                 let table_name = crate::macros::repository::to_sql_table_name(stringify!($table));
@@ -240,7 +240,7 @@ macro_rules! impl_repo_select_page {
     ($table:ty{$fn_name:ident($($param_key:ident:$param_type:ty$(,)?)*) => $sql:expr}) => {
         impl Repository{
             pub async fn $fn_name(&self, mut rb: &DB, $($param_key:$param_type,)* page_num: i64, page_size: i64)->Result<Vec<$table>, rbatis::Error>{
-                #[rbatis::py_sql("`select ${table_column} from ${table_name} `", $sql)]
+                #[rbatis::py_sql("`select ${table_column} from ${table_name} t `", $sql)]
                 async fn $fn_name(rb: &mut dyn rbatis::executor::Executor,table_column:&str,table_name:&str,$($param_key:$param_type,)* page_start: i64, page_size: i64) -> Result<Vec<$table>,rbatis::rbdc::Error> {impled!()}
                 let table_column = "*".to_string();
                 let table_name = crate::macros::repository::to_sql_table_name(stringify!($table));

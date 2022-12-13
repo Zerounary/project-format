@@ -34,6 +34,7 @@ fastdate = "0.1.29"
 
 moka = "0.9.3"
 async-session = "3.0.0"
+regex = "1.7.0"
 
 rbs = "0.1.11"
 rbatis = "4.0.39"
