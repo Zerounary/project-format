@@ -193,6 +193,11 @@ impl SqlIntercept for UserIntercept {
     ) -> Result<(), rbatis::Error> {
         let plugin_name = "[UserIntercept]: ";
         let upper_sql = sql.clone().to_uppercase().trim().to_string();
+        let current_time = match get_db_type() {
+            crate::drivers::db::DB_TYPE::Mysql => "now()",
+            crate::drivers::db::DB_TYPE::Pg => "sysdate",
+            crate::drivers::db::DB_TYPE::Sqlite => "datetime()",
+        };
         if upper_sql.contains("SELECT") {
             let regex = match get_db_type() {
                 crate::drivers::db::DB_TYPE::Mysql => Regex::new("`[a-zA-Z0-9_]+`").unwrap(),
@@ -228,6 +233,8 @@ impl SqlIntercept for UserIntercept {
             }
         } else if upper_sql.contains("UPDATE") {
             if upper_sql.contains("WHERE") {
+                let set_end_pos = upper_sql.find("WHERE").unwrap_or(0);
+                sql.insert_str(set_end_pos, &format!( ", updated={},updated_time={}", self.user.id, current_time));
                 sql.push_str(&format!(" and tenant_id = {}", self.user.tenant_id));
                 Ok(())
             } else {
@@ -247,9 +254,9 @@ impl SqlIntercept for UserIntercept {
                         .trim_end_matches(")")
                         .to_string();
                     let result_str = if i == 0 {
-                        format!("({},tenant_id)", matched_content)
+                        format!("({},tenant_id,created,created_time,updated,updated_time)", matched_content)
                     } else {
-                        format!("({},{})", matched_content, self.user.tenant_id)
+                        format!("({},{},{},{},{},{})", matched_content, self.user.tenant_id, self.user.id, current_time, self.user.id, current_time)
                     };
                     *sql = sql.replace(&matched_str, &result_str);
                 }
