@@ -247,9 +247,9 @@ impl SqlIntercept for UserIntercept {
                         .trim_end_matches(")")
                         .to_string();
                     let result_str = if i == 0 {
-                        format!("({}, tenant_id)", matched_content)
+                        format!("({},tenant_id)", matched_content)
                     } else {
-                        format!("({}, {})", matched_content, self.user.tenant_id)
+                        format!("({},{})", matched_content, self.user.tenant_id)
                     };
                     *sql = sql.replace(&matched_str, &result_str);
                 }

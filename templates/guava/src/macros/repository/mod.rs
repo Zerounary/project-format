@@ -75,8 +75,8 @@ macro_rules! impl_repo_insert {
                     "`insert into ${table_name} (`
             trim ',':
               for k,v in tables[0]:
-                  if k == 'id' && v== null:
-                    continue:
+                if k == 'id':
+                  continue:
                 ${k},
             `) VALUES `
             trim ',':
@@ -84,7 +84,7 @@ macro_rules! impl_repo_insert {
                 (
                   trim ',':
                     for k,v in table:
-                      if k == 'id' && v== null:
+                      if k == 'id':
                         continue:
                       #{v},
                 ),
