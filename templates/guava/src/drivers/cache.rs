@@ -1,5 +1,5 @@
 use moka::sync::Cache;
-use std::sync::Arc;
+use std::{sync::Arc, collections::HashMap};
 
 use crate::{
     {{#each tables}}
@@ -43,7 +43,11 @@ macro_rules! cache_value {
 macro_rules! cache {
     ($self:ident($key:ident) -> Result<$bo:ident, $err:ident> $block:block) => {
         let table_name = crate::macros::repository::pure_name(stringify!($bo));
-        let key = $key.to_string();
+        let key  = if  let Some(user) = $self.user.clone() {
+            format!("{}-{}", user.tenant_id, $key.to_string())
+        }else {
+            $key.to_string()
+        };
         let cache = $self.cache.get(&table_name).unwrap();
         match cache.get(&key) {
             Some(e) => {
@@ -67,4 +71,12 @@ macro_rules! cache_invalidate {
         let cache = $self.cache.get(&table_name).unwrap();
         cache.invalidate(&key);
     }
+}
+
+pub fn init_cache() -> Arc<HashMap<String, ServiceCache>>{
+    Arc::new(HashMap::from([
+        {{#each tables}}
+        ("{{name}}".to_string(), Arc::new(Cache::new(10_000))),
+        {{/each}}
+    ]))
 }

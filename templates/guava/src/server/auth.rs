@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{sync::Arc, collections::HashMap};
 
 use async_session::{async_trait, MemoryStore, Session, SessionStore};
 use axum::{
@@ -8,9 +8,10 @@ use axum::{
     response::IntoResponse,
     Extension, TypedHeader,
 };
+use rbatis::{intercept::SqlIntercept, Rbatis};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
-use crate::{drivers::db::DB, server::api::commands::Resp, service::Service, AppState};
+use crate::{drivers::{db::DB, cache::ServiceCache}, server::api::commands::Resp, service::Service, AppState};
 
 use super::api::commands::{State, AppResult};
 
@@ -103,6 +104,10 @@ where
             .await
             .expect("`DB` extension missing");
 
+        let Extension(cache) = Extension::<Arc<HashMap<String, ServiceCache>>>::from_request(req)
+            .await
+            .expect("`Arc<HashMap<String, ServiceCache>>` extension missing");
+
         let cookie = Option::<TypedHeader<Cookie>>::from_request(req)
             .await
             .unwrap();
@@ -148,6 +153,30 @@ where
             return Err((StatusCode::UNAUTHORIZED, "No session found for cookie"));
         };
 
-        Ok(Self::FoundUser((user_bo.clone(), Service::new_scope(db.clone(), user_bo.clone()))))
+        let mut db = db.clone();
+        db.set_sql_intercepts(vec![Box::new(UserIntercept{
+            user: user_bo.clone()
+        })]);
+        Ok(Self::FoundUser((user_bo.clone(), Service::new_scope(db, user_bo.clone(), cache))))
+    }
+}
+
+
+#[derive(Debug)]
+pub struct UserIntercept{
+    user: SessionUser,
+}
+
+impl SqlIntercept for UserIntercept{
+    /// do intercept sql/args
+    /// is_prepared_sql: if is run in prepared_sql=ture
+    fn do_intercept(&self, rb: &Rbatis, sql: &mut String, args: &mut Vec<rbs::Value>, is_prepared_sql: bool) -> Result<(), rbatis::Error>{
+        println!("sql=>{}",sql);
+        println!("args=>{:?}",args);
+        // args.push(to_value!(self.userId));
+        sql.push_str(&format!(" and tenant_id = {} ", self.user.tenant_id));
+        println!("args=>{:?}",args);
+        println!("[LogicDeletePlugin] after=> {}", sql);
+        Ok(())
     }
 }

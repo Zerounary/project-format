@@ -17,32 +17,25 @@ pub struct Service {
     cache: Arc<HashMap<String, ServiceCache>>
 }
 
-fn init_cache() -> Arc<HashMap<String, ServiceCache>>{
-    Arc::new(HashMap::from([
-        {{#each tables}}
-        ("{{name}}".to_string(), Arc::new(Cache::new(10_000))),
-        {{/each}}
-    ]))
-}
 
 impl Service {
-    pub fn new_scope(db: DB, user: SessionUser) -> Service {
-        let repo = Repository::new();
+    pub fn new_scope(db: DB, user: SessionUser, cache: Arc<HashMap<String, ServiceCache>>) -> Service {
+        let repo = Repository::new(Some(user.clone()));
         Service {
             db,
             repo,
+            cache,
             user: Some(user),
-            cache: init_cache()
         }
     }
 
-    pub fn new(db: DB ) -> Service {
-        let repo = Repository::new();
+    pub fn new(db: DB, cache: Arc<HashMap<String, ServiceCache>>) -> Service {
+        let repo = Repository::new(None);
         Service {
             db,
             repo,
+            cache,
             user: None,
-            cache: init_cache()
         }
     }
 }

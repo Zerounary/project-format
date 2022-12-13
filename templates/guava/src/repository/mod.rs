@@ -2,12 +2,16 @@
 pub mod {{this.name}}_repo;
 {{/each}}
 
-#[derive(Debug, Eq, PartialEq, Hash)]
-pub struct Repository {}
+#[derive(Debug)]
+pub struct Repository {
+    user: Option<SessionUser>,
+}
 
 impl Repository {
-    pub fn new() -> Repository {
-        Repository {}
+    pub fn new(user: Option<SessionUser>) -> Repository {
+        Repository {
+            user
+        }
     }
 }
 

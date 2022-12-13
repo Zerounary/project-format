@@ -6,7 +6,7 @@ pub mod service;
 pub mod macros;
 
 use crate::{
-    drivers::{db::{init_db, migrate}, log::{init_log}, redis::init_redis},
+    drivers::{db::{init_db, migrate}, log::{init_log}, redis::init_redis, cache::init_cache},
     server::api::commands::{
         {{#each tables}}
         {{this.name}}_controller::{find_{{ this.name }}_page, find_{{ this.name }}_list, delete_{{ this.name }}_ids, find_{{ this.name }}_by_id, update_{{ this.name }}, update_{{ this.name }}_opt, create_{{ this.name }}, create_{{ this.name }}_batch},
@@ -47,9 +47,11 @@ async fn main() -> anyhow::Result<()> {
 
     let redis = init_redis();
 
+    let cache = init_cache();
+
     // Inject a `AppState` into our handlers via a trait object. This could be
     // the live implementation or just a mock for testing.
-    let service = Arc::new(Service::new(db.clone()));
+    let service = Arc::new(Service::new(db.clone(), cache.clone()));
 
     let session_store = MemoryStore::new();
 
@@ -76,6 +78,7 @@ async fn main() -> anyhow::Result<()> {
         .layer(Extension(db.clone()))
         .layer(Extension(service))
         .layer(Extension(redis))
+        .layer(Extension(cache))
         .layer(TraceLayer::new_for_http());
 
     // run it
