@@ -15,7 +15,7 @@ mod test {
     impl Repository {
 
         pub async fn count_{{snake this.name}}(&self, pool: &DB) -> Result<i64, rbatis::Error> {
-            let result: i64 = pool.fetch_decode("SELECT count(1) FROM`{{prefix}}{{snake name}}` ", vec![])
+            let result: i64 = pool.fetch_decode("SELECT count(1) FROM `{{prefix}}{{snake name}}` ", vec![])
                 .await
                 .unwrap();
             Ok(result)
