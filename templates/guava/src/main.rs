@@ -6,7 +6,7 @@ pub mod service;
 pub mod macros;
 
 use crate::{
-    drivers::{db::{init_db, migrate}, log::{init_log}, redis::init_redis, cache::init_cache},
+    drivers::{db::{init_db, migrate}, log::{init_log}, redis::{init_redis_session_store, init_redis}, cache::init_cache},
     server::api::commands::{
         {{#each tables}}
         {{this.name}}_controller::{find_{{ this.name }}_page, find_{{ this.name }}_list, delete_{{ this.name }}_ids, find_{{ this.name }}_by_id, update_{{ this.name }}, update_{{ this.name }}_opt, create_{{ this.name }}, create_{{ this.name }}_batch},
@@ -15,7 +15,6 @@ use crate::{
     server::auth::{login, logout, check_auth},
     service::Service,
 };
-use async_session::{ MemoryStore,};
 use axum::{
     routing::{get, post},
     Extension, Router,
@@ -53,7 +52,7 @@ async fn main() -> anyhow::Result<()> {
     // the live implementation or just a mock for testing.
     let service = Arc::new(Service::new(db.clone(), cache.clone()));
 
-    let session_store = MemoryStore::new();
+    let session_store = init_redis_session_store(); //MemoryStore::new();
 
     // build our application with a route
     let app = Router::new()

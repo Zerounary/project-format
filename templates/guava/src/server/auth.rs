@@ -3,13 +3,12 @@ use std::{collections::HashMap, sync::Arc};
 use crate::{
     drivers::{
         cache::ServiceCache,
-        db::{get_db_type, DB},
+        db::{get_db_type, DB}, session::GuavaSessionStore,
     },
     server::api::commands::Resp,
     service::Service,
-    AppState,
 };
-use async_session::{async_trait, MemoryStore, Session, SessionStore};
+use async_session::{async_trait, Session, MemoryStore, SessionStore};
 use axum::{
     extract::{FromRequest, Query, RequestParts},
     headers::Cookie,
@@ -49,7 +48,7 @@ pub struct SessionUser {
 pub async fn login(
     Query(params): Query<LoginParams>,
     Extension(service): State,
-    Extension(store): Extension<MemoryStore>,
+    Extension(store): Extension<GuavaSessionStore>,
 ) -> impl IntoResponse {
     let result = service
         .repo
@@ -72,7 +71,7 @@ pub async fn login(
 }
 
 pub async fn logout(
-    Extension(store): Extension<MemoryStore>,
+    Extension(store): Extension<GuavaSessionStore>,
     TypedHeader(cookie): TypedHeader<Cookie>,
 ) -> StatusCode {
     let session_cookie = cookie.get(AXUM_SESSION_COOKIE_NAME);
@@ -106,9 +105,9 @@ where
     type Rejection = (StatusCode, &'static str);
 
     async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(store) = Extension::<MemoryStore>::from_request(req)
+        let Extension(store) = Extension::<GuavaSessionStore>::from_request(req)
             .await
-            .expect("`MemoryStore` extension missing");
+            .expect("`SessionStore` extension missing");
 
         let Extension(db) = Extension::<DB>::from_request(req)
             .await
