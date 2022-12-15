@@ -97,11 +97,11 @@ pub async fn create_{{snake this.name}}_batch(
 {{else}}
     Extension(service): State,
 {{/if}}
-) -> AppResult<Vec<String>> {
+) -> AppListResult<String> {
     let service_input: Vec<Create{{upperCamel this.name}}Input> = params.into_iter().map(|x| x.into()).collect();
     let service_result = service.create_{{snake this.name}}_batch(service_input).await?;
     let result = service_result.into_iter().map(|x| x.to_string()).collect_vec();
-    Resp::ok(result)
+    Resp::list(result)
 }
 // create!(Vec<Create{{upperCamel this.name}}VO> > create_{{snake this.name}}_batch(Vec<Create{{upperCamel this.name}}Input>) > Vec<String>);
 
