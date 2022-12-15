@@ -29,12 +29,22 @@ pub struct Resp<T> {
 pub struct Empty;
 
 impl<T> Resp<T> {
-    pub fn page(count: Option<i64>, rows: Vec<T>) -> AppListResult<T> {
+    pub fn list(rows: Vec<T>) -> AppListResult<T> {
         Ok(Json(Resp{
             status: 0,
             msg: "ok".to_string(),
             data: Some(Items{
-                count,
+                total: None,
+                rows
+            }),
+        }))
+    }
+    pub fn page(total: Option<i64>, rows: Vec<T>) -> AppListResult<T> {
+        Ok(Json(Resp{
+            status: 0,
+            msg: "ok".to_string(),
+            data: Some(Items{
+                total,
                 rows
             }),
         }))
@@ -64,6 +74,6 @@ pub struct PageParams {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Items<T> {
-    count: Option<i64>,
+    total: Option<i64>,
     rows: T,
 }

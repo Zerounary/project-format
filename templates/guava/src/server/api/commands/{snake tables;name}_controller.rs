@@ -55,7 +55,7 @@ pub async fn find_{{snake this.name}}_list(
 ) -> AppListResult<{{upperCamel this.name}}VO> {
     let result = service.find_{{snake this.name}}_list(params.into()).await?;
     let vos = result.into_iter().map(|x| x.into()).collect_vec();
-    Resp::page(None, vos)
+    Resp::list(vos)
 }
 // read!({{upperCamel this.name}}OptionVO > find_{{snake this.name}}_list > Vec<{{upperCamel this.name}}VO>);
 
