@@ -27,6 +27,7 @@ create table {{prefix}}{{name}} (
 
 -- 创建表约束
 {{#each tables }}
+create index idx_{{name}}_tenant_id on {{prefix}}{{name}}(tenant_id);
 {{#each ddls }}
 {{this}}
 {{/each}}

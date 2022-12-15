@@ -4,17 +4,1006 @@ project:
     output: "../guava-erp"
   data:
     project_name: "guava-erp"
-    table_ddls:
-      - "create table demand(id int8, name text, description text, dlike int8, status int4 );"
+    auth: 1
+    redis_session: 0
     tables:
       - {
-          name: "demand",
+          prefix: "b_",
+          name: "category",
+          auth: 1,
           columns:
             [
-              { name: "id", type: "i64", skip: [1, 1, 1, 1] },
-              { name: "name", type: "String", skip: [1, 1, 1, 1] },
-              { name: "description", type: "String", skip: [1, 1, 1, 1] },
-              { name: "dlike", type: "i64", skip: [0, 1, 0, 1] },
-              { name: "status", type: "i32", skip: [0, 1, 1, 1] },
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "b_",
+          name: "attribute",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "b_",
+          name: "attribute_value",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "attribute_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "b_",
+          name: "unit",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "b_",
+          name: "brand",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
             ],
         }
+      # 仓库
+      - {
+          prefix: "b_",
+          name: "warehouse",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      # 门店
+      - {
+          prefix: "b_",
+          name: "merchant",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "tax",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bank",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "account",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      # 结算账户
+      - {
+          prefix: "b_",
+          name: "account",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "create_date",
+                type: "Date",
+                dbType: "date",
+                default: "Date(fastdate::DateTime::now().into())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "initial",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "balance",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 0, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 供应商
+      - {
+          prefix: "b_",
+          name: "supplier",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "email",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "tax",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "bank",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "account",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "arrears",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "begin_arrears",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 客户
+      - {
+          prefix: "b_",
+          name: "customer",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "email",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "tax",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "bank",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "account",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "discount",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(1.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "integral",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "arrears",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "begin_arrears",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 商品
+      - {
+          prefix: "b_",
+          name: "product",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "serialno",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "spec",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "category_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "brand_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "unit_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "is_multi_unit",
+                type: "i8",
+                dbType: "bool",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "multi_unit_list",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "warehouse_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "location",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "stocktip",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "retail_name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "is_multi_price",
+                type: "i8",
+                dbType: "bool",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "buy",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "sell",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "retail",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "integral",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "is_active",
+                type: "i8",
+                dbType: "bool",
+                dbSkip: true,
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # asi
+      - {
+          prefix: "b_",
+          name: "asi",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "nod",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "product_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "is_active",
+                type: "i8",
+                dbType: "bool",
+                dbSkip: true,
+                default: "1",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+        # sku
+      - {
+          prefix: "b_",
+          name: "sku",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "product_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "asi_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "buy",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "sell",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "retail",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "is_active",
+                type: "i8",
+                dbType: "bool",
+                dbSkip: true,
+                default: "1",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 多单位
+      - {
+          prefix: "b_",
+          name: "multi_unit",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "product_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "unit_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "qty",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "is_active",
+                type: "i8",
+                dbType: "bool",
+                dbSkip: true,
+                default: "1",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      # 多单位价格
+      - {
+          prefix: "b_",
+          name: "sku_unit_price",
+          ddls: [],
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "product_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "asi_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "unit_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "buy",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "sell",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "retail",
+                type: "Decimal",
+                dbType: "decimal(14,4)",
+                default: "Decimal(0.to_string())",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "is_active",
+                type: "i8",
+                dbType: "bool",
+                dbSkip: true,
+                default: "1",
+                skip: [1, 1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "sys_",
+          name: "tenant",
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_tenant_name on sys_tenant(name);"],
+        }
+      - {
+          prefix: "sys_",
+          name: "user",
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "password",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "dept_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_user_name on sys_user(name);"],
+        }
+      - {
+          prefix: "sys_",
+          name: "role",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "sys_",
+          name: "menu",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "menu_name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "path",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "component",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "perms",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "icon",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "ty",
+                type: "String",
+                dbType: "CHAR(2)",
+                skip: [1, 1, 1, 1],
+              },
+              { name: "sort", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_menu_pid on sys_menu(pid);"],
+        }
+      - {
+          prefix: "sys_",
+          name: "user_role",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "user_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_user_role_user_id on sys_user_role(user_id);",
+              "create index idx_user_role_role_id on sys_user_role(role_id);",
+            ],
+        }
+      - {
+          prefix: "sys_",
+          name: "role_menu",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "menu_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_role_menu_user_id on sys_role_menu(menu_id);",
+              "create index idx_role_menu_role_id on sys_role_menu(role_id);",
+            ],
+        }
+
+    ddls: []
