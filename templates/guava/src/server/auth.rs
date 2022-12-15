@@ -93,8 +93,8 @@ pub async fn check_auth(
     Extension(service): Extension<Arc<Service>>,
 ) -> AppResult<i64> {
     // println!("{:?}", format!("{:?}", user));
-    let result = service.count_category().await?;
-    Resp::ok(result)
+    // let result = service.count_category().await?;
+    Resp::ok(1)
 }
 
 #[async_trait]
