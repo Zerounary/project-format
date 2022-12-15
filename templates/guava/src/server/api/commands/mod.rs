@@ -16,12 +16,12 @@ use rbatis::rbdc::{decimal::Decimal, date::Date};
 pub type State = Extension<Arc<Service>>;
 
 pub type AppResult<T> = Result<Json<Resp<T>>, AppError>;
+pub type AppListResult<T> = AppResult<Items<Vec<T>>>;
 
 #[derive(Debug, SmartDefault, Serialize, Deserialize)]
 pub struct Resp<T> {
     status: i32,
     msg: String,
-    count: Option<i64>,
     data: Option<T>,
 }
 
@@ -29,12 +29,14 @@ pub struct Resp<T> {
 pub struct Empty;
 
 impl<T> Resp<T> {
-    pub fn page(total: i64, data: T) -> AppResult<T> {
-        Ok(Json(Self {
+    pub fn page(count: Option<i64>, rows: Vec<T>) -> AppListResult<T> {
+        Ok(Json(Resp{
             status: 0,
             msg: "ok".to_string(),
-            data: Some(data),
-            count: Some(total)
+            data: Some(Items{
+                count,
+                rows
+            }),
         }))
     }
     pub fn ok(data: T) -> AppResult<T> {
@@ -42,16 +44,26 @@ impl<T> Resp<T> {
             status: 0,
             msg: "ok".to_string(),
             data: Some(data),
-            count: None
         }))
     }
 }
 
-pub fn resp_err(code: i32, msg: String) -> Json<Resp<Empty>> {
+pub fn resp_err(status: i32, msg: String) -> Json<Resp<Empty>> {
     Json(Resp {
         status,
         msg,
         data: None,
-        count: None,
     })
+}
+
+#[derive(Debug, Deserialize)]
+pub struct PageParams {
+    page: Option<i64>,
+    perPage: Option<i64>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Items<T> {
+    count: Option<i64>,
+    rows: T,
 }

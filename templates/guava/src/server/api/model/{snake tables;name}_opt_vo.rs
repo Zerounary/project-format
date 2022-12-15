@@ -20,8 +20,4 @@ pub struct {{upperCamel this.name}}OptionVO {
     pub {{name}}: Option<{{type}}>,
     {{/if}}
     {{/each}}
-    #[convert_field(ignore)]
-    pub page_num: Option<i64>,
-    #[convert_field(ignore)]
-    pub page_size: Option<i64>,
 }

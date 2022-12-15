@@ -8,14 +8,14 @@ use crate::{
     service::{{snake this.name}}_service::{Create{{upperCamel this.name}}Input, Update{{upperCamel this.name}}Input, Update{{upperCamel this.name}}OptionInput}
 };
 use axum::{
-    extract::Path,
+    extract::{Path, Query},
     http::StatusCode,
     response::{IntoResponse, Json},
     Extension,
 };
 use itertools::Itertools;
 
-use super::{AppResult, Resp, State};
+use super::{AppResult, Resp, State, PageParams, AppListResult};
 
 pub async fn find_{{snake this.name}}_by_id(
     Path(id): Path<i64>,
@@ -52,24 +52,25 @@ pub async fn find_{{snake this.name}}_list(
 {{else}}
     Extension(service): State,
 {{/if}}
-) -> AppResult<Vec<{{upperCamel this.name}}VO>> {
+) -> AppListResult<{{upperCamel this.name}}VO> {
     let result = service.find_{{snake this.name}}_list(params.into()).await?;
     let vos = result.into_iter().map(|x| x.into()).collect_vec();
-    Resp::ok(vos)
+    Resp::page(None, vos)
 }
 // read!({{upperCamel this.name}}OptionVO > find_{{snake this.name}}_list > Vec<{{upperCamel this.name}}VO>);
 
 pub async fn find_{{snake this.name}}_page(
+    Query(page_params): Query<PageParams>,
     Json(params): Json<{{upperCamel this.name}}OptionVO>,
 {{#if auth}}
     GuavaSession::FoundUser((_user, service)): GuavaSession,
 {{else}}
     Extension(service): State,
 {{/if}}
-) -> AppResult<Vec<{{upperCamel this.name}}VO>> {
-    let page_num = params.page_num.unwrap_or(1);
-    let page_size = params.page_size.unwrap_or(10);
-    let total = service.count_{{snake this.name}}().await?;
+) -> AppListResult<{{upperCamel this.name}}VO> {
+    let page_num = page_params.page.unwrap_or(1);
+    let page_size = page_params.perPage.unwrap_or(10);
+    let total = service.count_{{snake this.name}}().await.ok();
     let result = service.find_{{snake this.name}}_page(params.into(), page_num, page_size).await?;
     let vos = result.into_iter().map(|x| x.into()).collect_vec();
     Resp::page(total, vos)
