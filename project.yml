@@ -6,6 +6,17 @@ project:
     project_name: "guava-erp"
     auth: 1
     redis_session: 0
+    pages:
+      - {
+          label: "系统管理",
+          url: "/",
+          children:
+            [
+              { label: "用户管理", tableName: "user" },
+              { label: "租户管理", tableName: "tenant" },
+              { label: "角色管理", tableName: "role" },
+            ],
+        }
     tables:
       # 租户
       - {
@@ -14,12 +25,21 @@ project:
           skipAuto: true,
           columns:
             [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
               {
                 name: "name",
                 type: "String",
                 dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
+                ui: {
+                  type: 'input-text',
+                  label: '名称'
+                },
               },
             ],
           ddls: ["create index idx_tenant_name on sys_tenant(name);"],
@@ -37,24 +57,40 @@ project:
                 type: "String",
                 dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
+                ui: {
+                  type: 'input-text',
+                  label: '名称',
+                },
               },
               {
                 name: "password",
                 type: "String",
                 dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
+                ui: {
+                  type: 'input-password',
+                  label: '密码'
+                },
               },
               {
                 name: "store_id",
                 type: "i64",
                 dbType: "int8",
                 skip: [1, 1, 1, 1],
+                ui: {
+                  type: 'input-number',
+                  label: '所属店铺'
+                },
               },
               {
                 name: "dept_id",
                 type: "i64",
                 dbType: "int8",
                 skip: [1, 1, 1, 1],
+                ui: {
+                  type: 'input-number',
+                  label: '所属部门'
+                },
               },
             ],
           ddls: ["create index idx_user_name on sys_user(name);"],

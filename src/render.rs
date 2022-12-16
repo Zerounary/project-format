@@ -18,6 +18,10 @@ handlebars_helper!(camel: |s: String| s.to_case(Case::Camel));
 handlebars_helper!(upperCamel: |s: String| s.to_case(Case::UpperCamel));
 handlebars_helper!(kebab: |s: String| s.to_case(Case::Kebab));
 
+// stringify
+handlebars_helper!(stringify: |s: Value| s.to_string());
+
+
 // test
 handlebars_helper!(isId: |s: String| s.to_lowercase().eq("id"));
 
@@ -44,6 +48,8 @@ impl<'a> Render<'a> {
         h.register_helper("upperCamel", Box::new(upperCamel));
         h.register_helper("kebab", Box::new(kebab));
         h.register_helper("isId", Box::new(isId));
+
+        h.register_helper("stringify", Box::new(stringify));
 
         let render: Render = Self {
             h,
