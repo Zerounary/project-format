@@ -46,7 +46,7 @@ pub async fn find_{{snake this.name}}_by_id_no_cache(
 // read!(find_{{snake this.name}}_by_id_no_cache > {{upperCamel this.name}}VO);
 
 pub async fn find_{{snake this.name}}_list(
-    Json(params): Json<{{upperCamel this.name}}OptionVO>,
+    Query(params): Query<{{upperCamel this.name}}OptionVO>,
 {{#if auth}}
     GuavaSession::FoundUser((_user, service)): GuavaSession,
 {{else}}
@@ -61,7 +61,7 @@ pub async fn find_{{snake this.name}}_list(
 
 pub async fn find_{{snake this.name}}_page(
     Query(page_params): Query<PageParams>,
-    Json(params): Json<{{upperCamel this.name}}OptionVO>,
+    Query(params): Query<{{upperCamel this.name}}OptionVO>,
 {{#if auth}}
     GuavaSession::FoundUser((_user, service)): GuavaSession,
 {{else}}

@@ -63,8 +63,8 @@ async fn main() -> anyhow::Result<()> {
         .route("/api/auth", get(check_auth))
 {{/if}}
         {{#each tables}}
-        .route("/api/{{ this.name }}/list", post(find_{{ this.name }}_list))
-        .route("/api/{{ this.name }}/page", post(find_{{ this.name }}_page))
+        .route("/api/{{ this.name }}/list", get(find_{{ this.name }}_list))
+        .route("/api/{{ this.name }}/page", get(find_{{ this.name }}_page))
         .route(
             "/api/{{ this.name }}/:id",
             get(find_{{ this.name }}_by_id).delete(delete_{{ this.name }}_ids).patch(update_{{ this.name }}_opt).put(update_{{ this.name }}),
