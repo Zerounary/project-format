@@ -1,6 +1,7 @@
 
 use crate::{
     server::auth::GuavaSession,
+    server::error::AppError,
     server::api::model::{{snake this.name}}_vo::{{upperCamel this.name}}VO,
     server::api::model::{{snake this.name}}_opt_vo::{{upperCamel this.name}}OptionVO,
     server::api::model::{{snake this.name}}_create_vo::Create{{upperCamel this.name}}VO,
@@ -9,8 +10,7 @@ use crate::{
 };
 use axum::{
     extract::{Path, Query},
-    http::StatusCode,
-    response::{IntoResponse, Json},
+    response::{Json},
     Extension,
 };
 use itertools::Itertools;
@@ -143,11 +143,11 @@ pub async fn delete_{{snake this.name}}_ids(
 {{else}}
     Extension(service): State,
 {{/if}}
-) -> impl IntoResponse {
+) -> AppResult<bool> {
     let ids: Vec<i64> = ids.split(",").into_iter().map(|x| x.trim().parse().unwrap_or(-1)).collect();
     match service.delete_{{snake this.name}}_ids(ids).await {
-        Ok(_) => StatusCode::OK,
-        Err(_e) => StatusCode::NOT_FOUND,
+        Ok(_) => Resp::ok(true),
+        Err(e) => Err(AppError::{{upperCamel name}}RepoError(e)),
     }
 }
 // delete!(delete_{{snake this.name}}_ids);

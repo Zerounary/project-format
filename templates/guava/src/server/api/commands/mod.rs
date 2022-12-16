@@ -52,7 +52,7 @@ impl<T> Resp<T> {
     pub fn ok(data: T) -> AppResult<T> {
         Ok(Json(Self {
             status: 0,
-            msg: "ok".to_string(),
+            msg: "操作成功".to_string(),
             data: Some(data),
         }))
     }

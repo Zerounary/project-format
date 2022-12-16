@@ -63,7 +63,7 @@ app_error_register!{
     // 整个应用错误响应 code 和 message 都在这里设置。
     {{#each tables}}
     {{upperCamel name}}RepoError {
-        NotFound => (StatusCode::NOT_FOUND, 1, "{{upperCamel name}} not found"),
+        NotFound => (StatusCode::OK, 1, "{{upperCamel name}} not found"),
     },
     {{/each}}
 }
