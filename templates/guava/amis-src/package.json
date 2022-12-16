@@ -16,8 +16,8 @@
     "typescript": "^4.4.3"
   },
   "scripts": {
-    "vite": "vite",
-    "vite-build": "vite build"
+    "dev": "vite",
+    "build": "vite build"
   },
   "eslintConfig": {
     "extends": [
