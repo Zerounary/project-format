@@ -14,10 +14,9 @@ use crate::{
 #[derive(Convert)]
 #[convert(from = "{{upperCamel this.name}}BO")]
 pub struct {{upperCamel this.name}}VO {
-    #[convert_field(to_string)]
     {{#each columns}}
     {{#if (isId name) }}
-    pub {{name}}: String,
+    pub {{name}}: i64,
     {{else}}
     {{#if skip.[3]}}
     {{#if default}}
