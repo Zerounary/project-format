@@ -22,8 +22,14 @@ handlebars_helper!(kebab: |s: String| s.to_case(Case::Kebab));
 handlebars_helper!(stringify: |s: Value| s.to_string());
 
 
+// string convert
+handlebars_helper!(fkTable: |s: String| s.trim_end_matches("_id").to_string());
+
+
+
 // test
 handlebars_helper!(isId: |s: String| s.to_lowercase().eq("id"));
+handlebars_helper!(isFk: |s: String| s.to_lowercase().ends_with("_id"));
 
 pub struct Render<'a> {
     pub h: Handlebars<'a>,
@@ -48,8 +54,10 @@ impl<'a> Render<'a> {
         h.register_helper("upperCamel", Box::new(upperCamel));
         h.register_helper("kebab", Box::new(kebab));
         h.register_helper("isId", Box::new(isId));
+        h.register_helper("isFk", Box::new(isFk));
 
         h.register_helper("stringify", Box::new(stringify));
+        h.register_helper("fkTable", Box::new(fkTable));
 
         let render: Render = Self {
             h,

@@ -8,42 +8,144 @@ project:
     redis_session: 0
     pages:
       - {
-          label: "系统管理",
+          label: "基础信息",
           url: "/",
           children:
             [
-              { label: "用户管理", tableName: "user" },
-              { label: "租户管理", tableName: "tenant" },
-              { label: "角色管理", tableName: "role" },
+              { label: "部门", tableName: "dept" },
+              { label: "门店", tableName: "merchant" },
             ],
         }
-    tables:
-      # 租户
       - {
-          prefix: "sys_",
-          name: "tenant",
+          label: "系统管理",
+          url: "/",
+          children: [{ label: "用户管理", tableName: "user" }],
+        }
+    tables:
+      # 门店
+      - {
+          prefix: "b_",
+          name: "merchant",
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "门店编码" },
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "门店名称" },
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "联系人员" },
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "联系电话" },
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "门店地址" },
+              },
+              {
+                name: "tax",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "门店税号" },
+              },
+              {
+                name: "bank",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "开户银行" },
+              },
+              {
+                name: "account",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "对公账户" },
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "备注信息" },
+              },
+            ],
+          ddls: [],
+        }
+      # 部门
+      - {
+          prefix: "b_",
+          name: "dept",
           skipAuto: true,
           columns:
             [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
               {
-                name: "id",
-                type: "i64",
-                dbType: "int8",
+                name: "code",
+                type: "String",
+                dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "编码" },
               },
               {
                 name: "name",
                 type: "String",
                 dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
-                ui: {
-                  type: 'input-text',
-                  label: '名称'
-                },
+                ui: { type: "input-text", label: "名称" },
               },
             ],
-          ddls: ["create index idx_tenant_name on sys_tenant(name);"],
+          ddls: [],
         }
+      # 租户
+      # - {
+      #     prefix: "sys_",
+      #     name: "tenant",
+      #     skipAuto: true,
+      #     columns:
+      #       [
+      #         {
+      #           name: "id",
+      #           type: "i64",
+      #           dbType: "int8",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "name",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #           ui: {
+      #             type: 'input-text',
+      #             label: '名称'
+      #           },
+      #         },
+      #       ],
+      #     ddls: ["create index idx_tenant_name on sys_tenant(name);"],
+      #   }
       # 用户
       - {
           prefix: "sys_",
@@ -57,183 +159,171 @@ project:
                 type: "String",
                 dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
-                ui: {
-                  type: 'input-text',
-                  label: '名称',
-                },
+                ui: { type: "input-text", label: "名称" },
               },
               {
                 name: "password",
                 type: "String",
                 dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
-                ui: {
-                  type: 'input-password',
-                  label: '密码'
-                },
+                ui: { type: "input-password", label: "密码" },
               },
               {
-                name: "store_id",
+                name: "merchant_id",
                 type: "i64",
                 dbType: "int8",
                 skip: [1, 1, 1, 1],
-                ui: {
-                  type: 'input-number',
-                  label: '所属店铺'
-                },
+                ui: { type: "input-number", label: "所属店铺" },
               },
               {
                 name: "dept_id",
                 type: "i64",
                 dbType: "int8",
                 skip: [1, 1, 1, 1],
-                ui: {
-                  type: 'input-number',
-                  label: '所属部门'
-                },
+                ui: { type: "input-number", label: "所属部门" },
               },
             ],
           ddls: ["create index idx_user_name on sys_user(name);"],
         }
       # 角色
-      - {
-          prefix: "sys_",
-          name: "role",
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "name",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls: [],
-        }
-      # 菜单
-      - {
-          prefix: "sys_",
-          name: "menu",
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "menu_name",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "path",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "component",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "perms",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "icon",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "ty",
-                type: "String",
-                dbType: "CHAR(2)",
-                skip: [1, 1, 1, 1],
-              },
-              { name: "sort", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls: ["create index idx_menu_pid on sys_menu(pid);"],
-        }
-      # 用户角色关系
-      - {
-          prefix: "sys_",
-          name: "user_role",
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "user_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "role_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls:
-            [
-              "create index idx_user_role_user_id on sys_user_role(user_id);",
-              "create index idx_user_role_role_id on sys_user_role(role_id);",
-            ],
-        }
-      # 角色菜单关系
-      - {
-          prefix: "sys_",
-          name: "role_menu",
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "menu_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "role_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls:
-            [
-              "create index idx_role_menu_user_id on sys_role_menu(menu_id);",
-              "create index idx_role_menu_role_id on sys_role_menu(role_id);",
-            ],
-        }
+      # - {
+      #     prefix: "sys_",
+      #     name: "role",
+      #     columns:
+      #       [
+      #         { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+      #         {
+      #           name: "name",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "description",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #       ],
+      #     ddls: [],
+      #   }
+      # # 菜单
+      # - {
+      #     prefix: "sys_",
+      #     name: "menu",
+      #     columns:
+      #       [
+      #         { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+      #         { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+      #         {
+      #           name: "menu_name",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "path",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "component",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "perms",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "icon",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "ty",
+      #           type: "String",
+      #           dbType: "CHAR(2)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         { name: "sort", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+      #         {
+      #           name: "description",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #       ],
+      #     ddls: ["create index idx_menu_pid on sys_menu(pid);"],
+      #   }
+      # # 用户角色关系
+      # - {
+      #     prefix: "sys_",
+      #     name: "user_role",
+      #     columns:
+      #       [
+      #         { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+      #         {
+      #           name: "user_id",
+      #           type: "i64",
+      #           dbType: "int8",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "role_id",
+      #           type: "i64",
+      #           dbType: "int8",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "description",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #       ],
+      #     ddls:
+      #       [
+      #         "create index idx_user_role_user_id on sys_user_role(user_id);",
+      #         "create index idx_user_role_role_id on sys_user_role(role_id);",
+      #       ],
+      #   }
+      # # 角色菜单关系
+      # - {
+      #     prefix: "sys_",
+      #     name: "role_menu",
+      #     columns:
+      #       [
+      #         { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+      #         {
+      #           name: "menu_id",
+      #           type: "i64",
+      #           dbType: "int8",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "role_id",
+      #           type: "i64",
+      #           dbType: "int8",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #         {
+      #           name: "description",
+      #           type: "String",
+      #           dbType: "varchar(120)",
+      #           skip: [1, 1, 1, 1],
+      #         },
+      #       ],
+      #     ddls:
+      #       [
+      #         "create index idx_role_menu_user_id on sys_role_menu(menu_id);",
+      #         "create index idx_role_menu_role_id on sys_role_menu(role_id);",
+      #       ],
+      #   }
 
     ddls: []
