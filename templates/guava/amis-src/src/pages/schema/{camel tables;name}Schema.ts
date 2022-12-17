@@ -63,6 +63,7 @@ export default {
           {{#if ui}}
         {
           name: '{{name}}',
+          static: true,
           ...{{{stringify ui}}}
         },
           {{/if}}
