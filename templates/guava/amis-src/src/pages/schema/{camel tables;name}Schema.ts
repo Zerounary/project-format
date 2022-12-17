@@ -120,7 +120,7 @@ export default {
                 title: '查看详情',
                 body: {
                   type: 'form',
-                  api: 'post:/api/{{name}}',
+                  api: 'put:/api/{{name}}/${id}',
                   body: [
                     {{#each columns}}
                     {{#if ui}}
