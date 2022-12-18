@@ -12,7 +12,7 @@ export default [
         return {
           ...payload,
           data: {
-            fk_{{name}}: payload.data.name
+            fk_{{name}}: payload.data?.name
           },
         };
       },

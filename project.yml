@@ -26,6 +26,7 @@ project:
       - {
           prefix: "b_",
           name: "merchant",
+          auth: 1,
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
@@ -100,6 +101,7 @@ project:
           prefix: "b_",
           name: "dept",
           skipAuto: true,
+          auth: 1,
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
@@ -150,6 +152,7 @@ project:
       - {
           prefix: "sys_",
           name: "user",
+          auth: 1,
           skipAuto: true,
           columns:
             [

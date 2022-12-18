@@ -5,7 +5,7 @@ use crate::{
         cache::ServiceCache,
         db::{get_db_type, DB}, session::GuavaSessionStore,
     },
-    server::api::commands::Resp,
+    server::api::commands::{Resp, resp_err},
     service::Service,
 };
 use async_session::{async_trait, Session, MemoryStore, SessionStore};
@@ -20,7 +20,7 @@ use rbatis::{intercept::SqlIntercept, Rbatis};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
 
-use super::api::commands::{AppResult, State};
+use super::api::commands::{AppResult, State, AppErrResult};
 
 pub enum GuavaSession {
     FoundUser((SessionUser, Service)),
@@ -40,8 +40,6 @@ pub struct SessionUser {
     pub id: i64,
     pub name: String,
     pub password: String,
-    pub store_id: i64,
-    pub dept_id: i64,
     pub tenant_id: i64,
 }
 
@@ -64,19 +62,19 @@ pub async fn login(
                 HeaderValue::from_str(format!("{}={}", AXUM_SESSION_COOKIE_NAME, cookie).as_str())
                     .unwrap();
             headers.insert(http::header::SET_COOKIE, cookie);
-            return (headers, StatusCode::OK);
+            return (headers, Resp::ok(true));
         }
     }
-    (HeaderMap::new(), StatusCode::UNAUTHORIZED)
+    (HeaderMap::new(), Resp::ok(false))
 }
 
 pub async fn logout(
     Extension(store): Extension<GuavaSessionStore>,
     TypedHeader(cookie): TypedHeader<Cookie>,
-) -> StatusCode {
+) -> AppResult<bool> {
     let session_cookie = cookie.get(AXUM_SESSION_COOKIE_NAME);
     if session_cookie.is_none() {
-        return StatusCode::OK;
+        return Resp::ok(false);
     }
     if let Some(session) = store
         .load_session(session_cookie.unwrap().to_owned())
@@ -85,16 +83,16 @@ pub async fn logout(
     {
         store.destroy_session(session).await;
     }
-    StatusCode::OK
+    return Resp::ok(true);
 }
 
 pub async fn check_auth(
     GuavaSession::FoundUser((user, service2)): GuavaSession,
     Extension(service): Extension<Arc<Service>>,
-) -> AppResult<i64> {
+) -> AppResult<bool> {
     // println!("{:?}", format!("{:?}", user));
     // let result = service.count_category().await?;
-    Resp::ok(1)
+    Resp::ok(true)
 }
 
 #[async_trait]
@@ -102,7 +100,7 @@ impl<B> FromRequest<B> for GuavaSession
 where
     B: Send,
 {
-    type Rejection = (StatusCode, &'static str);
+    type Rejection = (StatusCode, AppErrResult);
 
     async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
         let Extension(store) = Extension::<GuavaSessionStore>::from_request(req)
@@ -127,7 +125,7 @@ where
 
         // return the new created session cookie for client
         if session_cookie.is_none() {
-            return Err((StatusCode::UNAUTHORIZED, "用户未登录"));
+            return Err((StatusCode::OK, resp_err(401, "请先登录".to_string())));
         }
 
         log::debug!(
@@ -148,10 +146,7 @@ where
                 );
                 user_bo
             } else {
-                return Err((
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    "No `user_bo` found in session",
-                ));
+                return Err((StatusCode::OK, resp_err(401, "No `user_bo` found in session".to_string())));
             }
         } else {
             log::debug!(
@@ -159,7 +154,7 @@ where
                 AXUM_SESSION_COOKIE_NAME,
                 session_cookie.unwrap()
             );
-            return Err((StatusCode::UNAUTHORIZED, "No session found for cookie"));
+            return Err((StatusCode::OK, resp_err(401, "No session found for cookie".to_string())));
         };
 
         let mut db = db.clone();

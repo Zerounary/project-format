@@ -17,6 +17,7 @@ pub type State = Extension<Arc<Service>>;
 
 pub type AppResult<T> = Result<Json<Resp<T>>, AppError>;
 pub type AppListResult<T> = AppResult<Items<Vec<T>>>;
+pub type AppErrResult = Json<Resp<Empty>>;
 
 #[derive(Debug, SmartDefault, Serialize, Deserialize)]
 pub struct Resp<T> {
@@ -58,7 +59,7 @@ impl<T> Resp<T> {
     }
 }
 
-pub fn resp_err(status: i32, msg: String) -> Json<Resp<Empty>> {
+pub fn resp_err(status: i32, msg: String) -> AppErrResult {
     Json(Resp {
         status,
         msg,

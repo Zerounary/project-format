@@ -83,16 +83,89 @@ class AMISComponent extends React.Component<any, any> {
     return renderAmis(
       // 这里是 amis 的 Json 配置。
       {
-        type: 'app',
-        brandName: '管理系统',
-        logo: '/assets/logo.png',
-        header: {
-          type: 'tpl',
-          inline: false,
-          className: 'w-full',
-          tpl: '<div class="flex justify-between"><div>顶部区域左侧</div><div>顶部区域右侧</div></div>'
+        type: 'service',
+        api: {
+          url: '/api/auth',
+          adaptor: function(payload, response) {
+            if(location.href.endsWith('/login')){
+              return {
+                ...payload,
+                status: 0
+              };
+            }else {
+              if(payload.status == 401) {
+                console.log(payload);
+                localStorage.removeItem('auth')
+                location.href = '/login'
+                return payload;
+              }else {
+                return {
+                  ...payload,
+                  status: 0
+                }
+              }
+            }
+          }
         },
-        pages
+        body: [
+          {
+            type: 'page',
+            cssVars: {
+              '--Page-body-padding': '0'
+            },
+            body: [
+              {
+                type: 'flex',
+                className: 'w-screen h-screen',
+                hiddenOn: '${!!ls:auth}',
+                items: [
+                  {
+                    type: 'form',
+                    className: 'w-96',
+                    api: {
+                      method: 'get',
+                      url: '/api/login?username=${username}&password=${password}',
+                      adaptor: function (payload, response) {
+                        if (payload.data) {
+                          localStorage.setItem('auth', true)
+                          location.href = '/';
+                          return payload;
+                        } else {
+                          return payload;
+                        }
+                      }
+                    },
+                    body: [
+                      {
+                        type: 'input-text',
+                        name: 'username',
+                        label: '用户名：'
+                      },
+                      {
+                        name: 'password',
+                        type: 'input-password',
+                        label: '密码：'
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'app',
+                brandName: '管理系统',
+                logo: '/assets/logo.png',
+                hiddenOn: '${!ls:auth}',
+                header: {
+                  type: 'tpl',
+                  inline: false,
+                  className: 'w-full',
+                  tpl: '<div class="flex justify-between"><div>顶部区域左侧</div><div>顶部区域右侧</div></div>'
+                },
+                pages
+              }
+            ]
+          },
+        ]
       },
       {
         // props...
