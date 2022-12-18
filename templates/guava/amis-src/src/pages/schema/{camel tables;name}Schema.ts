@@ -1,3 +1,7 @@
+import {{camel name}}Columns from './columns/{{camel name}}Columns';
+import {{camel name}}Create from './create/{{camel name}}Create';
+import {{camel name}}Update from './update/{{camel name}}Update';
+
 export default {
   type: 'page',
   body: [
@@ -16,29 +20,7 @@ export default {
               type: 'form',
               api: 'post:/api/{{name}}',
               body: [
-                {{#each columns}}
-                {{#if ui}}
-                {{#if (isFk name)}}
-                {
-                  name: '{{name}}',
-                  type: 'select',
-                  label: '{{ui.label}}',
-                  searchable: true,
-                  source: {
-                    method: 'get',
-                    url: '/api/{{fkTable name}}/list',
-                  },
-                  labelField: 'name',
-                  valueField: 'id',
-                },
-                {{else}}
-                {
-                  name: '{{name}}',
-                  ...{{{stringify ui}}}
-                },
-                {{/if}}
-                {{/if}}
-                {{/each}}
+                ...{{camel name}}Create,
               ]
             }
           }
@@ -74,39 +56,7 @@ export default {
           type: 'tpl',
           tpl: '${index + 1}'
         },
-        {{#each columns}}
-          {{#if ui}}
-          {{#if (isFk name)}}
-        {
-          type: 'service',
-          label: '{{ui.label}}',
-          api: {
-            method: 'get',
-            url: '/api/{{fkTable name}}/${ {{name}} }',
-            adaptor: function (payload, response) {
-              return {
-                ...payload,
-                data: {
-                  fk_{{name}}: payload.data.name
-                },
-              };
-            },
-            cache: 2000
-          },
-          body: {
-            type: 'tpl',
-            tpl: '${fk_{{name}} }'
-          },
-        },
-          {{else}}
-        {
-          name: '{{name}}',
-          static: true,
-          ...{{{stringify ui}}}
-        },
-          {{/if}}
-          {{/if}}
-        {{/each}}
+        ...{{camel name}}Columns,
         {
           type: 'operation',
           label: '操作',
@@ -122,29 +72,7 @@ export default {
                   type: 'form',
                   api: 'put:/api/{{name}}/${id}',
                   body: [
-                    {{#each columns}}
-                    {{#if ui}}
-                    {{#if (isFk name)}}
-                    {
-                      name: '{{name}}',
-                      type: 'select',
-                      label: '{{ui.label}}',
-                      searchable: true,
-                      source: {
-                        method: 'get',
-                        url: '/api/{{fkTable name}}/list',
-                      },
-                      labelField: 'name',
-                      valueField: 'id',
-                    },
-                    {{else}}
-                    {
-                      name: '{{name}}',
-                      ...{{{stringify ui}}}
-                    },
-                    {{/if}}
-                    {{/if}}
-                    {{/each}}
+                    ...{{name}}Update,
                   ]
                 }
               }
