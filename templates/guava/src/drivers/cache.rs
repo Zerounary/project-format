@@ -2,15 +2,16 @@ use moka::sync::Cache;
 use std::{sync::Arc, collections::HashMap};
 
 use crate::{
+    server::error::AppError,
     {{#each tables}}
-    entities::{{this.name}}_bo::{{upperCamel this.name}}BO, service::{{this.name}}_service::{{upperCamel this.name}}RepoError,
+    entities::{{this.name}}_bo::{{upperCamel this.name}}BO,
     {{/each}}
 };
 
 #[derive(Debug, Clone)]
 pub enum ServiceResult {
     {{#each tables}}
-    {{upperCamel this.name}}BO(Result<{{upperCamel this.name}}BO, {{upperCamel this.name}}RepoError>),
+    {{upperCamel this.name}}BO(Result<{{upperCamel this.name}}BO, AppError>),
     {{/each}}
 }
 
@@ -24,7 +25,7 @@ macro_rules! cache_value {
                 Ok(bo) => Ok(bo),
                 Err(e) => Err(e),
             },
-            _ => Err($err::NotFound),
+            _ => Err(AppError::RepoError("cache_value! failed".to_string())),
         };
         value
     } };

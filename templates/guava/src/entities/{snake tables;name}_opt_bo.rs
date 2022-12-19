@@ -2,7 +2,9 @@
 
 use serde::{Serialize, Deserialize};
 use smart_default::SmartDefault;
-use rbatis::rbdc::{decimal::Decimal, date::Date};
+use rbatis::{rbdc::{decimal::Decimal, date::Date}, crud};
+
+use crate::macros::repository::to_sql_table_name;
 
 #[derive(Debug, SmartDefault, Clone, Serialize, Deserialize)]
 pub struct {{upperCamel name}}OptionBO {
@@ -10,3 +12,5 @@ pub struct {{upperCamel name}}OptionBO {
     pub {{name}}: Option<{{type}}>,
     {{/each}}
 }
+
+crud!({{upperCamel name}}OptionBO{}, to_sql_table_name("`{{upperCamel name}}OptionBO`"));

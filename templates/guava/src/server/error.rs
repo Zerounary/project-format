@@ -2,13 +2,9 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
-
-{{#each tables}}
-use crate::service::{{name}}_service::{{upperCamel name}}RepoError;
-{{/each}}
+use rbatis::rbdc::Error;
 
 use super::api::commands::resp_err;
-
 
 macro_rules! app_error_register {
     (
@@ -37,7 +33,7 @@ macro_rules! app_error_register {
 
         impl IntoResponse for AppError {
             fn into_response(self) -> Response {
-                let (status, code, error_message) = match self { 
+                let (status, code, error_message) = match self {
                     // 匹配错误类型和对应的响应
                     $(
                         $(
@@ -46,24 +42,46 @@ macro_rules! app_error_register {
                             },
                         )+
                     )+
+                    // RepoError(msg) => {
+                    //     (StatusCode::OK, 1, msg)
+                    // },
                     _ => {
                         (StatusCode::INTERNAL_SERVER_ERROR, 99999, "Unkown Server Error")
                     }
                 };
-        
+
                 let body = resp_err(code, error_message.to_string());
-        
+
                 (status, body).into_response()
             }
         }
     };
 }
 
-app_error_register!{
-    // 整个应用错误响应 code 和 message 都在这里设置。
-    {{#each tables}}
-    {{upperCamel name}}RepoError {
-        NotFound => (StatusCode::OK, 1, "{{upperCamel name}} not found"),
-    },
-    {{/each}}
+#[derive(Debug, Clone)]
+pub enum AppError {
+    RepoError(String),
 }
+
+impl IntoResponse for AppError {
+    fn into_response(self) -> Response {
+        let (status, code, error_message) = match self {
+            AppError::RepoError(e) => (StatusCode::OK, 1, e),
+            // 匹配错误类型和对应的响应
+        };
+
+        let body = resp_err(code, error_message.to_string());
+
+        (status, body).into_response()
+    }
+}
+
+impl From<Error> for AppError {
+    fn from(e: Error) -> Self {
+        match e {
+            Error::E(e) => AppError::RepoError(e),
+            Error::Io(e) => AppError::RepoError(e.to_string()),
+        }
+    }
+}
+

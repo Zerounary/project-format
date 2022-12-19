@@ -147,7 +147,7 @@ pub async fn delete_{{snake this.name}}_ids(
     let ids: Vec<i64> = ids.split(",").into_iter().map(|x| x.trim().parse().unwrap_or(-1)).collect();
     match service.delete_{{snake this.name}}_ids(ids).await {
         Ok(_) => Resp::ok(true),
-        Err(e) => Err(AppError::{{upperCamel name}}RepoError(e)),
+        Err(e) => Err(e),
     }
 }
 // delete!(delete_{{snake this.name}}_ids);

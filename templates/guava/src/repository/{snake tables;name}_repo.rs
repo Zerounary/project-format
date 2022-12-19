@@ -14,15 +14,15 @@ mod test {
 
     impl Repository {
 
-        pub async fn count_{{snake this.name}}(&self, pool: &DB) -> Result<i64, rbatis::Error> {
-            let result: i64 = pool.fetch_decode("SELECT count(1) FROM `{{prefix}}{{snake name}}` t ", vec![])
+        pub async fn count_{{snake this.name}}(&self, db: &DB) -> Result<i64, rbatis::Error> {
+            let result: i64 = db.fetch_decode("SELECT count(1) FROM `{{prefix}}{{snake name}}` t ", vec![])
                 .await
                 .unwrap();
             Ok(result)
         }
 
-        pub async fn delete_{{snake this.name}}(&self, pool: &DB, id: i64) -> Result<(), rbatis::Error> {
-            pool.fetch("DELETE FROM `{{prefix}}{{snake name}}` t where id = ?", vec![to_value!(id)])
+        pub async fn delete_{{snake this.name}}(&self, db: &mut dyn rbatis::executor::Executor, id: i64) -> Result<(), rbatis::Error> {
+            db.fetch("DELETE FROM `{{prefix}}{{snake name}}` t where id = ?", vec![to_value!(id)])
                 .await
                 .unwrap();
             Ok(())

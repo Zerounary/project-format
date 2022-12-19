@@ -9,7 +9,7 @@ macro_rules! impl_repo_update {
         impl Repository {
             pub async fn $fn_name(
                 &self,
-                mut rb: &DB,
+                mut rb: &mut dyn rbatis::executor::Executor,
                 table: &$table,
                 $($param_key:$param_type,)*
             ) -> Result<(), rbatis::rbdc::Error> {
@@ -33,7 +33,7 @@ macro_rules! impl_repo_update {
                   }
                   let table_name = crate::macros::repository::to_sql_table_name(stringify!($table));
                   let table = rbs::to_value!(table);
-                  let result = $fn_name(&mut rb, table_name, &table, $($param_key,)*).await;
+                  let result = $fn_name(rb, table_name, &table, $($param_key,)*).await;
                 match result {
                     Ok(_result) => {
                         if _result.rows_affected > 0 {
@@ -67,7 +67,7 @@ macro_rules! impl_repo_insert {
         impl Repository {
             pub async fn $insert_batch_fn(
                 &self,
-                mut rb: &DB,
+                mut rb: &mut dyn rbatis::executor::Executor,
                 tables: &mut [$table],
                 batch_size: u64,
             ) -> Result<crate::macros::repository::InsertBatchResult, rbatis::rbdc::Error> {
@@ -111,7 +111,7 @@ macro_rules! impl_repo_insert {
                 let ranges = rbatis::sql::Page::<()>::into_ranges(tables.len() as u64, batch_size);
                 for (offset, limit) in ranges {
                     let exec_result = insert_batch(
-                        &mut rb,
+                        rb,
                         &tables[offset as usize..limit as usize],
                         table_name.as_str(),
                     )
@@ -133,7 +133,7 @@ macro_rules! impl_repo_insert {
         }
 
         impl Repository {
-            pub async fn $insert_fn(&self, rb: &DB, table: $table) -> Result<i64, rbatis::Error> {
+            pub async fn $insert_fn(&self, rb: &mut dyn rbatis::executor::Executor, table: $table) -> Result<i64, rbatis::Error> {
                 let result = self.$insert_batch_fn(rb, &mut [table.clone()], 1).await;
                 match result {
                     Ok(insert_result) => {
@@ -261,7 +261,7 @@ macro_rules! impl_repo_select_page {
 macro_rules! impl_repo_delete {
     ($table:ty{$fn_name:ident}) => {
         impl Repository {
-            pub async fn $fn_name(&self, pool: &DB, ids: Vec<i64>) -> Result<(), rbatis::Error> {
+            pub async fn $fn_name(&self, pool: &mut dyn rbatis::executor::Executor, ids: Vec<i64>) -> Result<(), rbatis::Error> {
                 if ids.is_empty() {
                     return Ok(());
                 }
