@@ -20,7 +20,7 @@ create table {{prefix}}{{name}} (
     updated int8,
     is_active bool default true,
     primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 {{/each}}
 
