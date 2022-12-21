@@ -101,6 +101,11 @@ impl Service {
         };
         {{#if ac}}
         let mut conn = self.db.acquire_begin().await?;
+        let mut conn = conn.defer_async(|mut tx| async move {
+            if !tx.done {
+                tx.rollback().await.unwrap();
+            }
+        });
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
@@ -133,6 +138,11 @@ impl Service {
         }).collect::<Vec<{{upperCamel this.name}}BO>>();
         {{#if ac}}
         let mut conn = self.db.acquire_begin().await?;
+        let mut conn = conn.defer_async(|mut tx| async move {
+            if !tx.done {
+                tx.rollback().await.unwrap();
+            }
+        });
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
@@ -153,6 +163,11 @@ impl Service {
         };
         {{#if am}}
         let mut conn = self.db.acquire_begin().await?;
+        let mut conn = conn.defer_async(|mut tx| async move {
+            if !tx.done {
+                tx.rollback().await.unwrap();
+            }
+        });
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
@@ -183,6 +198,11 @@ impl Service {
         };
         {{#if am}}
         let mut conn = self.db.acquire_begin().await?;
+        let mut conn = conn.defer_async(|mut tx| async move {
+            if !tx.done {
+                tx.rollback().await.unwrap();
+            }
+        });
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
@@ -203,6 +223,11 @@ impl Service {
     pub async fn delete_{{snake this.name}}(&self, id: i64) -> Result<(), AppError> {
         {{#if bd}}
         let mut conn = self.db.acquire_begin().await?;
+        let mut conn = conn.defer_async(|mut tx| async move {
+            if !tx.done {
+                tx.rollback().await.unwrap();
+            }
+        });
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
@@ -223,6 +248,11 @@ impl Service {
     pub async fn delete_{{snake this.name}}_ids(&self, ids: Vec<i64>) -> Result<(), AppError> {
         {{#if bd}}
         let mut conn = self.db.acquire_begin().await?;
+        let mut conn = conn.defer_async(|mut tx| async move {
+            if !tx.done {
+                tx.rollback().await.unwrap();
+            }
+        });
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}

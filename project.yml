@@ -154,6 +154,7 @@ project:
           name: "user",
           auth: 1,
           skipAuto: true,
+          ac: 1,
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
