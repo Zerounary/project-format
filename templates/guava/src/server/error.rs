@@ -2,7 +2,10 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
+use deadpool::managed::PoolError;
 use rbatis::rbdc::Error;
+use redis::RedisError;
+use serde::{Serialize, Deserialize};
 
 use super::api::commands::resp_err;
 
@@ -58,7 +61,7 @@ macro_rules! app_error_register {
     };
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AppError {
     RepoError(String),
 }
@@ -85,3 +88,20 @@ impl From<Error> for AppError {
     }
 }
 
+impl From<PoolError<RedisError>> for AppError {
+    fn from(e: PoolError<RedisError>) -> Self {
+        AppError::RepoError(e.to_string())
+    }
+}
+
+impl From<RedisError> for AppError {
+    fn from(e: RedisError) -> Self {
+        AppError::RepoError(e.to_string())
+    }
+}
+
+impl From<serde_json::Error> for AppError {
+    fn from(e: serde_json::Error) -> Self {
+        AppError::RepoError(e.to_string())
+    }
+}

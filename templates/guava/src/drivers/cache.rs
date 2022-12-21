@@ -45,19 +45,20 @@ macro_rules! cache {
     ($self:ident($key:ident) -> Result<$bo:ident, $err:ident> $block:block) => {
         let table_name = crate::macros::repository::pure_name(stringify!($bo));
         let key  = if  let Some(user) = $self.user.clone() {
-            format!("{}-{}", user.tenant_id, $key.to_string())
+            format!("{}-{}-{}", user.tenant_id, table_name, $key.to_string())
         }else {
             $key.to_string()
         };
-        let cache = $self.cache.get(&table_name).unwrap();
-        match cache.get(&key) {
-            Some(e) => {
-                let x = cache_value!(e as Result<$bo, $err>);
-                x
+        let mut conn = $self.cache.get().await?;
+        let result: Option<String> = conn.get(key.clone()).await?;
+        match result {
+            Some(json_str) => {
+                serde_json::from_str(&json_str).unwrap()
             }
             None => {
-                let result: Result<$bo, $err> = $block;
-                cache.insert(key, ServiceResult::$bo(result.clone()));
+                let result: Result<$bo, AppError> = $block;
+                let result_str = serde_json::to_string(&result)?;
+                conn.set(&key, result_str).await?;
                 result
             }
         }
@@ -68,9 +69,13 @@ macro_rules! cache {
 macro_rules! cache_invalidate {
     ($self:ident($key:expr => $bo:ident)) => {
         let table_name = crate::macros::repository::pure_name(stringify!($bo));
-        let key = $key.to_string();
-        let cache = $self.cache.get(&table_name).unwrap();
-        cache.invalidate(&key);
+        let key  = if  let Some(user) = $self.user.clone() {
+            format!("{}-{}-{}", user.tenant_id, table_name, $key.to_string())
+        }else {
+            $key.to_string()
+        };
+        let mut conn = $self.cache.get().await?;
+        conn.del(&key).await?;
     }
 }
 

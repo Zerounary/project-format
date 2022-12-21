@@ -1,4 +1,5 @@
 // use cached::proc_macro::cached;
+use redis::AsyncCommands;
 use serde::Deserialize;
 use smart_default::SmartDefault;
 use rbatis::rbdc::{decimal::Decimal, date::Date};

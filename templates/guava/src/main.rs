@@ -46,11 +46,11 @@ async fn main() -> anyhow::Result<()> {
 
     let redis = init_redis();
 
-    let cache = init_cache();
+    // let cache = init_cache();
 
     // Inject a `AppState` into our handlers via a trait object. This could be
     // the live implementation or just a mock for testing.
-    let service = Arc::new(Service::new(db.clone(), cache.clone()));
+    let service = Arc::new(Service::new(db.clone(), redis.clone()));
 
     let session_store = init_redis_session_store(); //MemoryStore::new();
 
@@ -77,7 +77,7 @@ async fn main() -> anyhow::Result<()> {
         .layer(Extension(db.clone()))
         .layer(Extension(service))
         .layer(Extension(redis))
-        .layer(Extension(cache))
+        // .layer(Extension(cache))
         .layer(TraceLayer::new_for_http());
 
     // run it

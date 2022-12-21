@@ -6,7 +6,7 @@ use crate::{
         db::{get_db_type, DB}, session::GuavaSessionStore,
     },
     server::api::commands::{Resp, resp_err},
-    service::Service,
+    service::Service, Redis,
 };
 use async_session::{async_trait, Session, MemoryStore, SessionStore};
 use axum::{
@@ -111,9 +111,9 @@ where
             .await
             .expect("`DB` extension missing");
 
-        let Extension(cache) = Extension::<Arc<HashMap<String, ServiceCache>>>::from_request(req)
+        let Extension(cache) = Extension::<Redis>::from_request(req)
             .await
-            .expect("`Arc<HashMap<String, ServiceCache>>` extension missing");
+            .expect("`Redis` extension missing");
 
         let cookie = Option::<TypedHeader<Cookie>>::from_request(req)
             .await
