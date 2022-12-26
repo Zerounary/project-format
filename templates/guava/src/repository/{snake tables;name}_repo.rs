@@ -55,6 +55,7 @@ where:
   if bo.{{name}} != null && bo.{{name}} != '':
     `and {{name}} = #{ bo.{{name}} }`
 {{/each}}
+` order by id `
 ` limit #{page_start}, #{page_size}`
   "#});
 
