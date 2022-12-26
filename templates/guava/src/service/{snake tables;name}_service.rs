@@ -115,6 +115,7 @@ impl Service {
         {{#if ac}}
         conn.commit().await?;
         {{/if}}
+        cache_invalidate!(self(&id => {{upperCamel name}}));
         Ok(id)
     }
 
