@@ -23,13 +23,13 @@ handlebars_helper!(stringify: |s: Value| s.to_string());
 
 
 // string convert
-handlebars_helper!(fkTable: |s: String| s.trim_end_matches("_id").to_string());
+handlebars_helper!(fkTable: |s: String| s.trim_end_matches("_id").trim_end_matches("_ids").to_string());
 
 
 
 // test
 handlebars_helper!(isId: |s: String| s.to_lowercase().eq("id"));
-handlebars_helper!(isFk: |s: String| s.to_lowercase().ends_with("_id"));
+handlebars_helper!(isFk: |s: String| s.to_lowercase().ends_with("_id") || s.to_lowercase().ends_with("_ids"));
 
 pub struct Render<'a> {
     pub h: Handlebars<'a>,
@@ -113,6 +113,11 @@ impl<'a> Render<'a> {
                                         .parent()
                                         .map(|p| p.join(replace_var(file_name, &item_name)))
                                         .unwrap();
+                                    
+                                    
+                                    if item_target.exists() && data.clone().get("overview").is_none() {
+                                        return;
+                                    }
 
                                     let contents = self
                                         .h
@@ -132,6 +137,9 @@ impl<'a> Render<'a> {
                             Ok(contents) => {
                                 // 某些文件是需要根据数据生成多个文件的
                                 // let file_name = target.file_name().unwrap().to_str().unwrap();
+                                if target.exists() && data.clone().get("overview").is_none() {
+                                    return;
+                                }
                                 fs::write(&target, contents).expect("生成文件失败");
                                 log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
                             }
