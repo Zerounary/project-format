@@ -6,6 +6,7 @@ project:
     project_name: "guava-erp"
     auth: 1
     redis_session: 1
+    overview: 1
     pages:
       - {
           label: "基础信息",
@@ -159,6 +160,27 @@ project:
           auth: 1,
           skipAuto: true,
           ac: 1,
+          acCode: '
+        let role_ids = bo.role_ids.clone();
+
+        let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
+            UserRoleBO { id: 0, user_id: id.clone(), role_id: role_id.parse().unwrap(), description: "".to_string() }
+        }).collect();
+
+        self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+          ',
+          am: 1,
+          amCode: '
+        self.repo.delete_user_role_by_user_id(&mut conn, bo.id).await?;
+
+        let role_ids = input.role_ids.clone();
+
+        let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
+            UserRoleBO { id: 0, user_id: bo.id, role_id: role_id.parse().unwrap(), description: "".to_string() }
+        }).collect();
+
+        self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+          ',
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
@@ -195,7 +217,7 @@ project:
                 type: "String",
                 dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
-                ui: { type: "input-number", label: "角色" },
+                ui: { type: "select", multiple: true, label: "角色" },
               },
             ],
           ddls: ["create index idx_user_name on sys_user(name);"],
@@ -206,6 +228,31 @@ project:
           name: "role",
           auth: 1,
           skipAuto: true,
+          ac: 1,
+          acCode: '
+
+        let menu_ids = bo.perms.clone();
+
+        let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
+            RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: id.clone(), description: "".to_string() }
+        }).collect_vec();
+
+        self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
+
+          ',
+          am: 1,
+          amCode: '
+        self.repo.delete_role_menu_by_role_id(&mut conn, bo.id).await?;
+
+        let menu_ids = bo.perms.clone();
+
+        let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
+            RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: bo.id, description: "".to_string() }
+        }).collect_vec();
+
+        self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
+
+          ',
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
@@ -224,11 +271,22 @@ project:
                 ui: { type: "input-text", label: "描述" },
               },
               {
-                name: "matrix",
+                name: "perms",
                 type: "String",
-                dbType: "json",
+                dbType: "text",
                 skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "矩阵" },
+                ui:
+                  {
+                    type: "transfer-picker",
+                    source:
+                      {
+                        method: "GET",
+                        url: "/api/menu/list",
+                        cache: 2000,
+                        adaptor: "return { ...payload, data: {rows: payload.data.rows.map(e => {return {label: e.menu_name, value: e.id}})} }",
+                      },
+                    label: "权限",
+                  },
               },
             ],
           ddls: [],

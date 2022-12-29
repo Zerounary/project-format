@@ -126,7 +126,8 @@ class AMISComponent extends React.Component<any, any> {
                       method: 'get',
                       url: '/api/login?username=${username}&password=${password}',
                       adaptor: function (payload, response) {
-                        if (payload.data) {
+                        if (payload.data?.length) {
+                          localStorage.setItem('perms', JSON.stringify(payload.data))
                           localStorage.setItem('auth', true)
                           location.href = '/';
                           return payload;
@@ -156,10 +157,16 @@ class AMISComponent extends React.Component<any, any> {
                 logo: '/assets/logo.png',
                 hiddenOn: '${!ls:auth}',
                 header: {
-                  type: 'tpl',
-                  inline: false,
-                  className: 'w-full',
-                  tpl: '<div class="flex justify-between"><div>顶部区域左侧</div><div>顶部区域右侧</div></div>'
+                  type: 'flex',
+                  items: [
+                    {
+                      type: 'button',
+                      label: '退出登录',
+                      actionType: 'ajax',
+                      api: 'get:/api/logout',
+                      redirect: '/'
+                    }
+                  ]
                 },
                 pages
               }

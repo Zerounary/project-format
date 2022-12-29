@@ -41,6 +41,7 @@ pub struct SessionUser {
     pub name: String,
     pub password: String,
     pub tenant_id: i64,
+    pub role_ids: String,
 }
 
 pub async fn login(
@@ -55,17 +56,18 @@ pub async fn login(
     if let Ok(user) = result {
         if params.password.eq(&user.password) {
             let mut session = Session::new();
-            session.insert("user_bo", user).unwrap();
+            session.insert("user_bo", user.clone()).unwrap();
             let cookie = store.store_session(session).await.unwrap().unwrap();
             let mut headers = HeaderMap::new();
             let cookie =
                 HeaderValue::from_str(format!("{}={}", AXUM_SESSION_COOKIE_NAME, cookie).as_str())
                     .unwrap();
             headers.insert(http::header::SET_COOKIE, cookie);
-            return (headers, Resp::ok(true));
+            let perms = service.repo.select_menu_by_ids(&service.db, &user.role_ids).await.unwrap();
+            return (headers, Resp::ok(perms));
         }
     }
-    (HeaderMap::new(), Resp::ok(false))
+    (HeaderMap::new(), Resp::ok(vec![]))
 }
 
 pub async fn logout(

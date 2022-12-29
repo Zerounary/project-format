@@ -1,3 +1,4 @@
+use itertools::Itertools;
 // use cached::proc_macro::cached;
 use redis::AsyncCommands;
 use serde::Deserialize;
@@ -110,8 +111,10 @@ impl Service {
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
-        let id = self.repo.create_{{snake this.name}}(&mut conn, bo).await?;
-
+        let id = self.repo.create_{{snake this.name}}(&mut conn, bo.clone()).await?;
+        {{#if acCode }}
+        {{{acCode}}}
+        {{/if}}
         {{#if ac}}
         conn.commit().await?;
         {{/if}}
@@ -174,6 +177,9 @@ impl Service {
         let mut conn = self.db.acquire().await?;
         {{/if}}
         let result = self.repo.update_{{snake this.name}}_by_id(&mut conn, &bo, bo.id).await;
+        {{#if amCode }}
+        {{{amCode}}}
+        {{/if}}
 
         {{#if am}}
         conn.commit().await?;

@@ -221,7 +221,7 @@ macro_rules! impl_repo_select_list {
             pub async fn $fn_name(&self, mut rb: &DB, $($param_key:$param_type,)*)->Result<Vec<$table>, rbatis::Error>{
                 #[rbatis::py_sql("`select ${table_column} from ${table_name} t `", $sql)]
                 async fn $fn_name(rb: &mut dyn rbatis::executor::Executor,table_column:&str,table_name:&str,$($param_key:$param_type,)*) -> Result<Vec<$table>,rbatis::rbdc::Error> {impled!()}
-                let table_column = "*".to_string();
+                let table_column = "t.*".to_string();
                 let table_name = crate::macros::repository::to_sql_table_name(stringify!($table));
                 let result = $fn_name(&mut rb,&table_column,&table_name,$($param_key ,)*).await;
                 match result {

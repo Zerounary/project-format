@@ -1,5 +1,6 @@
 use convert_case::{Case, Casing};
 use handlebars::{handlebars_helper, Handlebars};
+use itertools::Itertools;
 use jsonpath_rust::JsonPathQuery;
 use serde_json::{json, Value};
 use std::fs::{self, create_dir_all, DirEntry};
@@ -29,6 +30,7 @@ handlebars_helper!(fkTable: |s: String| s.trim_end_matches("_id").trim_end_match
 
 // test
 handlebars_helper!(isId: |s: String| s.to_lowercase().eq("id"));
+handlebars_helper!(isIds: |s: String| s.to_lowercase().ends_with("_ids"));
 handlebars_helper!(isFk: |s: String| s.to_lowercase().ends_with("_id") || s.to_lowercase().ends_with("_ids"));
 
 pub struct Render<'a> {
@@ -54,6 +56,7 @@ impl<'a> Render<'a> {
         h.register_helper("upperCamel", Box::new(upperCamel));
         h.register_helper("kebab", Box::new(kebab));
         h.register_helper("isId", Box::new(isId));
+        h.register_helper("isIds", Box::new(isIds));
         h.register_helper("isFk", Box::new(isFk));
 
         h.register_helper("stringify", Box::new(stringify));
@@ -125,7 +128,7 @@ impl<'a> Render<'a> {
                                         .expect(&format!("渲染对象{:?}", item));
                                     fs::write(&item_target, contents).expect("生成表达式文件失败");
                                     log_path_ok(
-                                        "生成文件",
+                                        "生成文件:",
                                         item_target.as_os_str().to_str().unwrap(),
                                     );
                                 }
