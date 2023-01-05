@@ -7,30 +7,8 @@ use crate::{
 };
 use itertools::Itertools;
 
-mod test {
-    use super::Repository;
-    use rbs::to_value;
-    use crate::drivers::db::DB;
 
-    impl Repository {
-
-        pub async fn count_{{snake this.name}}(&self, db: &DB) -> Result<i64, rbatis::Error> {
-            let result: i64 = db.fetch_decode("SELECT count(1) FROM `{{prefix}}{{snake name}}` t ", vec![])
-                .await
-                .unwrap();
-            Ok(result)
-        }
-
-        pub async fn delete_{{snake this.name}}(&self, db: &mut dyn rbatis::executor::Executor, id: i64) -> Result<(), rbatis::Error> {
-            db.fetch("DELETE FROM `{{prefix}}{{snake name}}` t where id = ?", vec![to_value!(id)])
-                .await
-                .unwrap();
-            Ok(())
-        }
-
-    }
-}
-
+impl_repo_select_one!({{upperCamel this.name}}BO => "count(1)" => i64 {count_{{snake name}}() => r#""#});
 // impl_repo_select!(UserBO{select_bo_by_id(id: i64) -> Option => "`where id = #{id}`"});
 impl_repo_select_one!({{upperCamel this.name}}BO{select_{{snake this.name}}_by_id});
 //impl_repo_select_one!({{upperCamel this.name}}BO{select_{{snake this.name}}_one(code:&str) => 
@@ -66,4 +44,6 @@ impl_repo_update!({{upperCamel this.name}}OptionBO{update_{{snake this.name}}_op
 impl_repo_insert!({{upperCamel this.name}}BO, create_{{snake this.name}}, create_{{snake this.name}}_batch);
 
 impl_repo_delete!({{upperCamel this.name}}BO{delete_{{snake this.name}}_ids});
+
+impl_repo_delete!({{upperCamel this.name}}BO{delete_{{snake this.name}}(id: i64) => "` where id = #{id}`"});
 

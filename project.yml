@@ -162,7 +162,7 @@ project:
           ac: 1,
           acCode: '
         let role_ids = bo.role_ids.clone();
-
+        use crate::entities::user_role_bo::UserRoleBO;
         let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
             UserRoleBO { id: 0, user_id: id.clone(), role_id: role_id.parse().unwrap(), description: "".to_string() }
         }).collect();
@@ -175,6 +175,7 @@ project:
 
         let role_ids = input.role_ids.clone();
 
+        use crate::entities::user_role_bo::UserRoleBO;
         let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
             UserRoleBO { id: 0, user_id: bo.id, role_id: role_id.parse().unwrap(), description: "".to_string() }
         }).collect();
@@ -233,6 +234,7 @@ project:
 
         let menu_ids = bo.perms.clone();
 
+        use crate::entities::role_menu_bo::RoleMenuBO;
         let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
             RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: id.clone(), description: "".to_string() }
         }).collect_vec();
@@ -244,6 +246,7 @@ project:
           amCode: '
         self.repo.delete_role_menu_by_role_id(&mut conn, bo.id).await?;
 
+        use crate::entities::role_menu_bo::RoleMenuBO;
         let menu_ids = bo.perms.clone();
 
         let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
