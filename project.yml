@@ -214,6 +214,13 @@ project:
                 ui: { type: "input-number", label: "所属部门" },
               },
               {
+                name: "is_admin",
+                type: "i64",
+                dbType: "bool",
+                skip: [0, 0, 0, 0],
+                ui: { type: "switch", label: "是否管理员" },
+              },
+              {
                 name: "role_ids",
                 type: "String",
                 dbType: "varchar(120)",
@@ -300,6 +307,29 @@ project:
           name: "menu",
           auth: 1,
           skipAuto: true,
+          listCode: '
+            let result = if let Some(user) = self.user.clone() {
+
+              let mut db = self.db.clone();
+
+              db.set_sql_intercepts(vec![]);
+
+              if user.is_admin == 1 {
+
+                  self.repo.select_menu_list(&db, bo).await?
+
+              }else {
+
+                  self.repo.select_menu_by_ids(&db, &user.role_ids).await?
+                  
+              }
+
+            } else {
+
+                vec![]
+
+            };
+          ',
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },

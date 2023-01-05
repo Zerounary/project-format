@@ -40,6 +40,7 @@ pub struct SessionUser {
     pub id: i64,
     pub name: String,
     pub password: String,
+    pub is_admin: i64,
     pub tenant_id: i64,
     pub role_ids: String,
 }
@@ -63,7 +64,12 @@ pub async fn login(
                 HeaderValue::from_str(format!("{}={}", AXUM_SESSION_COOKIE_NAME, cookie).as_str())
                     .unwrap();
             headers.insert(http::header::SET_COOKIE, cookie);
-            let perms = service.repo.select_menu_by_ids(&service.db, &user.role_ids).await.unwrap();
+            let perms = if user.is_admin == 1 {
+                use crate::entities::menu_opt_bo::MenuOptionBO;
+                service.repo.select_menu_list(&service.db, MenuOptionBO::default()).await.unwrap()
+            }else {
+                service.repo.select_menu_by_ids(&service.db, &user.role_ids).await.unwrap()
+            };
             return (headers, Resp::ok(perms));
         }
     }
@@ -205,7 +211,7 @@ impl SqlIntercept for UserIntercept {
                     let table_name = caps[0].to_string();
                     let limit_table_name = format!(
                         "(select * from {} where tenant_id = {})",
-                        table_name, self.user.tenant_id
+                        table_name.trim_matches('`').trim_matches('"'), self.user.tenant_id
                     );
                     *sql = sql.replace(&table_name, &limit_table_name);
                 }

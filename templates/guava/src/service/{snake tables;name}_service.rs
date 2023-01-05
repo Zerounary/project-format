@@ -57,7 +57,11 @@ pub struct Update{{upperCamel this.name}}OptionInput {
 impl Service {
 
     pub async fn find_{{snake this.name}}_list(&self, bo: {{upperCamel this.name}}OptionBO) -> Result<Vec<{{upperCamel this.name}}BO>, AppError> {
+        {{#if listCode}}
+        {{{listCode}}}
+        {{else}}
         let result = self.repo.select_{{snake this.name}}_list(&self.db, bo).await?;
+        {{/if}}
         Ok(result)
     }
 
