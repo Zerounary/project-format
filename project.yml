@@ -313,14 +313,16 @@ project:
               let mut db = self.db.clone();
 
               db.set_sql_intercepts(vec![]);
-
+              
+              let mut conn = db.acquire().await.unwrap();
+              
               if user.is_admin == 1 {
 
-                  self.repo.select_menu_list(&db, bo).await?
+                  self.repo.select_menu_list(&mut conn, bo).await?
 
               }else {
 
-                  self.repo.select_menu_by_ids(&db, &user.role_ids).await?
+                  self.repo.select_menu_by_ids(&mut conn, &user.role_ids).await?
                   
               }
 

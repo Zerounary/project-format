@@ -60,29 +60,34 @@ impl Service {
         {{#if listCode}}
         {{{listCode}}}
         {{else}}
-        let result = self.repo.select_{{snake this.name}}_list(&self.db, bo).await?;
+        let mut conn = self.db.acquire().await.unwrap();
+        let result = self.repo.select_{{snake this.name}}_list(&mut conn, bo).await?;
         {{/if}}
         Ok(result)
     }
 
     pub async fn count_{{snake name}}(&self) -> Result<i64, AppError> {
-        let count = self.repo.count_{{snake name}}(&self.db).await?;
+        let mut conn = self.db.acquire().await.unwrap();
+        let count = self.repo.count_{{snake name}}(&mut conn).await?;
         Ok(count)
     }
 
     pub async fn find_{{snake this.name}}_page(&self, bo: {{upperCamel this.name}}OptionBO, page_num: i64, page_size: i64) -> Result<Vec<{{upperCamel this.name}}BO>, AppError> {
-        let result = self.repo.select_{{snake this.name}}_page(&self.db, bo, page_num, page_size).await?;
+        let mut conn = self.db.acquire().await.unwrap();
+        let result = self.repo.select_{{snake this.name}}_page(&mut conn, bo, page_num, page_size).await?;
         Ok(result)
     }
     pub async fn find_{{snake this.name}}_by_id_no_cache(&self, id: i64) -> Result<{{upperCamel this.name}}BO, AppError> {
-        let result = self.repo.select_{{snake this.name}}_by_id(&self.db, id).await?;
+        let mut conn = self.db.acquire().await.unwrap();
+        let result = self.repo.select_{{snake this.name}}_by_id(&mut conn, id).await?;
         Ok(result)
     }
     
     pub async fn find_{{snake this.name}}_by_id(&self, id: i64) -> Result<{{upperCamel this.name}}BO, AppError> {
         cache!{
             self(id) -> Result<{{upperCamel this.name}}BO, AppError> {
-                let result = self.repo.select_{{snake this.name}}_by_id(&self.db, id).await?;
+                let mut conn = self.db.acquire().await.unwrap();
+                let result = self.repo.select_{{snake this.name}}_by_id(&mut conn, id).await?;
                 Ok(result)
             }
         }

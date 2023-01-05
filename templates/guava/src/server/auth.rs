@@ -50,9 +50,10 @@ pub async fn login(
     Extension(service): State,
     Extension(store): Extension<GuavaSessionStore>,
 ) -> impl IntoResponse {
+    let mut conn = service.db.acquire().await.unwrap();
     let result = service
         .repo
-        .select_session_user_by_name(&service.db, &params.username)
+        .select_session_user_by_name(&mut conn, &params.username)
         .await;
     if let Ok(user) = result {
         if params.password.eq(&user.password) {
@@ -66,9 +67,9 @@ pub async fn login(
             headers.insert(http::header::SET_COOKIE, cookie);
             let perms = if user.is_admin == 1 {
                 use crate::entities::menu_opt_bo::MenuOptionBO;
-                service.repo.select_menu_list(&service.db, MenuOptionBO::default()).await.unwrap()
+                service.repo.select_menu_list(&mut conn, MenuOptionBO::default()).await.unwrap()
             }else {
-                service.repo.select_menu_by_ids(&service.db, &user.role_ids).await.unwrap()
+                service.repo.select_menu_by_ids(&mut conn, &user.role_ids).await.unwrap()
             };
             return (headers, Resp::ok(perms));
         }
