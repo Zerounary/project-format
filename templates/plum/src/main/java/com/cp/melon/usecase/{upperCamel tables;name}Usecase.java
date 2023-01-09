@@ -7,7 +7,7 @@ import com.cp.melon.entity.common.BatchResult;
 import com.cp.melon.entity.common.BusResultBO;
 import com.cp.melon.entity.common.ErrorBO;
 import com.cp.melon.usecase.exception.NotFoundException;
-import com.cp.melon.usecase.exception.UsecaseException;
+import com.cp.melon.usecase.exception.AppException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ public class {{upperCamel name}}Usecase {
         if ({{camel name}}Service.save(bo)) {
             return bo.getId();
         }else {
-            throw new UsecaseException("新增失败");
+            throw new AppException("新增失败");
         }
     }
 
@@ -56,7 +56,7 @@ public class {{upperCamel name}}Usecase {
         if({{camel name}}Service.updateById(bo)) {
             return true;
         }else {
-            throw new UsecaseException("更新失败");
+            throw new AppException("更新失败");
         }
     }
 
@@ -84,7 +84,7 @@ public class {{upperCamel name}}Usecase {
         if({{camel name}}Service.removeById(id)){
             return true;
         }else {
-            throw new UsecaseException("删除失败");
+            throw new AppException("删除失败");
         }
     }
 

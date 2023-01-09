@@ -3,7 +3,7 @@ package com.cp.melon.adapter.api.config;
 import cn.hutool.core.util.StrUtil;
 import com.cp.melon.adapter.api.vo.Resp;
 import com.cp.melon.usecase.exception.UnAuthException;
-import com.cp.melon.usecase.exception.UsecaseException;
+import com.cp.melon.usecase.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.mybatis.spring.MyBatisSystemException;
@@ -67,9 +67,9 @@ public class GlobalErrorHandler {
         return Resp.fail(1, "错误：" + errMsg.get());
     }
 
-    @ExceptionHandler(value = UsecaseException.class)
+    @ExceptionHandler(value = AppException.class)
     @ResponseBody
-    public Resp handleException(UsecaseException e) throws Exception {
+    public Resp handleException(AppException e) throws Exception {
         log.error(e.getLocalizedMessage(), e);
         return Resp.fail(1, "错误：" + e.getLocalizedMessage());
     }

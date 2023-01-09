@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import com.cp.melon.adapter.utils.QueryParamUtils;
 
 import com.cp.melon.entity.common.BatchResult;
 import com.cp.melon.usecase.{{upperCamel name}}Usecase;
@@ -39,28 +41,25 @@ public class {{upperCamel name}}Controller{
         return Resp.ok(vo);
     }
 
-    @PostMapping("/one")
-    public Resp<{{upperCamel name}}VO> find{{upperCamel name}}One(@RequestBody {{upperCamel name}}QueryVO queryVO){
-        QueryChainWrapper<{{upperCamel name}}BO> query = {{camel name}}Service.query();
-        AbstractWrapper<{{upperCamel name}}BO, String, QueryWrapper<{{upperCamel name}}BO>> wrapper = queryVO.toWrapper(query);
+    @GetMapping("/one")
+    public Resp<{{upperCamel name}}VO> find{{upperCamel name}}One(@RequestParam Map<String, Object> params){
+        QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
         {{upperCamel name}}BO bo = {{camel name}}Service.getOne(wrapper);
         {{upperCamel name}}VO vo = {{upperCamel name}}VO.fromBO(bo);
         return Resp.ok(vo);
     }
 
-    @PostMapping("/list")
-    public Resp<List<{{upperCamel name}}VO>> find{{upperCamel name}}List(@RequestBody {{upperCamel name}}QueryVO queryVO){
-        QueryChainWrapper<{{upperCamel name}}BO> query = {{camel name}}Service.query();
-        AbstractWrapper<{{upperCamel name}}BO, String, QueryWrapper<{{upperCamel name}}BO>> wrapper = queryVO.toWrapper(query);
+    @GetMapping("/noPage")
+    public Resp<List<{{upperCamel name}}VO>> find{{upperCamel name}}List(@RequestParam Map<String, Object> params){
+        QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
         List<{{upperCamel name}}BO> bos = {{camel name}}Service.list(wrapper);
         List<{{upperCamel name}}VO> vos = bos.stream().map(bo -> {{upperCamel name}}VO.fromBO(bo)).collect(Collectors.toList());
         return Resp.ok(vos);
     }
 
-    @PostMapping("/page")
-    public Page<{{upperCamel name}}VO> find{{upperCamel name}}Page(@RequestBody {{upperCamel name}}QueryVO queryVO, @RequestParam("current") Long currentPage, @RequestParam("size") Long pageSize){
-        QueryChainWrapper<{{upperCamel name}}BO> query = {{camel name}}Service.query();
-        AbstractWrapper<{{upperCamel name}}BO, String, QueryWrapper<{{upperCamel name}}BO>> wrapper = queryVO.toWrapper(query);
+    @GetMapping("/list")
+    public Page<{{upperCamel name}}VO> find{{upperCamel name}}Page(@RequestParam Map<String, Object> params, @RequestParam( "currentPage") Long currentPage, @RequestParam( "pageSize") Long pageSize){
+        QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
         Page<{{upperCamel name}}BO> page = new Page(currentPage, pageSize);
         Page<{{upperCamel name}}BO> pageResult = {{camel name}}Service.page(page, wrapper);
         List<{{upperCamel name}}VO> vos = pageResult.getRecords().stream().map(bo -> {{upperCamel name}}VO.fromBO(bo)).collect(Collectors.toList());
