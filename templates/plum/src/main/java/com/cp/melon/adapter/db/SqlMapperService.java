@@ -155,7 +155,7 @@ public class SqlMapperService {
             request.put("currentPage", currentPage);
             request.put("pageSize", pageSize);
             JSONObject page = new JSONObject();
-            page.put("start", (currentPage - 1L) * pageSize + 1L);
+            page.put("start", (currentPage - 1L) * pageSize);
             page.put("end", currentPage * pageSize);
             request.put("page", page);
         }
@@ -206,16 +206,14 @@ public class SqlMapperService {
 
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("<script> ");
-        stringBuffer.append(" SELECT * FROM ( SELECT rownum as \"_no\", \"_no\".* FROM ( ");
         stringBuffer.append(cleanSql);
+        stringBuffer.append(" limit #{page.pageSize} offset #{page.start} ");
         stringBuffer.append("<if test=\"sorter != null and sorter.size() != 0\"> ");
         stringBuffer.append("order by ");
         stringBuffer.append("<foreach item=\"order\" index=\"column\" collection=\"sorter\" separator=\",\" > ");
         stringBuffer.append(" \"${column}\" ${order}");
         stringBuffer.append("</foreach> ");
         stringBuffer.append("</if> ");
-        stringBuffer.append(" ) \"_no\" where rownum <![CDATA[<=]]> #{page.end}) ");
-        stringBuffer.append(" WHERE \"_no\" <![CDATA[>=]]> #{page.start} ");
         stringBuffer.append("</script>");
 
         return stringBuffer.toString();
@@ -244,7 +242,7 @@ public class SqlMapperService {
         }
         stringBuffer.append(" FROM ( ");
         stringBuffer.append(cleanSql);
-        stringBuffer.append(" ) ");
+        stringBuffer.append(" ) t");
         stringBuffer.append("</script>");
 
         return stringBuffer.toString();
