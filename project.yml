@@ -21,7 +21,7 @@ project:
                 name: "pid",
                 type: "Long",
                 dbType: "INT8",
-                dbTypeWith: "constraint FK_category_pid references b_category(id)",
+                # dbTypeWith: "constraint FK_category_pid references b_category(id)",
                 skip: [1, 1, 1, 1],
               },
               {

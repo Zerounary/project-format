@@ -3,6 +3,13 @@
 -- 创建表结构
 {{#each tables }}
 -- changeset codegen:a{{@index}}
+CREATE SEQUENCE seq_{{prefix}}{{name}}
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+
 create table {{prefix}}{{name}} (
 {{#each columns }}
     {{name}} {{dbType}} {{dbTypeWith}},
@@ -28,3 +35,7 @@ create table {{prefix}}{{name}} (
 
 {{/each}}
 
+-- changeset codegen:c1
+insert into sys_user
+(id, name, password)
+values (nextval('seq_sys_user'), 'mrbird', '$2a$10$5vqiOoRnnE6tLzaRjjlvNOHEiuHjLtLYeTtViLyW5gDzPFvQf57QC');

@@ -1,7 +1,7 @@
 package com.cp.melon.adapter.db;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.incrementer.OracleKeyGenerator;
+import com.baomidou.mybatisplus.extension.incrementer.PostgreKeyGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +23,14 @@ public class MybatisPlusConfig {
         return interceptor;
     }
 
-    @Bean
-    public OracleKeyGenerator oracleKeyGenerator() {
-        return new OracleKeyGenerator() {
-            @Override
-            public String executeSql(String incrementerName) {
-                return "SELECT get_sequences('" + incrementerName + "') FROM DUAL";
-            }
-        };
-    }
+     @Bean
+     public PostgreKeyGenerator postgreKeyGenerator() {
+         return new PostgreKeyGenerator() {
+             @Override
+             public String executeSql(String incrementerName) {
+                 return "SELECT nextval('seq_" + incrementerName + "')";
+             }
+         };
+     }
 }
 
