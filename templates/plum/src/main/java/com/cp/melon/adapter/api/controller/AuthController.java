@@ -1,8 +1,11 @@
 package com.cp.melon.adapter.api.controller;
 
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
-import com.cp.melon.adapter.service.IUserService;
-import com.cp.melon.entity.UserBO;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.map.MapUtil;
+import com.cp.melon.adapter.api.auth.AuthUser;
+import com.cp.melon.adapter.api.auth.AuthUserVO;
+import com.cp.melon.adapter.api.vo.Resp;
+import com.cp.melon.adapter.db.SqlMapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,37 +22,34 @@ import javax.servlet.http.HttpSession;
 public class AuthController {
 
     @Autowired
-    private IUserService userService;
+    private SqlMapperService sqlMapper;
 
     @GetMapping("/login")
-    public String setSession(HttpServletRequest request, String username, String password) {
+    public Resp login(HttpServletRequest request, String username, String password, String tenantId) {
         HttpSession session = request.getSession();
-        QueryChainWrapper<UserBO> query = userService.query();
-        query.eq("name", username);
-        UserBO userBO = userService.getOne(query.getWrapper());
-        if(userBO != null && userBO.getPassword().equals(password)){
-            session.setAttribute(username, userBO);
-            return "success";
-        }else {
-            return "fail";
+        AuthUser authUser = sqlMapper
+                .selectOne(
+                        "auth",
+                        MapUtil.builder()
+                                .put("name", username)
+                                .put("tenantId", Long.parseLong(tenantId))
+                                .build(),
+                        AuthUser.class);
+        if (authUser != null && authUser.getPassword().equals(password)) {
+            session.setAttribute("user", authUser);
+            return Resp.ok(BeanUtil.toBean(authUser, AuthUserVO.class));
+        } else {
+            return Resp.fail(401, "请检查用户名密码是否正确");
         }
     }
 
     // @methodDesc: 功能描述:(从Session获取值)
 
-    @RequestMapping("/getSession")
-    public String getSession(HttpServletRequest request, String sessionKey) {
-        HttpSession session =null;
-        try {
-            session = request.getSession();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String value=null;
-        if(session!=null){
-            value = (String) session.getAttribute(sessionKey);
-        }
-        return "sessionValue:" + value;
+    @RequestMapping("/logout")
+    public Resp logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("user", null);
+        return Resp.ok(null);
     }
 
 }

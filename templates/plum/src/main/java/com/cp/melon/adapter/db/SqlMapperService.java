@@ -7,10 +7,10 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.cp.melon.adapter.api.auth.AuthUser;
 import com.cp.melon.adapter.api.vo.Resp;
 import com.cp.melon.adapter.api.vo.RespPage;
 import com.cp.melon.adapter.auth.Const;
-import com.cp.melon.entity.UserBO;
 import com.github.abel533.sql.SqlMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -47,7 +47,7 @@ public class SqlMapperService {
     }
 
     public RespPage<JSONObject> list(String fileName, boolean isNoPage, JSONObject request) {
-        UserBO user = Const.getUser(session);
+        AuthUser user = Const.getUser(session);
         request.put("user", user);
         RespPage<JSONObject> resultList = new RespPage<JSONObject>();
         String sqlContent = getFileContent(fileName);
@@ -103,6 +103,22 @@ public class SqlMapperService {
             return Resp.ok(firstRst);
         }
         return Resp.ok(null);
+    }
+
+    public String getMapperSql(String fileName) {
+        return getCleanSqlContent(getFileContent(fileName));
+    }
+
+    public <T> T selectOne(String fileName, Object value, Class<T> resultType) {
+        String sql = getMapperSql(fileName);
+        T t = sqlMapper.selectOne(sql, value, resultType);
+        return t;
+    }
+
+    public <T> List<T> selectList(String fileName, Object value, Class<T> resultType) {
+        String sql = getMapperSql(fileName);
+        List<T> ts = sqlMapper.selectList(sql, value, resultType);
+        return ts;
     }
 
     /**

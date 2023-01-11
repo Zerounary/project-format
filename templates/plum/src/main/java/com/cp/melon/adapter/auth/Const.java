@@ -1,6 +1,6 @@
 package com.cp.melon.adapter.auth;
 
-import com.cp.melon.entity.UserBO;
+import com.cp.melon.adapter.api.auth.AuthUser;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,8 +10,8 @@ import javax.servlet.http.HttpSession;
  */
 public class Const {
     public static final String USER = "user";
-    public static UserBO getUser(HttpSession session) {
-        UserBO user = (UserBO) session.getAttribute(Const.USER);
+    public static AuthUser getUser(HttpSession session) {
+        AuthUser user = (AuthUser) session.getAttribute(Const.USER);
         return user;
     }
 }
