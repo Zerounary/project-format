@@ -15,9 +15,9 @@ create table {{prefix}}{{name}} (
     {{name}} {{dbType}} {{dbTypeWith}},
 {{/each}}
     tenant_id INT8,
-    created_time DATE,
+    created_time TIMESTAMP,
     created INT8,
-    updated_time DATE,
+    updated_time TIMESTAMP,
     updated INT8,
     isactive bool default true,
     primary key (id)
