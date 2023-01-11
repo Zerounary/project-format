@@ -21,6 +21,7 @@ import com.cp.melon.adapter.utils.QueryParamUtils;
 import com.cp.melon.entity.common.BatchResult;
 import com.cp.melon.usecase.{{upperCamel name}}Usecase;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.cp.melon.adapter.api.auth.WebAuth;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,6 +35,7 @@ public class {{upperCamel name}}Controller{
     private {{upperCamel name}}Usecase {{camel name}}Usecase;
 
 
+    @WebAuth
     @GetMapping("/{id}")
     public Resp<{{upperCamel name}}VO> find{{upperCamel name}}ById( @PathVariable("id") Long id){
         {{upperCamel name}}BO bo = {{camel name}}Service.getById(id);

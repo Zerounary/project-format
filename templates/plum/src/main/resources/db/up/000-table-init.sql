@@ -37,5 +37,5 @@ create table {{prefix}}{{name}} (
 
 -- changeset codegen:c1
 insert into sys_user
-(id, name, password)
-values (nextval('seq_sys_user'), 'mrbird', '$2a$10$5vqiOoRnnE6tLzaRjjlvNOHEiuHjLtLYeTtViLyW5gDzPFvQf57QC');
+(id, name, password, tenant_id)
+values (nextval('seq_sys_user'), 'mrbird', '123456', 1);
