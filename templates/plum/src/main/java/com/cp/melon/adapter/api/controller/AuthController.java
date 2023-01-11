@@ -45,7 +45,7 @@ public class AuthController {
 
     // @methodDesc: 功能描述:(从Session获取值)
 
-    @RequestMapping("/logout")
+    @GetMapping("/logout")
     public Resp logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("user", null);
