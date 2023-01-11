@@ -1,14 +1,15 @@
 package com.cp.melon.adapter.api.controller;
 
-import cn.hutool.core.util.StrUtil;
-import com.cp.melon.adapter.api.vo.Resp;
-import com.cp.melon.usecase.exception.UnAuthException;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.cp.melon.adapter.service.IUserService;
+import com.cp.melon.entity.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @Author sc
@@ -18,16 +19,38 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthController {
 
     @Autowired
-    private ConsumerTokenServices consumerTokenServices;
+    private IUserService userService;
 
-    @DeleteMapping("signout")
-    public Resp<String> signout(HttpServletRequest request) throws UnAuthException {
-        String authorization = request.getHeader("Authorization");
-        String token = StrUtil.replace(authorization, "bearer ", "");
-        if (!consumerTokenServices.revokeToken(token)) {
-            throw new UnAuthException("退出登录失败");
+    @GetMapping("/login")
+    public String setSession(HttpServletRequest request, String username, String password) {
+        HttpSession session = request.getSession();
+        QueryChainWrapper<UserBO> query = userService.query();
+        query.eq("name", username);
+        UserBO userBO = userService.getOne(query.getWrapper());
+        if(userBO != null && userBO.getPassword().equals(password)){
+            session.setAttribute(username, userBO);
+            return "success";
+        }else {
+            return "fail";
         }
-        return Resp.ok("退出登录成功");
+    }
+
+    // @methodDesc: 功能描述:(从Session获取值)
+
+    @RequestMapping("/getSession")
+    public String getSession(HttpServletRequest request, String sessionKey) {
+        HttpSession session =null;
+        try {
+            session = request.getSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String value=null;
+        if(session!=null){
+            value = (String) session.getAttribute(sessionKey);
+        }
+        return "sessionValue:" + value;
     }
 
 }
+
