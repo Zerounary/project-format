@@ -2,6 +2,7 @@ package com.cp.melon.adapter.api.controller;
 
 
 import com.alibaba.fastjson2.JSONObject;
+import com.cp.melon.adapter.api.auth.WebAuth;
 import com.cp.melon.adapter.api.vo.Resp;
 import com.cp.melon.adapter.api.vo.RespPage;
 import com.cp.melon.adapter.db.SqlMapperService;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Slf4j
+@RequestMapping("/api")
 public class SqlMapperController {
     @Autowired
     private SqlMapperService sqlMapper;
 
     //列表查询接口
+    @WebAuth
     @PutMapping("/{table}/list")
     public RespPage<JSONObject> query(@RequestBody(required = false) JSONObject request, @PathVariable("table") String table) {
         String fileName = table + "-list";
@@ -27,6 +30,7 @@ public class SqlMapperController {
     }
 
     //详情查询接口
+    @WebAuth
     @PutMapping("/{table}/detail")
     public Resp<JSONObject> detail(@RequestBody(required = false) JSONObject request, @PathVariable("table") String table) {
         String fileName = table + "-detail";
@@ -34,6 +38,7 @@ public class SqlMapperController {
         return detail;
     }
 
+    @WebAuth
     @PutMapping("/{table}/noPage")
     public RespPage<JSONObject> noPage(@RequestBody(required = false) JSONObject request, @PathVariable("table") String table) {
         String fileName = table + "-list";
