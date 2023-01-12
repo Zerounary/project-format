@@ -10,6 +10,7 @@ pub struct Config {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Project {
     pub template: Option<Template>,
+    pub includes: Option<Vec<String>>,
     pub data: Value,
 }
 
