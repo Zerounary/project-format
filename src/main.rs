@@ -4,6 +4,7 @@ pub mod parser;
 pub mod render;
 
 use clap::Parser;
+use itertools::Itertools;
 use log::log_text_ok;
 use render::Render;
 // use itertools::Itertools;
@@ -41,7 +42,29 @@ fn main() {
         output = temp_out;
     }
 
-    render.copy_render(&input, &output, &yaml.project.data);
+    let data = if let Some(whitelist) = yaml.project.includes {
+        if whitelist.is_empty() {
+            yaml.project.data.clone()
+        } else {
+            let mut render_data = yaml.project.data.clone();
+            if let Some(tables) = render_data.get_mut("tables") {
+               let mut list = tables.as_array_mut().unwrap();
+               let filter_tables = list.clone().into_iter().filter(|e| {
+                    let name = e.get("name").unwrap().as_str().unwrap().to_string();
+                    whitelist.contains(&name)
+                }).collect_vec();
+
+                render_data.as_object_mut().unwrap().insert("tables".to_string(), serde_json::Value::Array(filter_tables) )  ;
+                render_data
+            }else {
+                yaml.project.data.clone()
+            }
+        }
+    }else {
+        yaml.project.data.clone()
+    };
+
+    render.copy_render(&input, &output, &data);
 
     log_text_ok("所有文件生成");
 }
