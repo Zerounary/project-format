@@ -16,6 +16,7 @@ use axum::{
     response::IntoResponse,
     Extension, TypedHeader,
 };
+use fastdate::DurationFrom;
 use rbatis::{intercept::SqlIntercept, Rbatis};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
@@ -45,6 +46,11 @@ pub struct SessionUser {
     pub role_ids: String,
 }
 
+#[derive(Debug, SmartDefault, Clone, Serialize, Deserialize)]
+pub struct AuthVO {
+    perms: Vec<String>,
+}
+
 pub async fn login(
     Query(params): Query<LoginParams>,
     Extension(service): State,
@@ -59,6 +65,7 @@ pub async fn login(
         if params.password.eq(&user.password) {
             let mut session = Session::new();
             session.insert("user_bo", user.clone()).unwrap();
+            session.expire_in(std::time::Duration::from_hour(24));
             let cookie = store.store_session(session).await.unwrap().unwrap();
             let mut headers = HeaderMap::new();
             let cookie =
@@ -67,14 +74,16 @@ pub async fn login(
             headers.insert(http::header::SET_COOKIE, cookie);
             let perms = if user.is_admin == 1 {
                 use crate::entities::menu_opt_bo::MenuOptionBO;
-                service.repo.select_menu_list(&mut conn, MenuOptionBO::default()).await.unwrap()
+                let res = service.repo.select_menu_perms_list(&mut conn, MenuOptionBO::default()).await.expect("查询管理员权限失败");
+                res
             }else {
-                service.repo.select_menu_by_ids(&mut conn, &user.role_ids).await.unwrap()
+                let res =service.repo.select_menu_perms_by_ids(&mut conn, &user.role_ids).await.unwrap();
+                res
             };
-            return (headers, Resp::ok(perms));
+            return (headers, Resp::ok(AuthVO{perms}));
         }
     }
-    (HeaderMap::new(), Resp::ok(vec![]))
+    (HeaderMap::new(), Resp::fail(401, "登录失败".to_string()))
 }
 
 pub async fn logout(
@@ -120,7 +129,7 @@ where
             .await
             .expect("`DB` extension missing");
 
-        let Extension(cache) = Extension::<Redis>::from_request(req)
+        let Extension(cache) = Extension::<ServiceCache>::from_request(req)
             .await
             .expect("`Redis` extension missing");
 

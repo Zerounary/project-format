@@ -13,13 +13,12 @@ impl Repository {
             user
         }
     }
-
-
 }
 
 {{#if auth}}
 use rbs::to_value;
 use crate::entities::menu_bo::MenuBO;
+use crate::entities::menu_opt_bo::MenuOptionBO;
 use crate::entities::role_menu_bo::RoleMenuBO;
 use crate::entities::user_role_bo::UserRoleBO;
 use crate::macros::repository::{impl_repo_select_list, impl_repo_select, impl_repo_delete};
@@ -29,6 +28,16 @@ impl_repo_select_one!(SessionUser => "id, name, password, is_admin, tenant_id, r
 r#"
 `where name = #{name}`
 "#});
+
+impl_repo_select_list!(MenuOptionBO[perms] => "t.perms" => String {select_menu_perms_by_ids(ids:&str) => 
+r#"
+` join sys_role_menu srm on srm.menu_id = t.id `
+`where srm.role_id in( ${ids} )`
+"#});
+
+impl_repo_select_list!(MenuOptionBO[perms] => "perms" => String{select_menu_perms_list(bo:MenuOptionBO) => 
+    // 此处 可以用 py_sql 和 html_sql 对比使用
+r#""#});
 
 impl_repo_select_list!(MenuBO => "t.*" => {select_menu_by_ids(ids:&str) => 
 r#"

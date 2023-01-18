@@ -1,6 +1,7 @@
 use moka::sync::Cache;
 use std::{sync::Arc, collections::HashMap};
-
+use crate::Redis;
+use super::redis::init_redis;
 use crate::{
     server::error::AppError,
     {{#each tables}}
@@ -15,7 +16,12 @@ pub enum ServiceResult {
     {{/each}}
 }
 
-pub type ServiceCache = Arc<Cache<String, ServiceResult>>;
+{{#if redis_session}}
+pub type ServiceCache = Redis;
+{{else}}
+pub type CacheCell = Arc<Cache<String, ServiceResult>>;
+pub type ServiceCache = Arc<HashMap<String, CacheCell>>;
+{{/if}}
 
 #[macro_export]
 macro_rules! cache_value {
@@ -43,6 +49,7 @@ macro_rules! cache_value {
 #[macro_export]
 macro_rules! cache {
     ($self:ident($key:ident) -> Result<$bo:ident, $err:ident> $block:block) => {
+        {{#if redis_session}}
         let table_name = crate::macros::repository::pure_name(stringify!($bo));
         let key  = if  let Some(user) = $self.user.clone() {
             format!("{}-{}-{}", user.tenant_id, table_name, $key.to_string())
@@ -62,12 +69,33 @@ macro_rules! cache {
                 result
             }
         }
+        {{else}}
+        let table_name = crate::macros::repository::pure_name(stringify!($bo));
+        let key  = if  let Some(user) = $self.user.clone() {
+            format!("{}-{}", user.tenant_id, $key.to_string())
+        }else {
+            $key.to_string()
+        };
+        let cache = $self.cache.get(&table_name).unwrap();
+        match cache.get(&key) {
+            Some(e) => {
+                let x = cache_value!(e as Result<$bo, $err>);
+                x
+            }
+            None => {
+                let result: Result<$bo, $err> = $block;
+                cache.insert(key, ServiceResult::$bo(result.clone()));
+                result
+            }
+        }
+        {{/if}}
     };
 }
 
 #[macro_export]
 macro_rules! cache_invalidate {
     ($self:ident($key:expr => $bo:ident)) => {
+        {{#if redis_session}}
         let table_name = crate::macros::repository::pure_name(stringify!($bo));
         let key  = if  let Some(user) = $self.user.clone() {
             format!("{}-{}-{}", user.tenant_id, table_name, $key.to_string())
@@ -76,13 +104,23 @@ macro_rules! cache_invalidate {
         };
         let mut conn = $self.cache.get().await?;
         conn.del(&key).await?;
+        {{else}}
+        let table_name = crate::macros::repository::pure_name(stringify!($bo));
+        let key = $key.to_string();
+        let cache = $self.cache.get(&table_name).unwrap();
+        cache.invalidate(&key);
+        {{/if}}
     }
 }
 
-pub fn init_cache() -> Arc<HashMap<String, ServiceCache>>{
+pub fn init_cache() -> ServiceCache {
+    {{#if redis_session}}
+    init_redis()
+    {{else}}
     Arc::new(HashMap::from([
         {{#each tables}}
         ("{{name}}".to_string(), Arc::new(Cache::new(10_000))),
         {{/each}}
     ]))
+    {{/if}}
 }

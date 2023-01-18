@@ -4,3 +4,4 @@ guava.db
 *.db
 *.db.*
 *.exe
+guava-session

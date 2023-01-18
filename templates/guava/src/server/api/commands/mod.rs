@@ -57,6 +57,14 @@ impl<T> Resp<T> {
             data: Some(data),
         }))
     }
+
+    pub fn fail(status: i32, msg: String) -> AppResult<T> {
+        Ok(Json(Self {
+            status,
+            msg,
+            data: None,
+        }))
+    }
 }
 
 pub fn resp_err(status: i32, msg: String) -> AppErrResult {

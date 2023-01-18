@@ -1,12 +1,12 @@
 [package]
-name = "{{project_name}}"
+name = "guava"
 version = "0.0.1"
 edition = "2021"
 description = "a fast development web application build with axum"
 authors = ["Zerounary <zerounary@163.com>"]
 license = "MIT"
 keywords = ["web", "codegen", "template"]
-repository = "https://github.com/Zerounary/{{project_name}}.git"
+repository = "https://github.com/Zerounary/guava.git"
 readme = "README.md"
 
 
@@ -31,6 +31,8 @@ struct-convert = "1.2.3"
 url = "2.3.1"
 smart-default = "0.6.0"
 fastdate = "0.1.29"
+easy_file = "0.1.20"
+async-lock = "2.4.0"
 
 moka = "0.9.3"
 async-session = "3.0.0"
