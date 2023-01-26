@@ -1,11 +1,11 @@
 project:
   template:
     dir: "templates/guava"
-    output: "../guava-erp"
+    output: "../cardroom-test"
   data:
-    project_name: "guava-erp"
+    project_name: "cardroom"
     auth: 1
-    redis_session: 1
+    redis_session: 0
     overview: 1
     pages:
       - {
@@ -27,132 +27,6 @@ project:
             ],
         }
     tables:
-      # 门店
-      - {
-          prefix: "b_",
-          name: "merchant",
-          auth: 1,
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "code",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "门店编码" },
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "门店名称" },
-              },
-              {
-                name: "contacts",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1, 1],
-                ui: { type: "input-text", label: "联系人员" },
-              },
-              {
-                name: "phone",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1, 1],
-                ui: { type: "input-text", label: "联系电话" },
-              },
-              {
-                name: "address",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1, 1],
-                ui: { type: "input-text", label: "门店地址" },
-              },
-              {
-                name: "tax",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1, 1],
-                ui: { type: "input-text", label: "门店税号" },
-              },
-              {
-                name: "bank",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1, 1],
-                ui: { type: "input-text", label: "开户银行" },
-              },
-              {
-                name: "account",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1, 1],
-                ui: { type: "input-text", label: "对公账户" },
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(80)",
-                skip: [1, 1, 1, 1, 1],
-                ui: { type: "input-text", label: "备注信息" },
-              },
-            ],
-          ddls: [],
-        }
-      # 部门
-      - {
-          prefix: "b_",
-          name: "dept",
-          skipAuto: true,
-          auth: 1,
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "code",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "编码" },
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "名称" },
-              },
-            ],
-          ddls: [],
-        }
-      # 租户
-      # - {
-      #     prefix: "sys_",
-      #     name: "tenant",
-      #     skipAuto: true,
-      #     columns:
-      #       [
-      #         {
-      #           name: "id",
-      #           type: "i64",
-      #           dbType: "int8",
-      #           skip: [1, 1, 1, 1],
-      #         },
-      #         {
-      #           name: "name",
-      #           type: "String",
-      #           dbType: "varchar(120)",
-      #           skip: [1, 1, 1, 1],
-      #           ui: {
-      #             type: 'input-text',
-      #             label: '名称'
-      #           },
-      #         },
-      #       ],
-      #     ddls: ["create index idx_tenant_name on sys_tenant(name);"],
-      #   }
       # 用户
       - {
           prefix: "sys_",
@@ -198,20 +72,6 @@ project:
                 dbType: "varchar(120)",
                 skip: [1, 1, 1, 1],
                 ui: { type: "input-password", label: "密码" },
-              },
-              {
-                name: "merchant_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-number", label: "所属店铺" },
-              },
-              {
-                name: "dept_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-number", label: "所属部门" },
               },
               {
                 name: "is_admin",
