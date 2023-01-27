@@ -1,7 +1,7 @@
 project:
   template:
     dir: "templates/guava"
-    output: "../cardroom-test"
+    output: "../cardroom"
   data:
     project_name: "cardroom"
     auth: 1
