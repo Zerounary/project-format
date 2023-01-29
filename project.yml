@@ -37,11 +37,13 @@ project:
           acCode: '
         let role_ids = bo.role_ids.clone();
         use crate::entities::user_role_bo::UserRoleBO;
-        let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
-            UserRoleBO { id: 0, user_id: id.clone(), role_id: role_id.parse().unwrap(), description: "".to_string() }
-        }).collect();
+        if !role_ids.is_empty() {
+          let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
+              UserRoleBO { id: 0, user_id: id.clone(), role_id: role_id.parse().unwrap(), description: "".to_string() }
+          }).collect();
 
-        self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+          self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+        }
           ',
           am: 1,
           amCode: '
@@ -50,11 +52,43 @@ project:
         let role_ids = input.role_ids.clone();
 
         use crate::entities::user_role_bo::UserRoleBO;
+        if !role_ids.is_empty() {
         let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
             UserRoleBO { id: 0, user_id: bo.id, role_id: role_id.parse().unwrap(), description: "".to_string() }
         }).collect();
 
         self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+        }
+          ',
+        amOptCode: '
+                if bo.role_ids.is_some() {
+            let user_id = bo.id.unwrap();
+            self.repo
+                .delete_user_role_by_user_id(&mut conn, user_id)
+                .await?;
+            let role_ids = input.role_ids.unwrap().clone();
+            use crate::entities::user_role_bo::UserRoleBO;
+            if !role_ids.is_empty() {
+                let mut user_roles: Vec<UserRoleBO> = role_ids
+                    .split(",")
+                    .map(|role_id| UserRoleBO {
+                        id: 0,
+                        user_id,
+                        role_id: role_id.parse().unwrap(),
+                        description: "".to_string(),
+                    })
+                    .collect();
+                self.repo
+                    .create_user_role_batch(&mut conn, &mut user_roles, 100)
+                    .await?;
+            }
+        }
+          ',
+          bd: 1,
+          deleteCode: '
+                  self.repo
+            .delete_user_role_by_user_id(&mut conn, id)
+            .await?;
           ',
           columns:
             [

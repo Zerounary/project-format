@@ -185,7 +185,9 @@ impl Service {
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
+
         let result = self.repo.update_{{snake this.name}}_by_id(&mut conn, &bo, bo.id).await;
+
         {{#if amCode }}
         {{{amCode}}}
         {{/if}}
@@ -224,7 +226,9 @@ impl Service {
         let mut conn = self.db.acquire().await?;
         {{/if}}
         let result = self.repo.update_{{snake this.name}}_opt_by_id(&mut conn, &bo, input.id).await;
-
+        {{#if amOptCode }}
+        {{{amOptCode}}}
+        {{/if}}
         {{#if am}}
         conn.commit().await?;
         {{/if}}
@@ -250,6 +254,10 @@ impl Service {
         {{/if}}
 
         let result = self.repo.delete_{{snake this.name}}(&mut conn, id).await;
+
+        {{#if deleteCode }}
+        {{{deleteCode}}}
+        {{/if}}
 
         {{#if bd}}
         conn.commit().await?;
