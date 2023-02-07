@@ -8,7 +8,7 @@ use rbatis::rbdc::{decimal::Decimal, date::Date};
 pub struct {{upperCamel name}}BO {
     {{#each columns}}
     {{#if default}}
-    #[default(_code = "{{default}}")]
+    #[default(_code = "{{{default}}}")]
     {{/if}}
     pub {{name}}: {{type}},
     {{/each}}

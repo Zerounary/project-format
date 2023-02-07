@@ -20,7 +20,7 @@ pub struct {{upperCamel this.name}}VO {
     {{else}}
     {{#if skip.[3]}}
     {{#if default}}
-    #[default(_code = "{{default}}")]
+    #[default(_code = "{{{default}}}")]
     {{/if}}
     pub {{name}}: {{type}},
     {{/if}}

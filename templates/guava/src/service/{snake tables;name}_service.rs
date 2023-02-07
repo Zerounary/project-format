@@ -24,7 +24,7 @@ pub struct Create{{upperCamel this.name}}Input {
     pub {{name}}: Option<{{type}}>,
     {{else}}
     {{#if default}}
-    #[default(_code = "{{default}}")]
+    #[default(_code = "{{{default}}}")]
     {{/if}}
     pub {{name}}: {{type}},
     {{/if}}
@@ -36,7 +36,7 @@ pub struct Create{{upperCamel this.name}}Input {
 pub struct Update{{upperCamel this.name}}Input {
     {{#each columns}}
     {{#if default}}
-    #[default(_code = "{{default}}")]
+    #[default(_code = "{{{default}}}")]
     {{/if}}
     pub {{name}}: {{type}},
     {{/each}}
@@ -99,7 +99,7 @@ impl Service {
             {{#unless (isId name) }}
             {{#if skip.[4]}}
                 {{#if default}}
-                {{name}}: input.{{name}}.clone().unwrap_or({{default}}),
+                {{name}}: input.{{name}}.clone().unwrap_or({{{default}}}),
                 {{else}}
                 {{name}}: input.{{name}}.clone().unwrap_or_default(),
                 {{/if}}
@@ -138,7 +138,7 @@ impl Service {
             {{#unless (isId name) }}
             {{#if skip.[4]}}
                 {{#if default}}
-                {{name}}: e.{{name}}.clone().unwrap_or({{default}}),
+                {{name}}: e.{{name}}.clone().unwrap_or({{{default}}}),
                 {{else}}
                 {{name}}: e.{{name}}.clone().unwrap_or_default(),
                 {{/if}}
