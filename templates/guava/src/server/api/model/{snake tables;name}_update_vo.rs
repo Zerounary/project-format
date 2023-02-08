@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use struct_convert::Convert;
-use rbatis::rbdc::{decimal::Decimal, date::Date};
+use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date};
 
 
 use crate::{
