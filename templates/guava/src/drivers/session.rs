@@ -25,7 +25,12 @@ impl LocalSessionStore {
         let session_file_name = String::from("./guava-session");
         let sessions: Option<HashMap<String, Session>> = match read_file!(session_file_name.clone()) {
             Ok(data) => {
-                serde_json::from_str(String::from_utf8(data).unwrap().as_str()).ok()
+                let result: Option<HashMap<String, Session>> = serde_json::from_str(String::from_utf8(data).unwrap().as_str()).ok();
+                let result = result.map(|mut map| {
+                    map.drain_filter(|_k, v| v.is_expired());
+                    map
+                });
+                result
             },
             Err(_) => Some(HashMap::new()),
         };

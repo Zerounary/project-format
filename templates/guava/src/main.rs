@@ -1,3 +1,5 @@
+#![feature(hash_drain_filter)]
+
 pub mod drivers;
 pub mod entities;
 pub mod repository;
