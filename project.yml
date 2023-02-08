@@ -27,6 +27,323 @@ project:
             ],
         }
     tables:
+      # 费用流水
+      - {
+        prefix: "b_",
+        name: "fee_ftp",
+        auth: 1,
+        skipAuto: true,
+        columns: [
+          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
+          {
+            name: "name",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "费用名称" },
+          },
+          {
+            name: "taketime",
+            type: "FastDateTime",
+            dbType: "datetime",
+            default: "FastDateTime::now()",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "入座时间" },
+          },
+          {
+            name: "paytime",
+            type: "FastDateTime",
+            dbType: "datetime",
+            default: "FastDateTime::now()",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "付款时间" },
+          },
+          {
+            name: "table_id",
+            type: "i64",
+            dbType: "int8",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "桌次" },
+          },
+          {
+            name: "price",
+            type: "Decimal",
+            dbType: "decimal(10,2)",
+            default: "Decimal(String::from(0.to_string()))",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "价格" },
+          },
+          {
+            name: "qty",
+            type: "i64",
+            dbType: "int8",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "数量" },
+          },
+          {
+            name: "amount",
+            type: "Decimal",
+            dbType: "decimal(10,2)",
+            default: "Decimal(String::from(0.to_string()))",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "金额" },
+          },
+        ]
+      }
+      # 费用
+      - {
+        prefix: "b_",
+        name: "table_fee",
+        auth: 1,
+        skipAuto: true,
+        columns: [
+          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
+          {
+            name: "name",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "费用名称" },
+          },
+          {
+            name: "table_id",
+            type: "i64",
+            dbType: "int8",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "桌次" },
+          },
+          {
+            name: "price",
+            type: "Decimal",
+            dbType: "decimal(10,2)",
+            default: "Decimal(String::from(0.to_string()))",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "价格" },
+          },
+          {
+            name: "qty",
+            type: "i64",
+            dbType: "int8",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "数量" },
+          },
+          {
+            name: "amount",
+            type: "Decimal",
+            dbType: "decimal(10,2)",
+            default: "Decimal(String::from(0.to_string()))",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "金额" },
+          },
+        ]
+      }
+      # 员工
+      - {
+        prefix: "b_",
+        name: "employee",
+        auth: 1,
+        skipAuto: true,
+        columns: [
+          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
+          {
+            name: "name",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "名称" },
+          },
+          {
+            name: "sex",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "性别" },
+          },
+          {
+            name: "salary",
+            type: "Decimal",
+            dbType: "decimal(5,2)",
+            default: "Decimal(String::from(0.to_string()))",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "薪资" },
+          },
+        ]
+      }
+      # 桌次信息
+      - {
+        prefix: "b_",
+        name: "table",
+        auth: 1,
+        skipAuto: true,
+        columns: [
+          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
+          {
+            name: "name",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "名称" },
+          },
+          {
+            name: "room",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "房间" },
+          },
+          {
+            name: "ty",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "类型" },
+          },
+          {
+            name: "status",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "状态" },
+          },
+          {
+            name: "amount",
+            type: "Decimal",
+            dbType: "decimal(10,2)",
+            default: "Decimal(String::from(0.to_string()))",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "待付金额" },
+          }
+        ]
+      }
+      # 牌友信息
+      - {
+        prefix: "b_",
+        name: "customer",
+        auth: 1,
+        skipAuto: true,
+        columns: [
+          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
+          {
+            name: "name",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "名称" },
+          },
+          {
+            name: "sex",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "性别" },
+          },
+          {
+            name: "tel",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "电话" },
+          },
+          {
+            name: "blacklist",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "陪玩黑名单" },
+          },
+          {
+            name: "whitelist",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "白名单" },
+          },
+        ]
+      }
+      # 房间信息
+      - {
+        prefix: "b_",
+        name: "room",
+        auth: 1,
+        skipAuto: true,
+        columns: [
+          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
+          {
+            name: "name",
+            type: "String",
+            dbType: "varchar(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "名称" },
+          },
+          {
+            name: "level",
+            type: "i64",
+            dbType: "int8",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-number", label: "楼层" },
+          },
+          {
+            name: "position",
+            type: "String",
+            dbType: "VARCHAR(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "位置" },
+          },
+          {
+            name: "room_map",
+            type: "String",
+            dbType: "VARCHAR(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "房间尺寸" },
+          },
+          {
+            name: "table_map",
+            type: "String",
+            dbType: "VARCHAR(120)",
+            skip: [1, 1, 1, 1, 1],
+            ui: { type: "input-text", label: "桌位分布" },
+          },
+        ]
+      }
+      # 系统参数
+      - {
+          prefix: "sys_",
+          name: "params",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "编码" },
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+              {
+                name: "ty",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "类型" },
+              },
+              {
+                name: "value",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "值" },
+              },
+            ],
+        }
       # 用户
       - {
           prefix: "sys_",
