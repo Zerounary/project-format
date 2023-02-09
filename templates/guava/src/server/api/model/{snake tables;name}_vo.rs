@@ -21,6 +21,10 @@ pub struct {{upperCamel this.name}}VO {
     {{#if skip.[3]}}
     {{#if default}}
     #[default(_code = "{{{default}}}")]
+    {{else}}
+    {{#if (defaultDbType dbType)}}
+    #[default(_code = "{{{defaultDbType dbType}}}")]
+    {{/if}}
     {{/if}}
     pub {{name}}: {{type}},
     {{/if}}

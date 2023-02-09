@@ -32,6 +32,22 @@ handlebars_helper!(fkTable: |s: String| s.trim_end_matches("_id").trim_end_match
 handlebars_helper!(isId: |s: String| s.to_lowercase().eq("id"));
 handlebars_helper!(isIds: |s: String| s.to_lowercase().ends_with("_ids"));
 handlebars_helper!(isFk: |s: String| s.to_lowercase().ends_with("_id") || s.to_lowercase().ends_with("_ids"));
+handlebars_helper!(isDate: |s: String| s.to_lowercase().eq("date"));
+handlebars_helper!(isDateTime: |s: String| s.to_lowercase().eq("datetime"));
+handlebars_helper!(isDecimal: |s: String| s.to_lowercase().starts_with("decimal"));
+handlebars_helper!(defaultDbType: |s: String| {
+    if s.to_lowercase().eq("date") {
+        "Date(fastdate::Date::from(fastdate::DateTime::now()))".to_string()
+    } else if  s.to_lowercase().eq("datetime") {
+        "FastDateTime::now()".to_string()
+    }
+    else if s.to_lowercase().starts_with("decimal"){
+        "Decimal(String::from(0.to_string()))".to_string()
+    }else {
+        "".to_string()
+    }
+});
+
 
 pub struct Render<'a> {
     pub h: Handlebars<'a>,
@@ -58,9 +74,13 @@ impl<'a> Render<'a> {
         h.register_helper("isId", Box::new(isId));
         h.register_helper("isIds", Box::new(isIds));
         h.register_helper("isFk", Box::new(isFk));
+        h.register_helper("isDate", Box::new(isDate));
+        h.register_helper("isDateTime", Box::new(isDateTime));
+        h.register_helper("isDecimal", Box::new(isDecimal));
 
         h.register_helper("stringify", Box::new(stringify));
         h.register_helper("fkTable", Box::new(fkTable));
+        h.register_helper("defaultDbType", Box::new(defaultDbType));
 
         let render: Render = Self {
             h,

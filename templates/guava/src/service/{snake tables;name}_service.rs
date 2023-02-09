@@ -25,6 +25,10 @@ pub struct Create{{upperCamel this.name}}Input {
     {{else}}
     {{#if default}}
     #[default(_code = "{{{default}}}")]
+    {{else}}
+    {{#if (defaultDbType dbType)}}
+    #[default(_code = "{{{defaultDbType dbType}}}")]
+    {{/if}}
     {{/if}}
     pub {{name}}: {{type}},
     {{/if}}
@@ -37,6 +41,10 @@ pub struct Update{{upperCamel this.name}}Input {
     {{#each columns}}
     {{#if default}}
     #[default(_code = "{{{default}}}")]
+    {{else}}
+    {{#if (defaultDbType dbType)}}
+    #[default(_code = "{{{defaultDbType dbType}}}")]
+    {{/if}}
     {{/if}}
     pub {{name}}: {{type}},
     {{/each}}
@@ -101,7 +109,11 @@ impl Service {
                 {{#if default}}
                 {{name}}: input.{{name}}.clone().unwrap_or({{{default}}}),
                 {{else}}
+                {{#if (defaultDbType dbType)}}
+                {{name}}: input.{{name}}.clone().unwrap_or({{{defaultDbType dbType}}}),
+                {{else}}
                 {{name}}: input.{{name}}.clone().unwrap_or_default(),
+                {{/if}}
                 {{/if}}
             {{else}}
             {{name}}: input.{{name}},
@@ -140,7 +152,11 @@ impl Service {
                 {{#if default}}
                 {{name}}: e.{{name}}.clone().unwrap_or({{{default}}}),
                 {{else}}
+                {{#if (defaultDbType dbType)}}
+                {{name}}: e.{{name}}.clone().unwrap_or({{{defaultDbType dbType}}}),
+                {{else}}
                 {{name}}: e.{{name}}.clone().unwrap_or_default(),
+                {{/if}}
                 {{/if}}
             {{else}}
                 {{name}}: e.{{name}}.clone(),

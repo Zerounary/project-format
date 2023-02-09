@@ -9,6 +9,10 @@ pub struct {{upperCamel name}}BO {
     {{#each columns}}
     {{#if default}}
     #[default(_code = "{{{default}}}")]
+    {{else}}
+    {{#if (defaultDbType dbType)}}
+    #[default(_code = "{{{defaultDbType dbType}}}")]
+    {{/if}}
     {{/if}}
     pub {{name}}: {{type}},
     {{/each}}
