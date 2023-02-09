@@ -22,7 +22,11 @@ pub struct LocalSessionStore {
 impl LocalSessionStore {
     pub fn new() -> Self {
         // 加载本地数据到 storage中
+        #[cfg(not(unix))]
         let session_file_name = String::from("./guava-session");
+        #[cfg(unix)]
+        let session_file_name = String::from("/dev/shm/guava-session");
+        
         let sessions: Option<HashMap<String, Session>> = match read_file!(session_file_name.clone()) {
             Ok(data) => {
                 let result: Option<HashMap<String, Session>> = serde_json::from_str(String::from_utf8(data).unwrap().as_str()).ok();
