@@ -3,7 +3,9 @@ use async_lock::RwLock;
 
 use async_session::{ serde_json, Result, Session, SessionStore, async_trait, };
 use easy_file::{read_file, create_write_file};
+use itertools::Itertools;
 use redis::{AsyncCommands};
+use sled::Db;
 
 use super::redis::{init_redis, Redis};
 
@@ -17,6 +19,7 @@ pub type GuavaSessionStore = LocalSessionStore;
 pub struct LocalSessionStore {
     inner: Arc<RwLock<HashMap<String, Session>>>,
     session_file_name: String,
+    tree: Db
 }
 
 impl LocalSessionStore {
@@ -26,34 +29,58 @@ impl LocalSessionStore {
         let session_file_name = String::from("./guava-session");
         #[cfg(unix)]
         let session_file_name = String::from("/dev/shm/guava-session");
-        
-        let sessions: Option<HashMap<String, Session>> = match read_file!(session_file_name.clone()) {
-            Ok(data) => {
-                let result: Option<HashMap<String, Session>> = serde_json::from_str(String::from_utf8(data).unwrap().as_str()).ok();
-                let result = result.map(|mut map| {
-                    map.drain_filter(|_k, v| v.is_expired());
-                    map
-                });
-                result
-            },
-            Err(_) => Some(HashMap::new()),
-        };
 
-        let inner: Arc<RwLock<HashMap<String, Session>>> = Arc::new(RwLock::new(sessions.unwrap()));
+        let tree = sled::open(session_file_name.clone()).expect("open");
+
+        let mut sessions: HashMap<String, Option<Session>> = tree.iter().map(|pair| {
+            match pair  {
+                Ok((key, val)) => {
+                    let key = key.to_vec();
+                    let data = val.to_vec();
+                    let session: Session = serde_json::from_slice(&data).unwrap();
+                    if session.is_expired() {
+                        (String::from_utf8(key).unwrap(), None)
+                    }else {
+                        (String::from_utf8(key).unwrap(), Some(session))
+                    }
+                },
+                _ => ("".to_string(), None)
+            }
+        }).collect();
+
+        sessions.drain_filter(|_, v| v.is_none());
+
+        let mut map: HashMap<String, Session> = HashMap::new();
+
+        for (k, v) in sessions {
+            if let Some(s) = v {
+                map.insert(k, s);
+            }
+        }
+
+        let inner: Arc<RwLock<HashMap<String, Session>>> = Arc::new(RwLock::new(map));
         Self {
             inner,
             session_file_name,
+            tree
         }
     }
 
-    pub async fn save_to_local(&self) {
-        let map = &self.inner.read().await.clone();
-        match create_write_file!(Path::new(&self.session_file_name), serde_json::to_string(map).unwrap().as_bytes()) {
+    pub async fn save_to_local(&self, session_id: String, session: Session) {
+        match self.tree.insert(session_id.as_bytes(), serde_json::to_vec(&session).unwrap()) {
             Ok(_r) => {log::info!("Session保存成功")},
             Err(e) => {
                 log::error!("Session保存失败, {}", e.to_string());
             },
-        };
+        }
+    }
+    pub async fn remove_from_local(&self, session_id: String) {
+        match self.tree.remove(session_id.as_bytes()) {
+            Ok(_r) => {log::info!("Session保存成功")},
+            Err(e) => {
+                log::error!("Session保存失败, {}", e.to_string());
+            },
+        }
     }
 }
 
@@ -78,14 +105,14 @@ impl SessionStore for LocalSessionStore {
             .await
             .insert(session.id().to_string(), session.clone());
         session.reset_data_changed();
-        self.save_to_local().await;
+        self.save_to_local(session.id().to_string(), session.clone()).await;
         Ok(session.into_cookie_value())
     }
 
     async fn destroy_session(&self, session: Session) -> Result {
         log::trace!("destroying session by id `{}`", session.id());
         self.inner.write().await.remove(session.id());
-        self.save_to_local().await;
+        self.remove_from_local(session.id().to_string()).await;
         Ok(())
     }
 
