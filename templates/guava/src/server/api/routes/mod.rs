@@ -1,4 +1,4 @@
-pub mod auth_routes;
+pub mod root_routes;
 {{#each tables}}
 pub mod {{{name}}}_routes;
 {{/each}}
@@ -6,16 +6,14 @@ pub mod {{{name}}}_routes;
 
 use axum::Router;
 
-use self::auth_routes::auth_routes;
+use self::root_routes::root_routes;
 {{#each tables}}
 use self::{{{name}}}_routes::{{{name}}}_routes;
 {{/each}}
 
 pub fn api_routes() -> Router {
     Router::new()
-        {{#if auth}}
-        .nest("/", auth_routes())
-        {{/if}}
+        .nest("/", root_routes())
         {{#each tables}}
         .nest("/{{{name}}}", {{{name}}}_routes())
         {{/each}}
