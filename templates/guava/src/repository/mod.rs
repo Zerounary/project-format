@@ -2,6 +2,9 @@
 pub mod {{this.name}}_repo;
 {{/each}}
 
+use crate::drivers::db::{DB, get_sql}; 
+use serde_json::Value;
+
 #[derive(Debug)]
 pub struct Repository {
     user: Option<SessionUser>,
@@ -13,6 +16,12 @@ impl Repository {
             user
         }
     }
+
+    pub async fn query_list(&self, rb: &DB, sql_name: String, params: Value) -> Value {
+        let (sql, args) = get_sql(&sql_name, &params);
+        let result: Value = rb.fetch_decode(&sql, args).await.unwrap();
+        result
+    }
 }
 
 {{#if auth}}
@@ -23,7 +32,6 @@ use crate::entities::role_menu_bo::RoleMenuBO;
 use crate::entities::user_role_bo::UserRoleBO;
 use crate::macros::repository::{impl_repo_select_list, impl_repo_select, impl_repo_delete};
 use crate::{macros::repository::impl_repo_select_one, server::auth::SessionUser};
-use crate::drivers::db::DB; 
 impl_repo_select_one!(SessionUser => "id, name, password, is_admin, tenant_id, role_ids" => {select_session_user_by_name(name:&str) => 
 r#"
 `where name = #{name}`

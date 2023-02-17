@@ -7,6 +7,9 @@ use rbdc_pg::driver::PgDriver;
 use rbdc_pg::options::PgConnectOptions;
 use rbdc_sqlite::driver::SqliteDriver;
 use url::Url;
+use handlebars::Handlebars;
+use jsonpath_rust::JsonPathQuery;
+use serde_json::Value;
 
 // alias DB pool type
 pub type DB = Rbatis;
@@ -104,4 +107,54 @@ pub async fn migrate() {
             todo!()
         }
     };
+}
+
+pub fn get_sql(sql_name: &str, params: &Value) -> (String, Vec<rbs::Value>) {
+    use regex::Regex;
+    let regex = Regex::new("@\\s?+[a-zA-Z0-9_\\.]+\\s?+@").unwrap();
+    let sql_template = match sql_name {
+       "test" => include_str!("../../sql/test.sql").to_string(),
+       _  => "".to_string()
+    };
+    let h = Handlebars::new();
+    let mut sql = h.render_template(&sql_template, params).expect(&format!("SQL模板 {} 异常", sql_name));
+    let mut vals: Vec<rbs::Value> = vec![];
+    if let Some(_captures) = regex.captures(&sql.clone()) {
+        for (i, caps) in regex.captures_iter(&sql.clone()).enumerate() {
+            let matched_str = caps[0].to_string();
+            sql = sql.replace(&matched_str, "?");
+            let path = matched_str.trim_matches('@').trim();
+            let val = params
+                .clone()
+                .path(&format!("$.{}", path))
+                .expect(&format!("sql 参数 @{}@ 不存在", path))
+                .as_array()
+                .unwrap()
+                .first()
+                .expect(&format!("sql 参数 @{}@ 不存在", path))
+                .clone();
+            vals.push(serde_json2rbs(val));
+        }
+    }
+
+    (sql, vals)
+}
+
+
+pub fn serde_json2rbs(val: Value) -> rbs::Value {
+    type rv = rbs::Value;
+    match val {
+        Value::Bool(v) => rv::Bool(v),
+        Value::Number(v) => rv::I64(v.as_i64().unwrap()),
+        Value::String(v) => rv::String(v),
+        Value::Array(v) => {
+            let mut vec: Vec<rv> = vec![];
+            for x in v {
+                vec.push(serde_json2rbs(x));
+            }
+            rv::Array(vec)
+        },
+        Value::Object(_) => rv::Null,
+        Value::Null => rv::Null,
+    }
 }

@@ -20,6 +20,7 @@ axum-extra = { version =  "0.3.7", features = ["spa"]}
 tokio = { version =  "1.20.1", features = ["full"]}
 tower-http = { version = "0.3.0", features = ["fs", "trace"] }
 
+jsonpath-rust = "0.1.6"
 serde_json ={ version = "1.0.85"}
 serde = { version = "1.0", features = ["derive"] }
 uuid = { version = "1.1.2", features = ["v4", "serde"] }
@@ -38,6 +39,7 @@ moka = "0.9.3"
 sled = "0.34.7"
 async-session = "3.0.0"
 regex = "1.7.0"
+handlebars = "4.3.4"
 
 rbs = "0.1.11"
 rbatis = "4.0.39"
