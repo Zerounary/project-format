@@ -2,9 +2,9 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
+  includes: []
   data:
     project_name: "weimob-inf"
-    overview: true
     tables:
       - {
           prefix: "e_third_",
