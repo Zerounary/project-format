@@ -12,7 +12,7 @@
     <groupId>com.cp</groupId>
     <artifactId>melon</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>melon</name>
+    <name>{{project_name}}</name>
     <description>quick project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>
@@ -45,15 +45,6 @@
         <!--            <artifactId>plugin-dispatcher</artifactId>-->
         <!--            <version>0.1.7</version>-->
         <!--        </dependency>-->
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-oauth2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-security</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>

@@ -1,677 +1,83 @@
 project:
   template:
-    dir: "templates/guava"
-    output: "../cardroom"
+    dir: "templates/melon"
+    output: "../../Java/weimob-inf"
   data:
-    project_name: "cardroom"
-    auth: 1
-    redis_session: 0
-    overview: 1
-    pages:
-      - {
-          label: "基础信息",
-          url: "/",
-          children:
-            [
-              { label: "部门", tableName: "dept" },
-              { label: "门店", tableName: "merchant" },
-            ],
-        }
-      - {
-          label: "系统管理",
-          url: "/",
-          children:
-            [
-              { label: "用户管理", tableName: "user" },
-              { label: "角色管理", tableName: "role" },
-            ],
-        }
+    project_name: "weimob-inf"
+    overview: true
     tables:
-      # 费用流水
       - {
-        prefix: "b_",
-        name: "fee_ftp",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "费用名称" },
-          },
-          {
-            name: "billdate",
-            type: "Date",
-            dbType: "date",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "日期" },
-          },
-          {
-            name: "taketime",
-            type: "FastDateTime",
-            dbType: "datetime",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "入座时间" },
-          },
-          {
-            name: "paytime",
-            type: "FastDateTime",
-            dbType: "datetime",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "付款时间" },
-          },
-          {
-            name: "table_id",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "桌次" },
-          },
-          {
-            name: "price",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "价格" },
-          },
-          {
-            name: "qty",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "数量" },
-          },
-          {
-            name: "amount",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "金额" },
-          },
-        ]
-      }
-      # 费用
-      - {
-        prefix: "b_",
-        name: "table_fee",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "费用名称" },
-          },
-          {
-            name: "table_id",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "桌次" },
-          },
-          {
-            name: "price",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "价格" },
-          },
-          {
-            name: "qty",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "数量" },
-          },
-          {
-            name: "amount",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "金额" },
-          },
-        ]
-      }
-      # 员工
-      - {
-        prefix: "b_",
-        name: "employee",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "名称" },
-          },
-          {
-            name: "sex",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "性别" },
-          },
-          {
-            name: "salary",
-            type: "Decimal",
-            dbType: "decimal(5,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "薪资" },
-          },
-        ]
-      }
-      # 桌次信息
-      - {
-        prefix: "b_",
-        name: "table",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "名称" },
-          },
-          {
-            name: "room",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "房间" },
-          },
-          {
-            name: "ty",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "类型" },
-          },
-          {
-            name: "status",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "状态" },
-          },
-          {
-            name: "amount",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "待付金额" },
-          }
-        ]
-      }
-      # 牌友信息
-      - {
-        prefix: "b_",
-        name: "customer",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "名称" },
-          },
-          {
-            name: "sex",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "性别" },
-          },
-          {
-            name: "tel",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "电话" },
-          },
-          {
-            name: "blacklist",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "陪玩黑名单" },
-          },
-          {
-            name: "whitelist",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "白名单" },
-          },
-        ]
-      }
-      # 房间信息
-      - {
-        prefix: "b_",
-        name: "room",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "名称" },
-          },
-          {
-            name: "level",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-number", label: "楼层" },
-          },
-          {
-            name: "position",
-            type: "String",
-            dbType: "VARCHAR(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "位置" },
-          },
-          {
-            name: "room_map",
-            type: "String",
-            dbType: "VARCHAR(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "房间尺寸" },
-          },
-          {
-            name: "table_map",
-            type: "String",
-            dbType: "VARCHAR(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "桌位分布" },
-          },
-        ]
-      }
-      # 系统参数
-      - {
-          prefix: "sys_",
-          name: "params",
-          auth: 1,
-          skipAuto: true,
+          prefix: "e_third_",
+          name: "weimob_customer_create",
           columns:
             [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
               {
-                name: "code",
-                type: "String",
-                dbType: "varchar(120)",
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
                 skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "编码" },
               },
               {
-                name: "name",
+                name: "eid",
                 type: "String",
-                dbType: "varchar(120)",
+                dbType: "VARCHAR2(120)",
                 skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "名称" },
               },
               {
-                name: "ty",
+                name: "topic",
                 type: "String",
-                dbType: "varchar(120)",
+                dbType: "VARCHAR2(120)",
                 skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "类型" },
               },
               {
-                name: "value",
+                name: "event",
                 type: "String",
-                dbType: "varchar(120)",
+                dbType: "VARCHAR2(120)",
                 skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "值" },
-              },
-            ],
-        }
-      # 用户
-      - {
-          prefix: "sys_",
-          name: "user",
-          auth: 1,
-          skipAuto: true,
-          ac: 1,
-          acCode: '
-        let role_ids = bo.role_ids.clone();
-        use crate::entities::user_role_bo::UserRoleBO;
-        if !role_ids.is_empty() {
-          let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
-              UserRoleBO { id: 0, user_id: id.clone(), role_id: role_id.parse().unwrap(), description: "".to_string() }
-          }).collect();
-
-          self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
-        }
-          ',
-          am: 1,
-          amCode: '
-        self.repo.delete_user_role_by_user_id(&mut conn, bo.id).await?;
-
-        let role_ids = input.role_ids.clone();
-
-        use crate::entities::user_role_bo::UserRoleBO;
-        if !role_ids.is_empty() {
-        let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
-            UserRoleBO { id: 0, user_id: bo.id, role_id: role_id.parse().unwrap(), description: "".to_string() }
-        }).collect();
-
-        self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
-        }
-          ',
-        amOptCode: '
-                if bo.role_ids.is_some() {
-            let user_id = bo.id.unwrap();
-            self.repo
-                .delete_user_role_by_user_id(&mut conn, user_id)
-                .await?;
-            let role_ids = input.role_ids.unwrap().clone();
-            use crate::entities::user_role_bo::UserRoleBO;
-            if !role_ids.is_empty() {
-                let mut user_roles: Vec<UserRoleBO> = role_ids
-                    .split(",")
-                    .map(|role_id| UserRoleBO {
-                        id: 0,
-                        user_id,
-                        role_id: role_id.parse().unwrap(),
-                        description: "".to_string(),
-                    })
-                    .collect();
-                self.repo
-                    .create_user_role_batch(&mut conn, &mut user_roles, 100)
-                    .await?;
-            }
-        }
-          ',
-          bd: 1,
-          deleteCode: '
-                  self.repo
-            .delete_user_role_by_user_id(&mut conn, id)
-            .await?;
-          ',
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "name",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "名称" },
               },
               {
-                name: "password",
+                name: "wid",
                 type: "String",
-                dbType: "varchar(120)",
+                dbType: "VARCHAR2(120)",
                 skip: [1, 1, 1, 1],
-                ui: { type: "input-password", label: "密码" },
               },
               {
-                name: "is_admin",
-                type: "i64",
-                dbType: "bool",
-                skip: [0, 0, 0, 0],
-                ui: { type: "switch", label: "是否管理员" },
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "role_ids",
+                name: "sign",
                 type: "String",
-                dbType: "varchar(120)",
+                dbType: "VARCHAR2(120)",
                 skip: [1, 1, 1, 1],
-                ui: { type: "select", multiple: true, label: "角色" },
-              },
-            ],
-          ddls: ["create index idx_user_name on sys_user(name);"],
-        }
-      # 角色
-      - {
-          prefix: "sys_",
-          name: "role",
-          auth: 1,
-          skipAuto: true,
-          ac: 1,
-          acCode: '
-
-        let menu_ids = bo.perms.clone();
-
-        use crate::entities::role_menu_bo::RoleMenuBO;
-        let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
-            RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: id.clone(), description: "".to_string() }
-        }).collect_vec();
-
-        self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
-
-          ',
-          am: 1,
-          amCode: '
-        self.repo.delete_role_menu_by_role_id(&mut conn, bo.id).await?;
-
-        use crate::entities::role_menu_bo::RoleMenuBO;
-        let menu_ids = bo.perms.clone();
-
-        let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
-            RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: bo.id, description: "".to_string() }
-        }).collect_vec();
-
-        self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
-
-          ',
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "name",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "名称" },
               },
               {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
+                name: "scene_type",
+                type: "Long",
+                dbType: "NUMBER(2)",
                 skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "描述" },
               },
               {
-                name: "perms",
-                type: "String",
-                dbType: "text",
+                name: "plan_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
                 skip: [1, 1, 1, 1],
-                ui:
-                  {
-                    type: "transfer-picker",
-                    source:
-                      {
-                        method: "GET",
-                        url: "/api/menu/list",
-                        cache: 2000,
-                        adaptor: "return { ...payload, data: {rows: payload.data.rows.map(e => {return {label: e.menu_name, value: e.id}})} }",
-                      },
-                    label: "权限",
-                  },
+              },
+              {
+                name: "type",
+                type: "Long",
+                dbType: "NUMBER(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid_list",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
               },
             ],
           ddls: [],
         }
-      # 菜单
-      - {
-          prefix: "sys_",
-          name: "menu",
-          auth: 1,
-          skipAuto: true,
-          listCode: '
-            let result = if let Some(user) = self.user.clone() {
-
-              let mut db = self.db.clone();
-
-              db.set_sql_intercepts(vec![]);
-              
-              let mut conn = db.acquire().await.unwrap();
-              
-              if user.is_admin == 1 {
-
-                  self.repo.select_menu_list(&mut conn, bo).await?
-
-              }else {
-
-                  self.repo.select_menu_by_ids(&mut conn, &user.role_ids).await?
-                  
-              }
-
-            } else {
-
-                vec![]
-
-            };
-          ',
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "menu_name",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "名称" },
-              },
-              {
-                name: "path",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "路径" },
-              },
-              {
-                name: "component",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "组件" },
-              },
-              {
-                name: "perms",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "权限" },
-              },
-              {
-                name: "icon",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "图标" },
-              },
-              {
-                name: "ty",
-                type: "String",
-                dbType: "CHAR(2)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "类型" },
-              },
-              {
-                name: "sort",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-number", label: "排序" },
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "描述" },
-              },
-            ],
-          ddls: ["create index idx_menu_pid on sys_menu(pid);"],
-        }
-      # 用户角色关系
-      - {
-          prefix: "sys_",
-          name: "user_role",
-          auth: 1,
-          skipAuto: true,
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "user_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "role_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls:
-            [
-              "create index idx_user_role_user_id on sys_user_role(user_id);",
-              "create index idx_user_role_role_id on sys_user_role(role_id);",
-            ],
-        }
-      # 角色菜单关系
-      - {
-          prefix: "sys_",
-          name: "role_menu",
-          auth: 1,
-          skipAuto: true,
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "menu_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "role_id",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls:
-            [
-              "create index idx_role_menu_user_id on sys_role_menu(menu_id);",
-              "create index idx_role_menu_role_id on sys_role_menu(role_id);",
-            ],
-        }
-
-    ddls: []
+    ddls: [""]

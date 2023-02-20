@@ -9,8 +9,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.cp.melon.adapter.api.vo.Resp;
 import com.cp.melon.adapter.api.vo.RespPage;
-import com.cp.melon.adapter.auth.Const;
-import com.cp.melon.entity.UserBO;
 import com.github.abel533.sql.SqlMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -47,8 +45,6 @@ public class SqlMapperService {
     }
 
     public RespPage<JSONObject> list(String fileName, boolean isNoPage, JSONObject request) {
-        UserBO user = Const.getUser(session);
-        request.put("user", user);
         RespPage<JSONObject> resultList = new RespPage<JSONObject>();
         String sqlContent = getFileContent(fileName);
         Long total = 0L;

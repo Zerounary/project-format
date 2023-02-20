@@ -15,7 +15,7 @@ import java.util.Date;
 @Builder
 @TableName("{{prefix}}{{snake name}}")
 @KeySequence(value ="{{prefix}}{{snake name}}")
-public class {{upperCamel name}}BO{
+public class {{upperCamel name}}BO extends BaseBO{
     @TableId(type = IdType.INPUT)
     {{#each columns}}
     private {{type}} {{camel name}};
