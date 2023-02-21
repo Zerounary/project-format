@@ -2,10 +2,168 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
-  includes: []
+    includes: ["weimob_customer_orgupdate"]
   data:
     project_name: "weimob-inf"
     tables:
+      - {
+          prefix: "e_third_",
+          name: "weimob_customer_list",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "nickname",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "avatarUrl",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "identityCardNum",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "email",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "birthday",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "gender",
+                type: "Long",
+                dbType: "NUMBER(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "education",
+                type: "Long",
+                dbType: "NUMBER(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "income",
+                type: "Long",
+                dbType: "NUMBER(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "industry",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "hobby",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "belongVid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "belongVidBindTime",
+                type: "Date",
+                dbType: "DATE",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "becomeCustomerTime",
+                type: "Date",
+                dbType: "DATE",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "becomeMemberTime",
+                type: "Date",
+                dbType: "DATE",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "memberIdentifyInfoList",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isFans",
+                type: "String",
+                dbType: "VARCHAR2(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isCustomer",
+                type: "String",
+                dbType: "VARCHAR2(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "hasValidMemberCard",
+                type: "String",
+                dbType: "VARCHAR2(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "extendInfo",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "status",
+                type: "Long",
+                dbType: "NUMBER(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sourceChannel",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
       - {
           prefix: "e_third_",
           name: "weimob_customer_create",
@@ -75,6 +233,68 @@ project:
                 name: "wid_list",
                 type: "String",
                 dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_customer_orgupdate",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "new_belong_vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "old_belong_vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
                 skip: [1, 1, 1, 1],
               },
             ],
