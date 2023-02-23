@@ -2,10 +2,144 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
-    includes: ["weimob_customer_freeze"]
+    includes: ["weimob_membercard_update"]
   data:
     project_name: "weimob-inf"
     tables:
+      - {
+          prefix: "e_third_",
+          name: "weimob_membercard_update",
+          cron: "0/10 * * * * ?",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "delayType",
+                type: "Long",
+                dbType: "NUMBER(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "newCustomCardNo",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "reason",
+                type: "String",
+                dbType: "VARCHAR2(300)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "operatorName",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "oldCustomCardNo",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "updateType",
+                type: "Long",
+                dbType: "NUMBER(2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "levelId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "operatorWId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "expireTime",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "membershipPlanId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "channelType",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "channelId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "is_propel",
+                type: "String",
+                dbType: "CHAR(1)",
+                dbTypeWith: "default 'N'",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "propel_msg",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_customer_import",
+          cron: "0/10 * * * * ?",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "is_propel",
+                type: "String",
+                dbType: "CHAR(1)",
+                dbTypeWith: "default 'N'",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
       - {
           prefix: "e_third_",
           name: "weimob_customer_freeze",
