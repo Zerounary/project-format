@@ -2,10 +2,38 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
-    includes: ["weimob_customer_orgupdate"]
+    includes: ["weimob_customer_freeze"]
   data:
     project_name: "weimob-inf"
     tables:
+      - {
+          prefix: "e_third_",
+          name: "weimob_customer_freeze",
+          cron: "0/10 * * * * ?",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "is_propel",
+                type: "String",
+                dbType: "CHAR(1)",
+                dbTypeWith: "default 'N'",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
       - {
           prefix: "e_third_",
           name: "weimob_customer_list",
