@@ -1,3 +1,5 @@
+-- liquibase formatted sql
+
 -- 创建定时任务
 {{#each tables }}
 {{#if cron }}
