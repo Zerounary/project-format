@@ -1,13 +1,10 @@
 package com.cp.melon.adapter.task;
 
-import cn.hutool.core.util.StrUtil;
-import com.cp.melon.adapter.db.dao.ScheduleCornDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,35 +16,22 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 public class ServerTask implements SchedulingConfigurer {
 
+{{#each tables}}
+{{#if cron}}
     @Autowired
-    private ScheduleCornDAO scheduleCornDAO;
+    {{upperCamel name}}Task {{camel name}}Task;
+{{/if}}
+{{/each}}
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
 
-{{#each tables }}
-{{#if cron }}
-        scheduledTaskRegistrar.addTriggerTask(() -> {{{name}}}(),
-                triggerContext -> {
-                    String taskName = "{{{name}}}";
-                    String cron = scheduleCornDAO.getCron(taskName);
-                    log.info("cron={}", cron);
-                    if(StrUtil.isBlank(cron)){
-                        log.error("定时任务【{}】的cron不存在", taskName);
-                    }
-                    return new CronTrigger(cron).nextExecutionTime(triggerContext);
-                });
-        
+{{#each tables}}
+{{#if cron}}
+        scheduledTaskRegistrar.addTriggerTask({{camel name}}Task.get_process(), {{camel name}}Task.get_trigger());
 {{/if}}
 {{/each}}
+
     }
 
-{{#each tables }}
-{{#if cron }}
-    // 冻结客户
-    private void {{{name}}}() {
-        log.info("【{}】定时任务启动", "{{{name}}}");
-    }
-{{/if}}
-{{/each}}
 }
