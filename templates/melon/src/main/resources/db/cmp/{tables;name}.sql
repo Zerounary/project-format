@@ -1,6 +1,6 @@
 create table {{prefix}}{{name}} (
 {{#each columns }}
-    {{snake name}} {{dbType}} {{dbTypeWith}},
+    {{snake name}} {{dbType}} {{{dbTypeWith}}},
 {{/each}}
     created_time DATE,
     updated_time DATE,
