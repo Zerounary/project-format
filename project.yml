@@ -2,10 +2,584 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
-    includes: ["weimob_membercard_update"]
+    includes: ["weimob_coupon_consume"]
   data:
     project_name: "weimob-inf"
     tables:
+      - {
+          prefix: "e_third_",
+          name: "weimob_coupon_consume",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "couponTemplateId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "useScene",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "useTime",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sWid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "subScene",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "subSceneId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "saasChannel",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_coupon_create",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "couponTemplateId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "couponType",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "saasChannel",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_coupon_receive",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "widInner",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "couponType",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "couponTemplateId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "expireTime",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "subScene",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "subSceneId",
+                type: "String",
+                dbType: "VARCHAR2(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sWid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "shareGuiderWid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "saasChannel",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_balance_change",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "productId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "productInstanceId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sourceProductId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "tcode",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bosIdInner",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "widInner",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "balancePlanId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "transType",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bizType",
+                type: "String",
+                dbType: "VARCHAR2(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bizUniqueId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "changAmount",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmount",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "changeTime",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_point_change",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "productId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "productInstanceId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sourceProductId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "tcode",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bosIdInner",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "widInner",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "pointPlanId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "transType",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bizType",
+                type: "String",
+                dbType: "VARCHAR2(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bizUniqueId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "changPoint",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalPoint",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "changeTime",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "effectiveTime",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "expireTime",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
       - {
           prefix: "e_third_",
           name: "weimob_membercard_update",
