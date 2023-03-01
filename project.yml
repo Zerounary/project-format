@@ -2,14 +2,126 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
-    includes: ["weimob_organization_update"]
+    includes: ["weimob_organization_create"]
   data:
     project_name: "weimob-inf"
     tasks:
       - {
-        name: "weimob_organization_update",
+        name: "weimob_organization_create",
       }
     tables:
+      - {
+          prefix: "e_third_",
+          name: "weimob_organization_create",
+          cron: "0/10 * * * * ?",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "parentVid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vidName",
+                type: "String",
+                dbType: "VARCHAR2(300)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vidCode",
+                type: "String",
+                dbType: "VARCHAR2(300)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vidType",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vidStatus",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "onlineStatus",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "logo",
+                type: "String",
+                dbType: "VARCHAR2(300)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "pictureList",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "contactTels",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "businessHours",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "area",
+                type: "BigDecimal",
+                dbType: "NUMBER(14,2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "VARCHAR2(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "floor",
+                type: "String",
+                dbType: "VARCHAR2(100)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isUnifyLogo",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "propel_msg",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "is_propel",
+                type: "String",
+                dbType: "CHAR(1)",
+                dbTypeWith: "default 'N'",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
       - {
           prefix: "e_third_",
           name: "weimob_organization_update",
