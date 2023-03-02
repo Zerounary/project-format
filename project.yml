@@ -2,11 +2,307 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
-    includes: ["weimob_customer_update_list"]
+    includes: ["weimob_coupon_update"]
   data:
     project_name: "weimob-inf"
     tasks: []
     tables:
+      - {
+          prefix: "e_third_",
+          name: "weimob_coupon_update",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "couponTemplateId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "saasChannel",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_coupon_detail",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "baseInfo",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "setting",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "reduceRule",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sendRule",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "useRule",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "otherSetting",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "createInfo",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "status",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_coupon_cancel",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "couponTemplateId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "type",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "subScene",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "subSceneId",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "saasChannel",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_coupon_present",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR2(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "fromWid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "toWid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "couponTemplateId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "statusType",
+                type: "Long",
+                dbType: "NUMBER(5)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "saasChannel",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
       - {
           prefix: "e_third_",
           name: "weimob_customer_update_list",
