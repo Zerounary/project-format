@@ -1,3 +1,4 @@
+-- changeset codegen:a
 create table {{prefix}}{{name}} (
 {{#each columns }}
     {{snake name}} {{dbType}} {{{dbTypeWith}}},

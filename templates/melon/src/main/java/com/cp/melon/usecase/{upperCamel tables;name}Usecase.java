@@ -1,5 +1,6 @@
 package com.cp.melon.usecase;
 
+import lombok.extern.slf4j.Slf4j;
 import cn.hutool.core.collection.CollUtil;
 import com.cp.melon.adapter.service.I{{upperCamel name}}Service;
 import com.cp.melon.entity.{{upperCamel name}}BO;
@@ -18,6 +19,7 @@ import java.util.List;
  * @Author sc
  * @Date 2022/10/28 14:05
  */
+@Slf4j
 @Service
 public class {{upperCamel name}}Usecase {
 
