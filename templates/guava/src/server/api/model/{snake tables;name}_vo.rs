@@ -12,6 +12,7 @@ use crate::{
 
 #[derive(Debug, SmartDefault, Serialize, Deserialize)]
 #[derive(Convert)]
+#[convert(into = "{{upperCamel this.name}}BO")]
 #[convert(from = "{{upperCamel this.name}}BO")]
 pub struct {{upperCamel this.name}}VO {
     {{#each columns}}

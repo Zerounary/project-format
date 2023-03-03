@@ -427,7 +427,7 @@ project:
                 name: "is_admin",
                 type: "i64",
                 dbType: "bool",
-                skip: [0, 0, 0, 0],
+                skip: [1, 1, 1, 1],
                 ui: { type: "switch", label: "是否管理员" },
               },
               {

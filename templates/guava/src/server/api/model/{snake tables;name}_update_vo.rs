@@ -24,7 +24,7 @@ pub struct Update{{upperCamel this.name}}VO {
     {{/each}}
 }
 
-#[derive(Convert)]
+#[derive(Convert, Default)]
 #[convert(into = "Update{{upperCamel this.name}}OptionInput")]
 #[derive(Debug, Deserialize)]
 pub struct Update{{upperCamel this.name}}OptionVO {

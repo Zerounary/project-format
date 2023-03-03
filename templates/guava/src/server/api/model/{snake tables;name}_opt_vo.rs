@@ -14,7 +14,6 @@ use crate::{
 #[derive(Convert)]
 #[convert(into = "{{upperCamel this.name}}OptionBO")]
 pub struct {{upperCamel this.name}}OptionVO {
-    #[convert_field(ignore)]
     {{#each columns}}
     {{#if skip.[2]}}
     pub {{name}}: Option<{{type}}>,
