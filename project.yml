@@ -2,11 +2,526 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
-    includes: ["weimob_order_update"]
+    includes: ["weimob_rights_detail"]
   data:
     project_name: "weimob-inf"
     tasks: []
     tables:
+      - {
+          prefix: "e_third_",
+          name: "weimob_rights_detail",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsInfo",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "status",
+                type: "String",
+                dbType: "VARCHAR2(300)",
+                skip: [1, 1, 1, 1],
+              },
+              
+          ]
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_order_detail",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              
+              {
+                name: "orderInfo",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsInfos",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "fulfillInfoList",
+                type: "String",
+                dbType: "CLOB",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "status",
+                type: "String",
+                dbType: "VARCHAR2(300)",
+                skip: [1, 1, 1, 1],
+              },
+              
+          ]
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_rights_info_update",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "operateType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "fields",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "flagRank",
+                type: "String",
+                dbType: "VARCHAR2(300)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "flagContent",
+                type: "String",
+                dbType: "VARCHAR2(3000)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "processVid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsStatus",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsCauseType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsSource",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "refundType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "parentOrderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderSource",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "channelType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bizSourceType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              
+          ]
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_rights_status_update",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "statusBefore",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "status",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "processVid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsStatus",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsCauseType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsSource",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "refundType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "parentOrderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderSource",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "channelType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bizSourceType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              
+          ]
+        }
+      - {
+          prefix: "e_third_",
+          name: "weimob_rights_create",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "eid",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "topic",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "event",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bos_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sign",
+                type: "String",
+                dbType: "VARCHAR2(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsId",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "vid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "processVid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsStatus",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsCauseType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "rightsSource",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "refundType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "parentOrderNo",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "orderSource",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "channelType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bizSourceType",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              
+          ]
+        }
       - {
           prefix: "e_third_",
           name: "weimob_order_update",
