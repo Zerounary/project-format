@@ -17,7 +17,6 @@ project:
               { label: "桌次", tableName: "table" },
               { label: "牌友", tableName: "customer" },
               { label: "房间", tableName: "room" },
-              { label: "房间", tableName: "room" },
             ],
         }
       - {
