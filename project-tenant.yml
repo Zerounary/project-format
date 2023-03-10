@@ -1,0 +1,431 @@
+project:
+  template:
+    dir: "templates/guava"
+    output: "../tenant_manager"
+  data:
+    project_name: "tenant_manager"
+    auth: 1
+    redis_session: 0
+    overview: 1
+    pages:
+      - {
+          label: "系统管理",
+          url: "/",
+          children:
+            [
+              { label: "系统参数", tableName: "params" },
+              { label: "租户", tableName: "tenant" },
+              { label: "用户管理", tableName: "user" },
+              { label: "角色管理", tableName: "role" },
+            ],
+        }
+    tables:
+      # 租户
+      - {
+          prefix: "sys_",
+          name: "tenant",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "编码" },
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+              {
+                name: "ty",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "类型" },
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "备注" },
+              },
+            ],
+        }
+      # 系统参数
+      - {
+          prefix: "sys_",
+          name: "params",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "编码" },
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+              {
+                name: "ty",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "类型" },
+              },
+              {
+                name: "value",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "值" },
+              },
+            ],
+        }
+      # 用户
+      - {
+          prefix: "sys_",
+          name: "user",
+          auth: 1,
+          skipAuto: true,
+          ac: 1,
+          acCode: '
+        let role_ids = bo.role_ids.clone();
+        use crate::entities::user_role_bo::UserRoleBO;
+        if !role_ids.is_empty() {
+          let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
+              UserRoleBO { id: 0, user_id: id.clone(), role_id: role_id.parse().unwrap(), description: "".to_string() }
+          }).collect();
+
+          self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+        }
+          ',
+          am: 1,
+          amCode: '
+        self.repo.delete_user_role_by_user_id(&mut conn, bo.id).await?;
+
+        let role_ids = input.role_ids.clone();
+
+        use crate::entities::user_role_bo::UserRoleBO;
+        if !role_ids.is_empty() {
+        let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
+            UserRoleBO { id: 0, user_id: bo.id, role_id: role_id.parse().unwrap(), description: "".to_string() }
+        }).collect();
+
+        self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+        }
+          ',
+        amOptCode: '
+                if bo.role_ids.is_some() {
+            let user_id = bo.id.unwrap();
+            self.repo
+                .delete_user_role_by_user_id(&mut conn, user_id)
+                .await?;
+            let role_ids = input.role_ids.unwrap().clone();
+            use crate::entities::user_role_bo::UserRoleBO;
+            if !role_ids.is_empty() {
+                let mut user_roles: Vec<UserRoleBO> = role_ids
+                    .split(",")
+                    .map(|role_id| UserRoleBO {
+                        id: 0,
+                        user_id,
+                        role_id: role_id.parse().unwrap(),
+                        description: "".to_string(),
+                    })
+                    .collect();
+                self.repo
+                    .create_user_role_batch(&mut conn, &mut user_roles, 100)
+                    .await?;
+            }
+        }
+          ',
+          bd: 1,
+          deleteCode: '
+                  self.repo
+            .delete_user_role_by_user_id(&mut conn, id)
+            .await?;
+          ',
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+              {
+                name: "password",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-password", label: "密码" },
+              },
+              {
+                name: "is_admin",
+                type: "i64",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+                ui: { type: "switch", label: "是否管理员", trueValue: 1, falseValue: 0, onText: "是", offText: "否" },
+              },
+              {
+                name: "tenant_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+                ui: { type: "select", multiple: true, label: "租户" },
+              },
+              {
+                name: "role_ids",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "select", multiple: true, label: "角色" },
+              },
+            ],
+          ddls: [],
+        }
+      # 角色
+      - {
+          prefix: "sys_",
+          name: "role",
+          auth: 1,
+          skipAuto: true,
+          ac: 1,
+          acCode: '
+
+        let menu_ids = bo.perms.clone();
+
+        use crate::entities::role_menu_bo::RoleMenuBO;
+        let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
+            RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: id.clone(), description: "".to_string() }
+        }).collect_vec();
+
+        self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
+
+          ',
+          am: 1,
+          amCode: '
+        self.repo.delete_role_menu_by_role_id(&mut conn, bo.id).await?;
+
+        use crate::entities::role_menu_bo::RoleMenuBO;
+        let menu_ids = bo.perms.clone();
+
+        let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
+            RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: bo.id, description: "".to_string() }
+        }).collect_vec();
+
+        self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
+
+          ',
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "描述" },
+              },
+              {
+                name: "perms",
+                type: "String",
+                dbType: "text",
+                skip: [1, 1, 1, 1],
+                ui:
+                  {
+                    type: "transfer-picker",
+                    source:
+                      {
+                        method: "GET",
+                        url: "/api/menu/list",
+                        cache: 2000,
+                        adaptor: "return { ...payload, data: {rows: payload.data.rows.map(e => {return {label: e.menu_name, value: e.id}})} }",
+                      },
+                    label: "权限",
+                  },
+              },
+            ],
+          ddls: [],
+        }
+      # 菜单
+      - {
+          prefix: "sys_",
+          name: "menu",
+          auth: 1,
+          skipAuto: true,
+          listCode: '
+            let result = if let Some(user) = self.user.clone() {
+
+              let mut db = self.db.clone();
+
+              db.set_sql_intercepts(vec![]);
+              
+              let mut conn = db.acquire().await.unwrap();
+              
+              if user.is_admin == 1 {
+
+                  self.repo.select_menu_list(&mut conn, bo).await?
+
+              }else {
+
+                  self.repo.select_menu_by_ids(&mut conn, &user.role_ids).await?
+                  
+              }
+
+            } else {
+
+                vec![]
+
+            };
+          ',
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "menu_name",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+              {
+                name: "path",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "路径" },
+              },
+              {
+                name: "component",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "组件" },
+              },
+              {
+                name: "perms",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "权限" },
+              },
+              {
+                name: "icon",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "图标" },
+              },
+              {
+                name: "ty",
+                type: "String",
+                dbType: "CHAR(2)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "类型" },
+              },
+              {
+                name: "sort",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-number", label: "排序" },
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+                ui: { type: "input-text", label: "描述" },
+              },
+            ],
+          ddls: [],
+        }
+      # 用户角色关系
+      - {
+          prefix: "sys_",
+          name: "user_role",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "user_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      # 角色菜单关系
+      - {
+          prefix: "sys_",
+          name: "role_menu",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
+              {
+                name: "menu_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "role_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: []
+        }
+
+    ddls: []
