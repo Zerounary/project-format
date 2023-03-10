@@ -37,4 +37,20 @@ impl Service {
             user: None,
         }
     }
+
+
+    pub async fn conn_begin(&self) -> Result<rbatis::executor::RBatisTxExecutorGuard, rbatis::rbdc::Error> {
+        let conn = self.db.acquire_begin().await?;
+        let conn = conn.defer_async(|mut tx| async move {
+            if !tx.done {
+                tx.rollback().await.unwrap();
+            }
+        });
+        Ok(conn)
+    }
+
+    pub async fn conn(&self) -> Result<rbatis::executor::RBatisConnExecutor, rbatis::rbdc::Error> {
+        let conn = self.db.acquire().await?;
+        Ok(conn)
+    }
 }

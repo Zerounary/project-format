@@ -123,14 +123,9 @@ impl Service {
             ..{{upperCamel this.name}}BO::default()
         };
         {{#if ac}}
-        let mut conn = self.db.acquire_begin().await?;
-        let mut conn = conn.defer_async(|mut tx| async move {
-            if !tx.done {
-                tx.rollback().await.unwrap();
-            }
-        });
+        let mut conn = self.conn_begin().await?;
         {{else}}
-        let mut conn = self.db.acquire().await?;
+        let mut conn = self.conn().await?;
         {{/if}}
         let id = self.repo.create_{{snake this.name}}(&mut conn, bo.clone()).await?;
         {{#if acCode }}
@@ -167,14 +162,9 @@ impl Service {
             }
         }).collect::<Vec<{{upperCamel this.name}}BO>>();
         {{#if ac}}
-        let mut conn = self.db.acquire_begin().await?;
-        let mut conn = conn.defer_async(|mut tx| async move {
-            if !tx.done {
-                tx.rollback().await.unwrap();
-            }
-        });
+        let mut conn = self.conn_begin().await?;
         {{else}}
-        let mut conn = self.db.acquire().await?;
+        let mut conn = self.conn().await?;
         {{/if}}
         let insert_result = self.repo.create_{{snake this.name}}_batch(&mut conn, &mut bos, 100).await?;
 
@@ -192,14 +182,9 @@ impl Service {
             ..{{upperCamel this.name}}BO::default()
         };
         {{#if am}}
-        let mut conn = self.db.acquire_begin().await?;
-        let mut conn = conn.defer_async(|mut tx| async move {
-            if !tx.done {
-                tx.rollback().await.unwrap();
-            }
-        });
+        let mut conn = self.conn_begin().await?;
         {{else}}
-        let mut conn = self.db.acquire().await?;
+        let mut conn = self.conn().await?;
         {{/if}}
 
         let result = self.repo.update_{{snake this.name}}_by_id(&mut conn, &bo, bo.id).await;
@@ -232,14 +217,9 @@ impl Service {
             ..{{upperCamel this.name}}OptionBO::default()
         };
         {{#if am}}
-        let mut conn = self.db.acquire_begin().await?;
-        let mut conn = conn.defer_async(|mut tx| async move {
-            if !tx.done {
-                tx.rollback().await.unwrap();
-            }
-        });
+        let mut conn = self.conn_begin().await?;
         {{else}}
-        let mut conn = self.db.acquire().await?;
+        let mut conn = self.conn().await?;
         {{/if}}
         let result = self.repo.update_{{snake this.name}}_opt_by_id(&mut conn, &bo, input.id).await;
         {{#if amOptCode }}
@@ -259,14 +239,9 @@ impl Service {
     }
     pub async fn delete_{{snake this.name}}(&self, id: i64) -> Result<(), AppError> {
         {{#if bd}}
-        let mut conn = self.db.acquire_begin().await?;
-        let mut conn = conn.defer_async(|mut tx| async move {
-            if !tx.done {
-                tx.rollback().await.unwrap();
-            }
-        });
+        let mut conn = self.conn_begin().await?;
         {{else}}
-        let mut conn = self.db.acquire().await?;
+        let mut conn = self.conn().await?;
         {{/if}}
 
         let result = self.repo.delete_{{snake this.name}}(&mut conn, id).await;
@@ -288,14 +263,9 @@ impl Service {
     }
     pub async fn delete_{{snake this.name}}_ids(&self, ids: Vec<i64>) -> Result<(), AppError> {
         {{#if bd}}
-        let mut conn = self.db.acquire_begin().await?;
-        let mut conn = conn.defer_async(|mut tx| async move {
-            if !tx.done {
-                tx.rollback().await.unwrap();
-            }
-        });
+        let mut conn = self.conn_begin().await?;
         {{else}}
-        let mut conn = self.db.acquire().await?;
+        let mut conn = self.conn().await?;
         {{/if}}
 
         let result = self.repo.delete_{{snake this.name}}_ids(&mut conn, ids.clone()).await;
