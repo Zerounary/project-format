@@ -13,8 +13,11 @@ project:
           url: "/",
           children:
             [
-              { label: "部门", tableName: "dept" },
-              { label: "门店", tableName: "merchant" },
+              { label: "员工", tableName: "employee" },
+              { label: "桌次", tableName: "table" },
+              { label: "牌友", tableName: "customer" },
+              { label: "房间", tableName: "room" },
+              { label: "房间", tableName: "room" },
             ],
         }
       - {
@@ -24,6 +27,7 @@ project:
             [
               { label: "用户管理", tableName: "user" },
               { label: "角色管理", tableName: "role" },
+              { label: "系统参数", tableName: "params" },
             ],
         }
     tables:
@@ -428,7 +432,7 @@ project:
                 type: "i64",
                 dbType: "bool",
                 skip: [1, 1, 1, 1],
-                ui: { type: "switch", label: "是否管理员" },
+                ui: { type: "switch", label: "是否管理员", trueValue: 1, falseValue: 0, onText: "是", offText: "否" },
               },
               {
                 name: "role_ids",

@@ -1,3 +1,11 @@
+insert into `sys_user`
+(name, password, is_admin, role_ids, tenant_id)
+values
+('root', 'root123', 1, '1', 1);
+insert into `sys_role`
+(name, description, perms, tenant_id)
+values
+('管理员', '管理员', '', 1);
 {{#each pages }}
 {{#each children }}
 insert into `sys_menu`

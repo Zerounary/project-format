@@ -126,8 +126,8 @@ class AMISComponent extends React.Component<any, any> {
                       method: 'get',
                       url: '/api/login?username=${username}&password=${password}',
                       adaptor: function (payload, response) {
-                        if (payload.data?.length) {
-                          localStorage.setItem('perms', JSON.stringify(payload.data))
+                        if (payload.data?.perms.length) {
+                          localStorage.setItem('perms', JSON.stringify(payload.data.perms))
                           localStorage.setItem('auth', true)
                           location.href = '/';
                           return payload;
