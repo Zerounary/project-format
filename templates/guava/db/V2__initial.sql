@@ -1,11 +1,21 @@
+ALTER TABLE
+  `sys_user`
+ADD
+  COLUMN `is_manager` BOOL NULL
+AFTER
+  `is_admin`;
+
 insert into `sys_user`
-(name, password, is_admin, role_ids, tenant_id)
+(name, password, is_manager, is_admin, role_ids, tenant_id)
 values
-('root', 'root123', 1, '1', 1);
+('admin', 'admin123', 1, 1, '1', 1);
+
 insert into `sys_role`
 (name, description, perms, tenant_id)
 values
 ('管理员', '管理员', '', 1);
+
+
 {{#each pages }}
 {{#each children }}
 insert into `sys_menu`
