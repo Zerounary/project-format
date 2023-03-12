@@ -3,11 +3,19 @@ pub mod {{this.name}}_repo;
 {{/each}}
 
 use crate::drivers::db::{DB, get_sql}; 
+use rbatis::decode;
+use serde::{Serialize, Deserialize};
 use serde_json::Value;
 
 #[derive(Debug)]
 pub struct Repository {
     user: Option<SessionUser>,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct ProcResult {
+    pub r_code: i64,
+    pub r_msg: String
 }
 
 impl Repository {
@@ -21,6 +29,29 @@ impl Repository {
         let (sql, args) = get_sql(&sql_name, &params);
         let result: Value = rb.fetch_decode(&sql, args).await.unwrap();
         result
+    }
+
+    pub async fn call_procedure(&self, rb: &mut dyn rbatis::executor::Executor, proc: &str, id: i64) -> Result<ProcResult, rbatis::rbdc::Error> {
+        match self.user.clone() {
+            Some(user) => {
+                rb.exec(&format!("call {}(?, ?, @r_code, @r_msg);", proc), vec![to_value!(id), to_value!(user.tenant_id)]).await?;
+                let res = rb.fetch("SELECT @r_code as r_code, @r_msg as r_msg;", vec![]).await?;
+                let proc_result :ProcResult =  decode(res)?;
+                match proc_result.r_code {
+                    0 => Ok(proc_result),
+                    _ => Err(rbatis::rbdc::Error::E(proc_result.r_msg))
+                }
+            },
+            None => {
+                rb.exec(&format!("call {}(?, @r_code, @r_msg);", proc), vec![to_value!(id),]).await?;
+                let res = rb.fetch("SELECT @r_code as r_code, @r_msg as r_msg;", vec![]).await?;
+                let proc_result :ProcResult =  decode(res)?;
+                match proc_result.r_code {
+                    0 => Ok(proc_result),
+                    _ => Err(rbatis::rbdc::Error::E(proc_result.r_msg))
+                }
+            },
+        }
     }
 }
 

@@ -227,11 +227,15 @@ impl SqlIntercept for UserIntercept {
                 }
                 Ok(())
             } else {
-                log::error!("{}表名未使用符号包裹, sql => {} ", plugin_name, sql);
-                Err(rbatis::Error::E(format!(
-                    "{}表名未使用符号包裹",
-                    plugin_name
-                )))
+                if(upper_sql.contains("FROM")) {
+                    log::error!("{}表名未使用符号包裹, sql => {} ", plugin_name, sql);
+                    Err(rbatis::Error::E(format!(
+                        "{}表名未使用符号包裹",
+                        plugin_name
+                    )))
+                }else {
+                    Ok(())
+                }
             }
         } else if upper_sql.contains("DELETE FROM") {
             if upper_sql.contains("WHERE") {
@@ -280,6 +284,8 @@ impl SqlIntercept for UserIntercept {
                     plugin_name
                 )))
             }
+        } else if upper_sql.contains("CALL") {
+            Ok(())
         } else {
             log::error!("{}未知SQL, sql => {} ", plugin_name, sql);
             Err(rbatis::Error::E(format!("{}未知SQL", plugin_name)))
