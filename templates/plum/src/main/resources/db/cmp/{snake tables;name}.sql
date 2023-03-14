@@ -24,6 +24,7 @@ create table {{prefix}}{{name}} (
 
 
 -- 创建表约束
+create index idx_{{name}}_tenant_id on {{prefix}}{{name}}(tenant_id);
 {{#if ddls}}
 -- changeset codegen:b{{@index}}
 {{#each ddls }}

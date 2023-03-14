@@ -28,8 +28,9 @@ create table {{prefix}}{{name}} (
 
 -- 创建表约束
 {{#each tables }}
-{{#if ddls}}
 -- changeset codegen:b{{@index}}
+create index idx_{{name}}_tenant_id on {{prefix}}{{name}}(tenant_id);
+{{#if ddls}}
 {{#each ddls }}
 {{this}}
 {{/each}}
