@@ -1,8 +1,7 @@
 -- liquibase formatted sql
 
 -- 创建表结构
-{{#each tables }}
--- changeset codegen:a{{@index}}
+-- changeset codegen:a
 CREATE SEQUENCE seq_{{prefix}}{{name}}
 START WITH 1
 INCREMENT BY 1
@@ -23,19 +22,11 @@ create table {{prefix}}{{name}} (
     primary key (id)
 );
 
-{{/each}}
-
 
 -- 创建表约束
-{{#each tables }}
 {{#if ddls}}
 -- changeset codegen:b{{@index}}
 {{#each ddls }}
 {{this}}
 {{/each}}
 {{/if}}
-{{/each}}
--- changeset codegen:c1
-insert into sys_user
-(id, name, password, tenant_id)
-values (nextval('seq_sys_user'), 'mrbird', '123456', 1);
