@@ -24,6 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.cp.melon.adapter.api.auth.WebAuth;
 import org.springframework.web.bind.annotation.*;
 
+import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+
 @RestController
 @RequestMapping("/api/{{camel name}}")
 public class {{upperCamel name}}Controller{
@@ -45,7 +49,12 @@ public class {{upperCamel name}}Controller{
 
     @WebAuth
     @GetMapping("/one")
-    public Resp<{{upperCamel name}}VO> find{{upperCamel name}}One(@RequestParam Map<String, Object> params){
+    @ApiImplicitParams({
+        {{#each columns}}
+        @ApiImplicitParam(name = "qp-{{camel name}}-eq", value = "{{camel name}}", paramType = "query"),
+        {{/each}}
+    })
+    public Resp<{{upperCamel name}}VO> find{{upperCamel name}}One(@RequestParam @ApiIgnore Map<String, Object> params){
         QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
         {{upperCamel name}}BO bo = {{camel name}}Service.getOne(wrapper);
         {{upperCamel name}}VO vo = {{upperCamel name}}VO.fromBO(bo);
@@ -54,7 +63,12 @@ public class {{upperCamel name}}Controller{
 
     @WebAuth
     @GetMapping("/noPage")
-    public Resp<List<{{upperCamel name}}VO>> find{{upperCamel name}}List(@RequestParam Map<String, Object> params){
+    @ApiImplicitParams({
+        {{#each columns}}
+        @ApiImplicitParam(name = "qp-{{camel name}}-eq", value = "{{camel name}}", paramType = "query"),
+        {{/each}}
+    })
+    public Resp<List<{{upperCamel name}}VO>> find{{upperCamel name}}List(@RequestParam @ApiIgnore Map<String, Object> params){
         QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
         List<{{upperCamel name}}BO> bos = {{camel name}}Service.list(wrapper);
         List<{{upperCamel name}}VO> vos = bos.stream().map(bo -> {{upperCamel name}}VO.fromBO(bo)).collect(Collectors.toList());
@@ -63,7 +77,12 @@ public class {{upperCamel name}}Controller{
 
     @WebAuth
     @GetMapping("/list")
-    public Page<{{upperCamel name}}VO> find{{upperCamel name}}Page(@RequestParam Map<String, Object> params, @RequestParam( "currentPage") Long currentPage, @RequestParam( "pageSize") Long pageSize){
+    @ApiImplicitParams({
+        {{#each columns}}
+        @ApiImplicitParam(name = "qp-{{camel name}}-eq", value = "{{camel name}}", paramType = "query"),
+        {{/each}}
+    })
+    public Page<{{upperCamel name}}VO> find{{upperCamel name}}Page(@RequestParam @ApiIgnore Map<String, Object> params, @RequestParam( "currentPage") Long currentPage, @RequestParam( "pageSize") Long pageSize){
         QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
         Page<{{upperCamel name}}BO> page = new Page(currentPage, pageSize);
         Page<{{upperCamel name}}BO> pageResult = {{camel name}}Service.page(page, wrapper);
