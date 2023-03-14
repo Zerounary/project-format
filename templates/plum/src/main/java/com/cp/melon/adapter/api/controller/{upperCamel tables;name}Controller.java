@@ -43,6 +43,7 @@ public class {{upperCamel name}}Controller{
         return Resp.ok(vo);
     }
 
+    @WebAuth
     @GetMapping("/one")
     public Resp<{{upperCamel name}}VO> find{{upperCamel name}}One(@RequestParam Map<String, Object> params){
         QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
@@ -51,6 +52,7 @@ public class {{upperCamel name}}Controller{
         return Resp.ok(vo);
     }
 
+    @WebAuth
     @GetMapping("/noPage")
     public Resp<List<{{upperCamel name}}VO>> find{{upperCamel name}}List(@RequestParam Map<String, Object> params){
         QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
@@ -59,6 +61,7 @@ public class {{upperCamel name}}Controller{
         return Resp.ok(vos);
     }
 
+    @WebAuth
     @GetMapping("/list")
     public Page<{{upperCamel name}}VO> find{{upperCamel name}}Page(@RequestParam Map<String, Object> params, @RequestParam( "currentPage") Long currentPage, @RequestParam( "pageSize") Long pageSize){
         QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
@@ -69,6 +72,7 @@ public class {{upperCamel name}}Controller{
         result.setRecords(vos);
         return result;
     }
+    @WebAuth
     @PostMapping
     public Resp<Long> create{{upperCamel name}}(@RequestBody {{upperCamel name}}CreateVO createVO){
         {{upperCamel name}}BO bo = createVO.toBO();
@@ -76,6 +80,7 @@ public class {{upperCamel name}}Controller{
         return Resp.ok(id);
     }
 
+    @WebAuth
     @PostMapping("/batch")
     public Resp<BatchResult> create{{upperCamel name}}Batch(@RequestBody List<{{upperCamel name}}CreateVO> createVOList){
         if(CollUtil.isNotEmpty(createVOList)){
@@ -86,12 +91,14 @@ public class {{upperCamel name}}Controller{
         return Resp.ok(null);
     }
 
+    @WebAuth
     @PatchMapping
     public Resp<Boolean> update{{upperCamel name}}Any(@RequestBody {{upperCamel name}}UpdateVO updateVO){
         Boolean result = {{camel name}}Usecase.update(updateVO.toBO());
         return Resp.ok(result);
     }
 
+    @WebAuth
     @DeleteMapping("/{ids}")
     public Resp<BatchResult> delete{{upperCamel name}}ByIds(@PathVariable("ids") String ids){
         if(ids.matches("([\\d]+,?)+")){
