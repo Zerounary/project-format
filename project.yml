@@ -2,11 +2,45 @@ project:
   template:
     dir: "templates/melon"
     output: "../../Java/weimob-inf"
-    includes: ["weimob_rights_detail"]
+    includes: ["weimob_customer_init"]
   data:
     project_name: "weimob-inf"
     tasks: []
     tables:
+      - {
+          prefix: "e_third_",
+          name: "weimob_customer_init",
+          cron: "0/10 * * * * ?",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(15)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "c_vip_id",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "wid",
+                type: "Long",
+                dbType: "NUMBER(32)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "is_propel",
+                type: "String",
+                dbType: "CHAR(1)",
+                dbTypeWith: "default 'N'",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
       - {
           prefix: "e_third_",
           name: "weimob_rights_detail",
