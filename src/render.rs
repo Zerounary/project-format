@@ -145,7 +145,7 @@ impl<'a> Render<'a> {
                                     let contents = self
                                         .h
                                         .render_template(&template_string, &item)
-                                        .expect(&format!("渲染对象{:?}", item));
+                                        .expect(&format!("渲染对象{:?} => {:?}", item, e.path().clone()));
                                     fs::write(&item_target, contents).expect("生成表达式文件失败");
                                     log_path_ok(
                                         "生成文件:",
