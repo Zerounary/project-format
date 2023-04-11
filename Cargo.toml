@@ -13,8 +13,8 @@ handlebars = "4.3.4"
 itertools = "0.10.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "*"
-jsonpath = "0.1.1"
 serde_yaml = "0.9.13"
+jsonpath-rust = "0.1.6"
 convert_case = "0.6.0"
 clap = {version = "3", features = ["derive"]}
 ansi_term = "0.12.1"
