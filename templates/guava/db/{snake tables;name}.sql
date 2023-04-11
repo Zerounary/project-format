@@ -26,3 +26,7 @@ create index idx_{{name}}_tenant_id on {{prefix}}{{name}}(tenant_id);
 {{#each ddls }}
 {{this}}
 {{/each}}
+
+--<slot>
+{{{~slot0~}}}
+--</slot>
