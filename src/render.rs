@@ -1,7 +1,7 @@
 use convert_case::{Case, Casing};
 use handlebars::{handlebars_helper, Handlebars};
 use itertools::Itertools;
-use jsonpath_rust::JsonPathQuery;
+use jsonpath::Selector;
 use serde_json::{json, Value};
 use std::fs::{self, create_dir_all, DirEntry};
 use std::io;
@@ -22,11 +22,8 @@ handlebars_helper!(kebab: |s: String| s.to_case(Case::Kebab));
 // stringify
 handlebars_helper!(stringify: |s: Value| s.to_string());
 
-
 // string convert
 handlebars_helper!(fkTable: |s: String| s.trim_end_matches("_id").trim_end_matches("_ids").to_string());
-
-
 
 // test
 handlebars_helper!(isId: |s: String| s.to_lowercase().eq("id"));
@@ -47,7 +44,6 @@ handlebars_helper!(defaultDbType: |s: String| {
         "".to_string()
     }
 });
-
 
 pub struct Render<'a> {
     pub h: Handlebars<'a>,
@@ -103,57 +99,33 @@ impl<'a> Render<'a> {
                     let file_name = target.file_name().map(|x| x.to_str().unwrap()).unwrap();
                     if file_name.contains("{") {
                         let (list_key, item_key) = get_var_name(file_name);
-                        data.clone()
-                            .path(&format!("$.{:}", list_key))
-                            .map(|v| match v.get(0) {
-                                Some(l) => l.to_owned(),
-                                None => json!([]),
-                            })
-                            .expect(&format!("project.data.{:} 未找到", list_key))
-                            .as_array()
-                            .map(|list| {
-                                for item in list {
-                                    let item_name = item
-                                        .clone()
-                                        .path(&format!("$.{:}", item_key))
-                                        .map(|v| match v.get(0) {
-                                            Some(name) => name.to_owned(),
-                                            None => item.clone(),
-                                        })
-                                        .expect(&format!("{:}.{:}不存在", list_key, item_key))
-                                        .as_str()
-                                        .map(|v| v.to_string());
-                                    let item_name = match item_name {
-                                        Some(name) => name.to_string(),
-                                        None => match item.as_str() {
-                                            Some(name) => name.to_string(),
-                                            None => {
-                                                panic!("{:?}.{:?}不存在", list_key, item_key)
-                                            }
-                                        },
-                                    };
-                                    let item_target = target
-                                        .parent()
-                                        .map(|p| p.join(replace_var(file_name, &item_name)))
-                                        .unwrap();
-                                    
-                                    
-                                    if item_target.exists() && data.clone().get("overview").is_none() {
-                                        return;
-                                    }
+                        let jsonpath = format!("$.{:}", list_key);
+                        let selector = Selector::new(&jsonpath).unwrap();
+                        // 动态名称的列表
+                        let list = selector.find(&data).next().unwrap();
+                        if let Some(list) = list.as_array() {
+                            for item in list {
+                                let jsonpath = format!("$.{:}", item_key);
+                                let selector = Selector::new(&jsonpath).unwrap();
+                                let item_name =
+                                    selector.find(&item).next().unwrap().as_str().unwrap();
+                                let item_target = target
+                                    .parent()
+                                    .map(|p| p.join(replace_var(file_name, item_name)))
+                                    .unwrap();
 
-                                    let contents = self
-                                        .h
-                                        .render_template(&template_string, &item)
-                                        .expect(&format!("渲染对象{:?}", item));
-                                    fs::write(&item_target, contents).expect("生成表达式文件失败");
-                                    log_path_ok(
-                                        "生成文件:",
-                                        item_target.as_os_str().to_str().unwrap(),
-                                    );
+                                if item_target.exists() && data.clone().get("overview").is_none() {
+                                    return;
                                 }
-                            })
-                            .expect(&format!("不能遍历对象{:?}", list_key))
+
+                                let contents = self
+                                    .h
+                                    .render_template(&template_string, item)
+                                    .expect(&format!("渲染对象{:?}", item));
+                                fs::write(&item_target, contents).expect("生成表达式文件失败");
+                                log_path_ok("生成文件:", item_target.as_os_str().to_str().unwrap());
+                            }
+                        }
                     } else {
                         let result = self.h.render_template(&template_string, data);
                         match result {
