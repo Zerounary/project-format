@@ -18,3 +18,4 @@ jsonpath-rust = "0.1.6"
 convert_case = "0.6.0"
 clap = {version = "3", features = ["derive"]}
 ansi_term = "0.12.1"
+regex = "1.7.3"

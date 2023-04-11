@@ -2,10 +2,12 @@ use convert_case::{Case, Casing};
 use handlebars::{handlebars_helper, Handlebars};
 use itertools::Itertools;
 use jsonpath_rust::JsonPathQuery;
+use regex::Regex;
 use serde_json::{json, Value};
+use std::fmt::format;
 use std::fs::{self, create_dir_all, DirEntry};
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::log::{log_fail, log_path_ok};
 use crate::parser::gen_file_name::{parse_file_name, to_case};
@@ -124,10 +126,17 @@ impl<'a> Render<'a> {
                                     })
                                     .unwrap();
 
-                                if item_target.exists() && data.clone().get("overview").is_none() {
-                                    return;
+                                // 支持插槽
+                                let slots = get_slots_content(item_target.clone());
+                                let mut item = item.clone();
+                                for (index, slot) in slots.iter().enumerate() {
+                                    if let Some(obj) = item.as_object_mut() {
+                                        obj.insert(
+                                            format!("slot{}", index),
+                                            Value::String(slot.to_string()),
+                                        );
+                                    }
                                 }
-
                                 let contents = self
                                     .h
                                     .render_template(&template_string, &item)
@@ -137,22 +146,23 @@ impl<'a> Render<'a> {
                             }
                         }
                     } else {
-                        let result = self.h.render_template(&template_string, data);
-                        match result {
-                            Ok(contents) => {
-                                // 某些文件是需要根据数据生成多个文件的
-                                // let file_name = target.file_name().unwrap().to_str().unwrap();
-                                if target.exists() && data.clone().get("overview").is_none() {
-                                    return;
-                                }
-                                fs::write(&target, contents).expect("生成文件失败");
-                                log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
-                            }
-                            Err(_e) => {
-                                // println!("{:?}", e);
-                                log_fail("不能生成文件", e.path().to_str().unwrap());
+                        // 支持插槽
+                        let slots = get_slots_content(target.clone());
+                        let mut data = data.clone();
+                        for (index, slot) in slots.iter().enumerate() {
+                            if let Some(obj) = data.as_object_mut() {
+                                obj.insert(
+                                    format!("slot{}", index),
+                                    Value::String(slot.to_string()),
+                                );
                             }
                         }
+                        let contents = self
+                            .h
+                            .render_template(&template_string, &data)
+                            .expect(&format!("不能生成文件{}", e.path().to_str().unwrap()));
+                        fs::write(&target, contents).expect("生成文件失败");
+                        log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
                     }
                 }
                 Err(_e) => {
@@ -201,6 +211,34 @@ pub fn replace_var(s: &str, v: &str) -> String {
     };
     x.replace_range(start..end, &replace_value);
     x
+}
+
+///
+/// 解析源码中的slot
+/// ```rust
+/// //<slot>
+/// hello
+/// //</slot>
+/// ```
+/// 获取槽中的代码
+pub fn get_slots_content(target: PathBuf) -> Vec<String> {
+    let commet_keyword = if let Some(extension) = target.extension() {
+        match extension.to_str().unwrap_or_default() {
+            "sql" => "--",
+            _ => "//",
+        }
+    } else {
+        "//"
+    };
+    let pattern = &format!(r"{0}<slot>([\s\S]*?){0}</slot>", commet_keyword.to_string());
+    let TAG_REGEX = Regex::new(pattern).unwrap();
+    let target_str = fs::read_to_string(target).expect("未能读取到文件");
+    let mut result = vec![];
+    for captures in TAG_REGEX.captures_iter(&target_str) {
+        let tag_content = captures.get(1).unwrap().as_str();
+        result.push(tag_content.to_string());
+    }
+    result
 }
 
 #[test]
