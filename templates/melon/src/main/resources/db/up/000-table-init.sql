@@ -1,8 +1,7 @@
 -- liquibase formatted sql
-
 -- 创建表结构
 {{#each tables }}
--- changeset codegen:a{{@index}}
+-- changeset {{../project_name}}:t{{@index}}
 create table {{prefix}}{{name}} (
 {{#each columns }}
     {{snake name}} {{dbType}} {{{dbTypeWith}}},
