@@ -1,42 +1,80 @@
 project:
   template:
     dir: "templates/melon"
-    output: "../../Java/hgtplat-inf"
+    output: "../../Java/weimob-data-inf"
   data:
-    project_name: "hgtplat-inf"
+    project_name: "weimob-data-inf"
     tasks: 
       - {
-        name: "area"
+        name: "vip_info"
       }
     tables:
       - {
-          prefix: "e_third_",
-          name: "area",
+          prefix: "wm_",
+          name: "vip_info",
           cron: "0 0/1 * * * ?",
           columns:
             [
               {
                 name: "id",
                 type: "Long",
-                dbType: "NUMBER(15)",
+                dbType: "NUMBER(10)",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "code",
+                name: "wid",
                 type: "String",
-                dbType: "VARCHAR2(300)",
+                dbType: "VARCHAR2(80)",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "name",
+                name: "phone",
                 type: "String",
-                dbType: "VARCHAR2(300)",
+                dbType: "VARCHAR2(80)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: [],
+        }
+      - {
+          prefix: "wm_",
+          name: "vip_info_pages",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "parentCode",
+                name: "current_page",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "total_page",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "customer_start_time",
+                type: "Long",
+                dbType: "NUMBER(19)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "customer_end_time",
+                type: "Long",
+                dbType: "NUMBER(19)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "error_msg",
                 type: "String",
-                dbType: "VARCHAR2(300)",
+                dbType: "VARCHAR2(500)",
                 skip: [1, 1, 1, 1],
               },
             ],
