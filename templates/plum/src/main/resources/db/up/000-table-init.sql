@@ -2,7 +2,7 @@
 
 -- 创建表结构
 {{#each tables }}
--- changeset codegen:a{{@index}}
+-- changeset {{../project_name}}:a{{@index}}
 CREATE SEQUENCE seq_{{prefix}}{{name}}
 START WITH 1
 INCREMENT BY 1
@@ -28,7 +28,7 @@ create table {{prefix}}{{name}} (
 
 -- 创建表约束
 {{#each tables }}
--- changeset codegen:b{{@index}}
+-- changeset {{../project_name}}:b{{@index}}
 create index idx_{{name}}_tenant_id on {{prefix}}{{name}}(tenant_id);
 {{#if ddls}}
 {{#each ddls }}
@@ -36,7 +36,7 @@ create index idx_{{name}}_tenant_id on {{prefix}}{{name}}(tenant_id);
 {{/each}}
 {{/if}}
 {{/each}}
--- changeset codegen:c1
+-- changeset {{../project_name}}:c1
 insert into sys_user
 (id, name, password, tenant_id)
 values (nextval('seq_sys_user'), 'mrbird', '123456', 1);
