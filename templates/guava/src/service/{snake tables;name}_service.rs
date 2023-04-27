@@ -1,8 +1,9 @@
+use itertools::Itertools;
 // use cached::proc_macro::cached;
 use redis::AsyncCommands;
 use serde::Deserialize;
 use smart_default::SmartDefault;
-use rbatis::rbdc::{decimal::Decimal, date::Date};
+use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date};
 
 use crate::{
     drivers::{cache::ServiceResult}, cache_value, cache, cache_invalidate,
@@ -23,7 +24,11 @@ pub struct Create{{upperCamel this.name}}Input {
     pub {{name}}: Option<{{type}}>,
     {{else}}
     {{#if default}}
-    #[default(_code = "{{default}}")]
+    #[default(_code = "{{{default}}}")]
+    {{else}}
+    {{#if (defaultDbType dbType)}}
+    #[default(_code = "{{{defaultDbType dbType}}}")]
+    {{/if}}
     {{/if}}
     pub {{name}}: {{type}},
     {{/if}}
@@ -35,7 +40,11 @@ pub struct Create{{upperCamel this.name}}Input {
 pub struct Update{{upperCamel this.name}}Input {
     {{#each columns}}
     {{#if default}}
-    #[default(_code = "{{default}}")]
+    #[default(_code = "{{{default}}}")]
+    {{else}}
+    {{#if (defaultDbType dbType)}}
+    #[default(_code = "{{{defaultDbType dbType}}}")]
+    {{/if}}
     {{/if}}
     pub {{name}}: {{type}},
     {{/each}}
@@ -56,28 +65,37 @@ pub struct Update{{upperCamel this.name}}OptionInput {
 impl Service {
 
     pub async fn find_{{snake this.name}}_list(&self, bo: {{upperCamel this.name}}OptionBO) -> Result<Vec<{{upperCamel this.name}}BO>, AppError> {
-        let result = self.repo.select_{{snake this.name}}_list(&self.db, bo).await?;
+        {{#if listCode}}
+        {{{listCode}}}
+        {{else}}
+        let mut conn = self.db.acquire().await.unwrap();
+        let result = self.repo.select_{{snake this.name}}_list(&mut conn, bo).await?;
+        {{/if}}
         Ok(result)
     }
 
     pub async fn count_{{snake name}}(&self) -> Result<i64, AppError> {
-        let count = self.repo.count_{{snake name}}(&self.db).await?;
+        let mut conn = self.db.acquire().await.unwrap();
+        let count = self.repo.count_{{snake name}}(&mut conn).await?;
         Ok(count)
     }
 
     pub async fn find_{{snake this.name}}_page(&self, bo: {{upperCamel this.name}}OptionBO, page_num: i64, page_size: i64) -> Result<Vec<{{upperCamel this.name}}BO>, AppError> {
-        let result = self.repo.select_{{snake this.name}}_page(&self.db, bo, page_num, page_size).await?;
+        let mut conn = self.db.acquire().await.unwrap();
+        let result = self.repo.select_{{snake this.name}}_page(&mut conn, bo, page_num, page_size).await?;
         Ok(result)
     }
     pub async fn find_{{snake this.name}}_by_id_no_cache(&self, id: i64) -> Result<{{upperCamel this.name}}BO, AppError> {
-        let result = self.repo.select_{{snake this.name}}_by_id(&self.db, id).await?;
+        let mut conn = self.db.acquire().await.unwrap();
+        let result = self.repo.select_{{snake this.name}}_by_id(&mut conn, id).await?;
         Ok(result)
     }
     
     pub async fn find_{{snake this.name}}_by_id(&self, id: i64) -> Result<{{upperCamel this.name}}BO, AppError> {
         cache!{
             self(id) -> Result<{{upperCamel this.name}}BO, AppError> {
-                let result = self.repo.select_{{snake this.name}}_by_id(&self.db, id).await?;
+                let mut conn = self.db.acquire().await.unwrap();
+                let result = self.repo.select_{{snake this.name}}_by_id(&mut conn, id).await?;
                 Ok(result)
             }
         }
@@ -89,9 +107,13 @@ impl Service {
             {{#unless (isId name) }}
             {{#if skip.[4]}}
                 {{#if default}}
-                {{name}}: input.{{name}}.clone().unwrap_or({{default}}),
+                {{name}}: input.{{name}}.clone().unwrap_or({{{default}}}),
+                {{else}}
+                {{#if (defaultDbType dbType)}}
+                {{name}}: input.{{name}}.clone().unwrap_or({{{defaultDbType dbType}}}),
                 {{else}}
                 {{name}}: input.{{name}}.clone().unwrap_or_default(),
+                {{/if}}
                 {{/if}}
             {{else}}
             {{name}}: input.{{name}},
@@ -110,8 +132,10 @@ impl Service {
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
-        let id = self.repo.create_{{snake this.name}}(&mut conn, bo).await?;
-
+        let id = self.repo.create_{{snake this.name}}(&mut conn, bo.clone()).await?;
+        {{#if acCode }}
+        {{{acCode}}}
+        {{/if}}
         {{#if ac}}
         conn.commit().await?;
         {{/if}}
@@ -126,9 +150,13 @@ impl Service {
             {{#unless (isId name) }}
             {{#if skip.[4]}}
                 {{#if default}}
-                {{name}}: e.{{name}}.clone().unwrap_or({{default}}),
+                {{name}}: e.{{name}}.clone().unwrap_or({{{default}}}),
+                {{else}}
+                {{#if (defaultDbType dbType)}}
+                {{name}}: e.{{name}}.clone().unwrap_or({{{defaultDbType dbType}}}),
                 {{else}}
                 {{name}}: e.{{name}}.clone().unwrap_or_default(),
+                {{/if}}
                 {{/if}}
             {{else}}
                 {{name}}: e.{{name}}.clone(),
@@ -173,7 +201,12 @@ impl Service {
         {{else}}
         let mut conn = self.db.acquire().await?;
         {{/if}}
+
         let result = self.repo.update_{{snake this.name}}_by_id(&mut conn, &bo, bo.id).await;
+
+        {{#if amCode }}
+        {{{amCode}}}
+        {{/if}}
 
         {{#if am}}
         conn.commit().await?;
@@ -209,7 +242,9 @@ impl Service {
         let mut conn = self.db.acquire().await?;
         {{/if}}
         let result = self.repo.update_{{snake this.name}}_opt_by_id(&mut conn, &bo, input.id).await;
-
+        {{#if amOptCode }}
+        {{{amOptCode}}}
+        {{/if}}
         {{#if am}}
         conn.commit().await?;
         {{/if}}
@@ -235,6 +270,10 @@ impl Service {
         {{/if}}
 
         let result = self.repo.delete_{{snake this.name}}(&mut conn, id).await;
+
+        {{#if deleteCode }}
+        {{{deleteCode}}}
+        {{/if}}
 
         {{#if bd}}
         conn.commit().await?;

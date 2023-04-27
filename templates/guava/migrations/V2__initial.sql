@@ -1,15 +1,15 @@
-insert into `sys_menu`
-(menu_name, perms)
-values
 {{#each pages }}
 {{#each children }}
-('{{label}}', '{{tableName}}:view'),
--- ('{{label}}', '{{tableName}}:add'),
--- ('{{label}}', '{{tableName}}:update'),
--- ('{{label}}', '{{tableName}}:delete'),
--- ('{{label}}', '{{tableName}}:invalid'),
--- ('{{label}}', '{{tableName}}:submit'),
--- ('{{label}}', '{{tableName}}:import'),
--- ('{{label}}', '{{tableName}}:export'),
+insert into `sys_menu`
+(pid, menu_name, path, component, perms, icon, ty, sort, description)
+values
+(0, '{{label}} - 查看', '', '', '{{tableName}}:view', '', '', 0, ''),
+(0, '{{label}} - 新增', '', '', '{{tableName}}:add', '', '', 0, ''),
+(0, '{{label}} - 修改', '', '', '{{tableName}}:update', '', '', 0, ''),
+(0, '{{label}} - 删除', '', '', '{{tableName}}:delete', '', '', 0, ''),
+(0, '{{label}} - 作废', '', '', '{{tableName}}:invalid', '', '', 0, ''),
+(0, '{{label}} - 提交', '', '', '{{tableName}}:submit', '', '', 0, ''),
+(0, '{{label}} - 导入', '', '', '{{tableName}}:import', '', '', 0, ''),
+(0, '{{label}} - 导出', '', '', '{{tableName}}:export', '', '', 0, '');
 {{/each}}
-{{/each}};
+{{/each}}

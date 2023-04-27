@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use struct_convert::Convert;
 use smart_default::SmartDefault;
-use rbatis::rbdc::{decimal::Decimal, date::Date};
+use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date};
 
 
 use crate::{
@@ -20,7 +20,11 @@ pub struct {{upperCamel this.name}}VO {
     {{else}}
     {{#if skip.[3]}}
     {{#if default}}
-    #[default(_code = "{{default}}")]
+    #[default(_code = "{{{default}}}")]
+    {{else}}
+    {{#if (defaultDbType dbType)}}
+    #[default(_code = "{{{defaultDbType dbType}}}")]
+    {{/if}}
     {{/if}}
     pub {{name}}: {{type}},
     {{/if}}

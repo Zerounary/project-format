@@ -70,7 +70,7 @@ export default {
                 title: '查看详情',
                 body: {
                   type: 'form',
-                  api: 'put:/api/{{name}}/${id}',
+                  api: 'patch:/api/{{name}}/${id}',
                   body: [
                     ...{{name}}Update,
                   ]

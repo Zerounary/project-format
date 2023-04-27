@@ -1,0 +1,45 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: nightly
+      run: rustup default nightly
+    - name: Build
+      run: cargo build -r --verbose
+    - name: debug
+      run: ls -a -R
+    - name: rsync deployments
+      uses: burnett01/rsync-deployments@5.2
+      with:
+        switches: -avzr --delete
+        path: ./target/release/{{{project_name}}} deploy.sh .env-prd
+        remote_path: /home/ubuntu/{{{project_name}}}
+        remote_host: $\{{ secrets.DEPLOY_HOST }}
+        remote_port: 22
+        remote_user: $\{{ secrets.DEPLOY_USER }}
+        remote_key: $\{{ secrets.DEPLOY_KEY }}
+    - name: restart server
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: $\{{ secrets.DEPLOY_HOST }}
+        username: $\{{ secrets.DEPLOY_USER }}
+        key: $\{{ secrets.DEPLOY_KEY }}
+        port: 22
+        script: |
+          sudo mv /home/ubuntu/{{{project_name}}}/.env-prd /home/ubuntu/{{{project_name}}}/.env
+          sudo chmod +x /home/ubuntu/{{{project_name}}}/{{{project_name}}}
+          sudo chmod +x /home/ubuntu/{{{project_name}}}/deploy.sh
+          sudo /home/ubuntu/{{{project_name}}}/./deploy.sh

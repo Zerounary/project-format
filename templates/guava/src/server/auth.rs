@@ -16,6 +16,7 @@ use axum::{
     response::IntoResponse,
     Extension, TypedHeader,
 };
+use fastdate::DurationFrom;
 use rbatis::{intercept::SqlIntercept, Rbatis};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
@@ -40,7 +41,14 @@ pub struct SessionUser {
     pub id: i64,
     pub name: String,
     pub password: String,
+    pub is_admin: i64,
     pub tenant_id: i64,
+    pub role_ids: String,
+}
+
+#[derive(Debug, SmartDefault, Clone, Serialize, Deserialize)]
+pub struct AuthVO {
+    perms: Vec<String>,
 }
 
 pub async fn login(
@@ -48,24 +56,34 @@ pub async fn login(
     Extension(service): State,
     Extension(store): Extension<GuavaSessionStore>,
 ) -> impl IntoResponse {
+    let mut conn = service.db.acquire().await.unwrap();
     let result = service
         .repo
-        .select_session_user_by_name(&service.db, &params.username)
+        .select_session_user_by_name(&mut conn, &params.username)
         .await;
     if let Ok(user) = result {
         if params.password.eq(&user.password) {
             let mut session = Session::new();
-            session.insert("user_bo", user).unwrap();
+            session.insert("user_bo", user.clone()).unwrap();
+            session.expire_in(std::time::Duration::from_hour(24));
             let cookie = store.store_session(session).await.unwrap().unwrap();
             let mut headers = HeaderMap::new();
             let cookie =
                 HeaderValue::from_str(format!("{}={}", AXUM_SESSION_COOKIE_NAME, cookie).as_str())
                     .unwrap();
             headers.insert(http::header::SET_COOKIE, cookie);
-            return (headers, Resp::ok(true));
+            let perms = if user.is_admin == 1 {
+                use crate::entities::menu_opt_bo::MenuOptionBO;
+                let res = service.repo.select_menu_perms_list(&mut conn, MenuOptionBO::default()).await.expect("查询管理员权限失败");
+                res
+            }else {
+                let res =service.repo.select_menu_perms_by_ids(&mut conn, &user.role_ids).await.unwrap();
+                res
+            };
+            return (headers, Resp::ok(AuthVO{perms}));
         }
     }
-    (HeaderMap::new(), Resp::ok(false))
+    (HeaderMap::new(), Resp::fail(401, "登录失败".to_string()))
 }
 
 pub async fn logout(
@@ -111,7 +129,7 @@ where
             .await
             .expect("`DB` extension missing");
 
-        let Extension(cache) = Extension::<Redis>::from_request(req)
+        let Extension(cache) = Extension::<ServiceCache>::from_request(req)
             .await
             .expect("`Redis` extension missing");
 
@@ -203,7 +221,7 @@ impl SqlIntercept for UserIntercept {
                     let table_name = caps[0].to_string();
                     let limit_table_name = format!(
                         "(select * from {} where tenant_id = {})",
-                        table_name, self.user.tenant_id
+                        table_name.trim_matches('`').trim_matches('"'), self.user.tenant_id
                     );
                     *sql = sql.replace(&table_name, &limit_table_name);
                 }

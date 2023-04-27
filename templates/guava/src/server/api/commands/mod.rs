@@ -7,7 +7,7 @@ use axum::{response::Json, Extension};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use smart_default::SmartDefault;
-use rbatis::rbdc::{decimal::Decimal, date::Date};
+use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date};
 
 // TODO 用 serde_json::Value 来接所有不知道类型的，又要存起来的数据。 也可以看是否可以用Box
 
@@ -55,6 +55,14 @@ impl<T> Resp<T> {
             status: 0,
             msg: "操作成功".to_string(),
             data: Some(data),
+        }))
+    }
+
+    pub fn fail(status: i32, msg: String) -> AppResult<T> {
+        Ok(Json(Self {
+            status,
+            msg,
+            data: None,
         }))
     }
 }

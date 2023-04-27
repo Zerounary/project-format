@@ -4,3 +4,4 @@ drop table {{prefix}}{{name}};
 {{/each}}
 drop table DATABASECHANGELOG;
 drop table DATABASECHANGELOGLOCK;
+drop table SYS_SCHEDULE_CRON;

@@ -671,8 +671,9 @@ project:
                 skip: [1, 1, 1, 1, 1],
               },
               {
-                name: "name",
+                name: "wid",
                 type: "String",
+<<<<<<< HEAD
                 dbType: "VARCHAR(120)",
                 skip: [1, 1, 1, 1, 1],
               },
@@ -681,6 +682,10 @@ project:
                 type: "String",
                 dbType: "VARCHAR(120)",
                 skip: [1, 1, 1, 1, 1],
+=======
+                dbType: "VARCHAR2(80)",
+                skip: [1, 1, 1, 1],
+>>>>>>> melon
               },
               {
                 name: "product_id",
@@ -705,6 +710,7 @@ project:
               {
                 name: "code",
                 type: "String",
+<<<<<<< HEAD
                 dbType: "VARCHAR(120)",
                 skip: [1, 1, 1, 1, 1],
               },
@@ -874,12 +880,16 @@ project:
                 name: "name",
                 type: "String",
                 dbType: "VARCHAR(120)",
+=======
+                dbType: "VARCHAR2(80)",
+>>>>>>> melon
                 skip: [1, 1, 1, 1],
               },
             ],
           ddls: ["create index idx_tenant_name on sys_tenant(name);"],
         }
       - {
+<<<<<<< HEAD
           prefix: "sys_",
           name: "user",
           skipAuto: true,
@@ -940,10 +950,52 @@ project:
                 type: "String",
                 dbType: "VARCHAR(120)",
                 skip: [1, 1, 1, 1],
+=======
+          prefix: "wm_",
+          name: "vip_info_pages",
+          columns:
+            [
+              {
+                name: "id",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "current_page",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "total_page",
+                type: "Long",
+                dbType: "NUMBER(10)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "customer_start_time",
+                type: "Long",
+                dbType: "NUMBER(19)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "customer_end_time",
+                type: "Long",
+                dbType: "NUMBER(19)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "error_msg",
+                type: "String",
+                dbType: "VARCHAR2(500)",
+                skip: [1, 1, 1, 1],
+>>>>>>> melon
               },
             ],
           ddls: [],
         }
+<<<<<<< HEAD
       - {
           prefix: "sys_",
           name: "menu",
@@ -1077,4 +1129,6 @@ project:
           ddls: [],
         }
 
+=======
+>>>>>>> melon
     ddls: [""]

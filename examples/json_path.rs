@@ -11,7 +11,7 @@ fn main() {
       }
     });
 
-    let tables = &data.path("$.data.tables").unwrap();
+    let tables = &data.path("$.data.tables[*]").unwrap();
     println!("{:?}", tables.to_string());
 
     let data = json!({"id":1,"name":{"b":"book1"}});

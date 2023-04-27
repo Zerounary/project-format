@@ -13,12 +13,12 @@ pub struct Service {
     pub repo: Repository,
     pub db: DB, // 为了调用事物
     user: Option<SessionUser>,
-    cache: Redis 
+    cache: ServiceCache 
 }
 
 
 impl Service {
-    pub fn new_scope(db: DB, user: SessionUser, cache: Redis) -> Service {
+    pub fn new_scope(db: DB, user: SessionUser, cache: ServiceCache) -> Service {
         let repo = Repository::new(Some(user.clone()));
         Service {
             db,
@@ -28,7 +28,7 @@ impl Service {
         }
     }
 
-    pub fn new(db: DB, cache: Redis) -> Service {
+    pub fn new(db: DB, cache: ServiceCache) -> Service {
         let repo = Repository::new(None);
         Service {
             db,

@@ -1,10 +1,13 @@
 use convert_case::{Case, Casing};
 use handlebars::{handlebars_helper, Handlebars};
+use itertools::Itertools;
 use jsonpath_rust::JsonPathQuery;
+use regex::Regex;
 use serde_json::{json, Value};
+use std::fmt::format;
 use std::fs::{self, create_dir_all, DirEntry};
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::log::{log_fail, log_path_ok};
 use crate::parser::gen_file_name::{parse_file_name, to_case};
@@ -21,15 +24,28 @@ handlebars_helper!(kebab: |s: String| s.to_case(Case::Kebab));
 // stringify
 handlebars_helper!(stringify: |s: Value| s.to_string());
 
-
 // string convert
 handlebars_helper!(fkTable: |s: String| s.trim_end_matches("_id").trim_end_matches("_ids").to_string());
 
-
-
 // test
 handlebars_helper!(isId: |s: String| s.to_lowercase().eq("id"));
+handlebars_helper!(isIds: |s: String| s.to_lowercase().ends_with("_ids"));
 handlebars_helper!(isFk: |s: String| s.to_lowercase().ends_with("_id") || s.to_lowercase().ends_with("_ids"));
+handlebars_helper!(isDate: |s: String| s.to_lowercase().eq("date"));
+handlebars_helper!(isDateTime: |s: String| s.to_lowercase().eq("datetime"));
+handlebars_helper!(isDecimal: |s: String| s.to_lowercase().starts_with("decimal"));
+handlebars_helper!(defaultDbType: |s: String| {
+    if s.to_lowercase().eq("date") {
+        "Date(fastdate::Date::from(fastdate::DateTime::now()))".to_string()
+    } else if  s.to_lowercase().eq("datetime") {
+        "FastDateTime::now()".to_string()
+    }
+    else if s.to_lowercase().starts_with("decimal"){
+        "Decimal(String::from(0.to_string()))".to_string()
+    }else {
+        "".to_string()
+    }
+});
 
 pub struct Render<'a> {
     pub h: Handlebars<'a>,
@@ -54,10 +70,15 @@ impl<'a> Render<'a> {
         h.register_helper("upperCamel", Box::new(upperCamel));
         h.register_helper("kebab", Box::new(kebab));
         h.register_helper("isId", Box::new(isId));
+        h.register_helper("isIds", Box::new(isIds));
         h.register_helper("isFk", Box::new(isFk));
+        h.register_helper("isDate", Box::new(isDate));
+        h.register_helper("isDateTime", Box::new(isDateTime));
+        h.register_helper("isDecimal", Box::new(isDecimal));
 
         h.register_helper("stringify", Box::new(stringify));
         h.register_helper("fkTable", Box::new(fkTable));
+        h.register_helper("defaultDbType", Box::new(defaultDbType));
 
         let render: Render = Self {
             h,
@@ -80,74 +101,68 @@ impl<'a> Render<'a> {
                     let file_name = target.file_name().map(|x| x.to_str().unwrap()).unwrap();
                     if file_name.contains("{") {
                         let (list_key, item_key) = get_var_name(file_name);
-                        data.clone()
-                            .path(&format!("$.{:}", list_key))
-                            .map(|v| match v.get(0) {
-                                Some(l) => l.to_owned(),
-                                None => json!([]),
-                            })
-                            .expect(&format!("project.data.{:} 未找到", list_key))
-                            .as_array()
-                            .map(|list| {
-                                for item in list {
-                                    let item_name = item
-                                        .clone()
-                                        .path(&format!("$.{:}", item_key))
-                                        .map(|v| match v.get(0) {
-                                            Some(name) => name.to_owned(),
-                                            None => item.clone(),
-                                        })
-                                        .expect(&format!("{:}.{:}不存在", list_key, item_key))
-                                        .as_str()
-                                        .map(|v| v.to_string());
-                                    let item_name = match item_name {
-                                        Some(name) => name.to_string(),
-                                        None => match item.as_str() {
-                                            Some(name) => name.to_string(),
-                                            None => {
-                                                panic!("{:?}.{:?}不存在", list_key, item_key)
-                                            }
-                                        },
-                                    };
-                                    let item_target = target
-                                        .parent()
-                                        .map(|p| p.join(replace_var(file_name, &item_name)))
-                                        .unwrap();
-                                    
-                                    
-                                    if item_target.exists() && data.clone().get("overview").is_none() {
-                                        return;
-                                    }
-
-                                    let contents = self
-                                        .h
-                                        .render_template(&template_string, &item)
-                                        .expect(&format!("渲染对象{:?}", item));
-                                    fs::write(&item_target, contents).expect("生成表达式文件失败");
-                                    log_path_ok(
-                                        "生成文件",
-                                        item_target.as_os_str().to_str().unwrap(),
-                                    );
-                                }
-                            })
-                            .expect(&format!("不能遍历对象{:?}", list_key))
-                    } else {
-                        let result = self.h.render_template(&template_string, data);
-                        match result {
-                            Ok(contents) => {
-                                // 某些文件是需要根据数据生成多个文件的
-                                // let file_name = target.file_name().unwrap().to_str().unwrap();
-                                if target.exists() && data.clone().get("overview").is_none() {
-                                    return;
-                                }
-                                fs::write(&target, contents).expect("生成文件失败");
-                                log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
+                        let list = data
+                            .clone()
+                            .path(&format!("$.{:}[*]", list_key))
+                            .expect(&format!("jsonpath: '$.{:}[*]' 不合法", list_key));
+                        if let Some(list) = list.as_array() {
+                            if list.is_empty() {
+                                panic!("{:}中数据列表{:}不存在", file_name, list_key)
                             }
-                            Err(_e) => {
-                                // println!("{:?}", e);
-                                log_fail("不能生成文件", e.path().to_str().unwrap());
+                            for item in list {
+                                let item_name = item
+                                    .clone()
+                                    .path(&format!("$.{:}", item_key))
+                                    .map(|v| match v.get(0) {
+                                        Some(l) => l.to_owned(),
+                                        None => json!(""),
+                                    })
+                                    .expect(&format!("{:}.{:}不存在", list_key, item_key));
+
+                                let item_target = target
+                                    .parent()
+                                    .map(|p| {
+                                        p.join(replace_var(file_name, item_name.as_str().unwrap()))
+                                    })
+                                    .unwrap();
+
+                                // 支持插槽
+                                let slots = get_slots_content(item_target.clone());
+                                let mut item = item.clone();
+                                for (index, slot) in slots.iter().enumerate() {
+                                    if let Some(obj) = item.as_object_mut() {
+                                        obj.insert(
+                                            format!("slot{}", index),
+                                            Value::String(slot.to_string()),
+                                        );
+                                    }
+                                }
+                                let contents = self
+                                    .h
+                                    .render_template(&template_string, &item)
+                                    .expect(&format!("渲染对象{:?}", item));
+                                fs::write(&item_target, contents).expect("生成表达式文件失败");
+                                log_path_ok("生成文件:", item_target.as_os_str().to_str().unwrap());
                             }
                         }
+                    } else {
+                        // 支持插槽
+                        let slots = get_slots_content(target.clone());
+                        let mut data = data.clone();
+                        for (index, slot) in slots.iter().enumerate() {
+                            if let Some(obj) = data.as_object_mut() {
+                                obj.insert(
+                                    format!("slot{}", index),
+                                    Value::String(slot.to_string()),
+                                );
+                            }
+                        }
+                        let contents = self
+                            .h
+                            .render_template(&template_string, &data)
+                            .expect(&format!("不能生成文件{}", e.path().to_str().unwrap()));
+                        fs::write(&target, contents).expect("生成文件失败");
+                        log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
                     }
                 }
                 Err(_e) => {
@@ -196,6 +211,38 @@ pub fn replace_var(s: &str, v: &str) -> String {
     };
     x.replace_range(start..end, &replace_value);
     x
+}
+
+///
+/// 解析源码中的slot
+/// ```rust
+/// //<slot>
+/// hello
+/// //</slot>
+/// ```
+/// 获取槽中的代码
+pub fn get_slots_content(target: PathBuf) -> Vec<String> {
+    let commet_keyword = if let Some(extension) = target.extension() {
+        match extension.to_str().unwrap_or_default() {
+            "sql" => "--",
+            _ => "//",
+        }
+    } else {
+        "//"
+    };
+    let pattern = &format!(r"{0}<slot>([\s\S]*?){0}</slot>", commet_keyword.to_string());
+    let TAG_REGEX = Regex::new(pattern).unwrap();
+    let mut result = vec![];
+    if target.exists() {
+        let target_str = fs::read_to_string(target).expect("不能读取文件");
+        for captures in TAG_REGEX.captures_iter(&target_str) {
+            let tag_content = captures.get(1).unwrap().as_str();
+            result.push(tag_content.to_string());
+        }
+        result
+    }else {
+        result
+    }
 }
 
 #[test]

@@ -32,3 +32,7 @@ create index idx_{{name}}_tenant_id on {{prefix}}{{name}}(tenant_id);
 {{this}}
 {{/each}}
 {{/each}}
+
+--<slot>
+{{{~slot0~}}}
+--</slot>
