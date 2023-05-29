@@ -141,6 +141,9 @@ impl<'a> Render<'a> {
                                     .h
                                     .render_template(&template_string, &item)
                                     .expect(&format!("渲染对象{:?}", item));
+                                if item_target.exists() && data.clone().get("overview").is_none() {
+                                    return;
+                                }
                                 fs::write(&item_target, contents).expect("生成表达式文件失败");
                                 log_path_ok("生成文件:", item_target.as_os_str().to_str().unwrap());
                             }
@@ -161,6 +164,9 @@ impl<'a> Render<'a> {
                             .h
                             .render_template(&template_string, &data)
                             .expect(&format!("不能生成文件{}", e.path().to_str().unwrap()));
+                        if target.exists() && data.clone().get("overview").is_none() {
+                            return;
+                        }
                         fs::write(&target, contents).expect("生成文件失败");
                         log_path_ok("生成文件", target.as_os_str().to_str().unwrap());
                     }
