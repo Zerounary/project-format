@@ -1,827 +1,177 @@
 project:
   template:
     dir: "templates/plum"
-    output: "../../Java/web-qiyunle"
+    output: "../../Java/effici-pro"
   data:
-    project_name: "plum"
-    overview: true
+    project_name: "EfficiPro"
     tables:
       - {
-          prefix: "b_",
-          name: "category",
+          prefix: "t_",
+          name: "purchase_return",
           columns:
             [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
               {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "pid",
-                type: "Long",
-                dbType: "INT8",
-                dbTypeWith: "constraint FK_category_pid references b_category(id)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls: ["create index idx_category_pid on b_category(pid);"],
-        }
-      - {
-          prefix: "b_",
-          name: "attribute",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls: [],
-        }
-      - {
-          prefix: "b_",
-          name: "attribute_value",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
+                name: "recordCode",
                 type: "String",
                 dbType: "VARCHAR(120)",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "attribute_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-        }
-      - {
-          prefix: "b_",
-          name: "unit",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-        }
-      - {
-          prefix: "b_",
-          name: "brand",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-        }
-      # 仓库
-      - {
-          prefix: "b_",
-          name: "warehouse",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "contacts",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "phone",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "address",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-        }
-      # 门店
-      - {
-          prefix: "b_",
-          name: "merchant",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "contacts",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "phone",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "address",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "tax",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "bank",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "account",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-        }
-      - {
-          prefix: "b_",
-          name: "dept",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "pid",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-            ],
-          ddls: [],
-        }
-      # 结算账户
-      - {
-          prefix: "b_",
-          name: "account",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "create_date",
+                name: "recordDate",
                 type: "Date",
                 dbType: "date",
-                skip: [1, 1, 1, 1, 1],
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "init_balance",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "balance",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 0, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-            ],
-        }
-      # 供应商
-      - {
-          prefix: "b_",
-          name: "supplier",
-          columns:
-            [
-              {
-                name: "id",
+                name: "supplierId",
                 type: "Long",
                 dbType: "INT8",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "contacts",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "phone",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "email",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "address",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "tax",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "bank",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "account",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "arrears",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "begin_arrears",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-            ],
-        }
-      # 客户
-      - {
-          prefix: "b_",
-          name: "customer",
-          columns:
-            [
-              {
-                name: "id",
+                name: "storeId",
                 type: "Long",
                 dbType: "INT8",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "code",
+                name: "isAutomaticOut",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
                 type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                name: "OutDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "contacts",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                name: "businessStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "phone",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                name: "recordStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "email",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "address",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "tax",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "bank",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "account",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "discount",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "integral",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "arrears",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "begin_arrears",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-            ],
-        }
-      # 商品
-      - {
-          prefix: "b_",
-          name: "product",
-          columns:
-            [
-              {
-                name: "id",
+                name: "recordStatusUserId",
                 type: "Long",
                 dbType: "INT8",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "code",
+                name: "recordStatusUserName",
                 type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                name: "recordStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "serialno",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                name: "recordOutStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "spec",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "category_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "brand_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "unit_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "is_multi_unit",
-                type: "String",
-                dbType: "CHAR(1)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "multi_unit_list",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "warehouse_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "location",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "stocktip",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "retail_name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "is_multi_price",
-                type: "String",
-                dbType: "CHAR(1)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "buy",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "sell",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "retail",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "integral",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-            ],
-        }
-      # asi
-      - {
-          prefix: "b_",
-          name: "asi",
-          columns:
-            [
-              {
-                name: "id",
+                name: "recordOutStatusUserId",
                 type: "Long",
                 dbType: "INT8",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "code",
+                name: "recordOutStatusUserName",
                 type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "wid",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
+                name: "recordOutStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "nod",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "product_id",
+                name: "totalQuantity",
                 type: "Long",
                 dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantityOut",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountOut",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountOutList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "stock_out_record_code",
+                type: "String",
+                dbType: "VARCHAR(80)",
                 skip: [1, 1, 1, 1],
               },
             ],
-        }
-        # sku
-      - {
-          prefix: "b_",
-          name: "sku",
-          columns:
+          ddls:
             [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "product_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "asi_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "buy",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "sell",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "retail",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
+              "create index idx_purchase_return_001 on t_purchase_return(supplier_id);",
+              "create index idx_purchase_return_002 on t_purchase_return(store_id);",
+              "create index idx_purchase_return_003 on t_purchase_return(record_date);",
+              "create index idx_purchase_return_004 on t_purchase_return(out_date);",
             ],
         }
-      # 多单位
       - {
-          prefix: "b_",
-          name: "multi_unit",
+          prefix: "t_",
+          name: "purchase_return_detail",
           columns:
             [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
               {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "product_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "unit_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "qty",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
-              },
-            ],
-        }
-      # 多单位价格
-      - {
-          prefix: "b_",
-          name: "sku_unit_price",
-          columns:
-            [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "code",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "name",
-                type: "String",
-                dbType: "VARCHAR(120)",
-                skip: [1, 1, 1, 1, 1],
-              },
-              {
-                name: "product_id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "asi_id",
+                name: "purchase_return_id",
                 type: "Long",
                 dbType: "INT8",
                 skip: [1, 1, 1, 1],
@@ -833,43 +183,2933 @@ project:
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "unit_id",
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
                 type: "Long",
                 dbType: "INT8",
                 skip: [1, 1, 1, 1],
               },
               {
-                name: "buy",
-                type: "BigDecimal",
-                dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "sell",
+                name: "price",
                 type: "BigDecimal",
                 dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
+                skip: [1, 1, 1, 1],
               },
               {
-                name: "retail",
+                name: "pricePurchaseReturn",
                 type: "BigDecimal",
                 dbType: "numeric(14,4)",
-                skip: [1, 1, 1, 1, 1],
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantityOut",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountOut",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountOutList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_purchase_return_detail_001 on t_purchase_return_detail(purchase_return_id);",
+              "create index idx_purchase_return_detail_002 on t_purchase_return_detail(spu_id);",
+              "create index idx_purchase_return_detail_003 on t_purchase_return_detail(sku_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "purchase",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "recordCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "supplierId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "storeId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isAutomaticIn",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "inDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "businessInStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordInStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordInStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordInStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordInStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantityIn",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountIn",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountInList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "stock_in_record_code",
+                type: "String",
+                dbType: "VARCHAR(80)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_purchase_001 on t_purchase(supplier_id);",
+              "create index idx_purchase_002 on t_purchase(store_id);",
+              "create index idx_purchase_003 on t_purchase(record_date);",
+              "create index idx_purchase_004 on t_purchase(in_date);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "purchase_detail",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "purchase_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "pricePurchase",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "discount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantityIn",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountIn",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountInList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_purchase_detail_001 on t_purchase_detail(purchase_id);",
+              "create index idx_purchase_detail_002 on t_purchase_detail(spu_id);",
+              "create index idx_purchase_detail_003 on t_purchase_detail(sku_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "transfer",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "recordCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "origStoreId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "destStoreId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isAutomaticIn",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isAutomaticOut",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "outDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "inDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "businessOutStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "businessInStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordOutStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordOutStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordOutStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordOutStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordInStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordInStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordInStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordInStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantityOut",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantityIn",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountOut",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountIn",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountOutList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountInList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "stock_out_record_code",
+                type: "String",
+                dbType: "VARCHAR(80)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "stock_in_record_code",
+                type: "String",
+                dbType: "VARCHAR(80)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_transfer_001 on t_transfer(orig_store_id);",
+              "create index idx_transfer_002 on t_transfer(dest_store_id);",
+              "create index idx_transfer_003 on t_transfer(record_date);",
+              "create index idx_transfer_004 on t_transfer(in_date);",
+              "create index idx_transfer_005 on t_transfer(out_date);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "transfer_detail",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "transfer_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantityOut",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantityIn",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountOut",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountIn",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountInList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountOutList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_transfer_detail_001 on t_transfer_detail(transfer_id);",
+              "create index idx_transfer_detail_002 on t_transfer_detail(spu_id);",
+              "create index idx_transfer_detail_003 on t_transfer_detail(sku_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "stock_in",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "recordCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "origCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "origName",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "logisticsCompanyId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "logisticsInfo",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "logisticsNo",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantityIn",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountInList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_stock_in_001 on t_stock_in(store_id);",
+              "create index idx_stock_in_002 on t_stock_in(orig_code);",
+              "create index idx_stock_in_003 on t_stock_in(record_date);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "stock_in_detail",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "stock_in_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantityIn",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountInList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_stock_in_detail_001 on t_stock_in_detail(stock_in_id);",
+              "create index idx_stock_in_detail_002 on t_stock_in_detail(spu_id);",
+              "create index idx_stock_in_detail_003 on t_stock_in_detail(sku_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "stock_out",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "recordCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "destCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "destName",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "logisticsCompanyId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "logisticsInfo",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "logisticsNo",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantityOut",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountOutList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_stock_out_001 on t_stock_out(store_id);",
+              "create index idx_stock_out_002 on t_stock_out(dest_code);",
+              "create index idx_stock_out_003 on t_stock_out(record_date);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "stock_out_detail",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "stock_out_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantityOut",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountOutList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_stock_out_detail_001 on t_stock_out_detail(stock_out_id);",
+              "create index idx_stock_out_detail_002 on t_stock_out_detail(spu_id);",
+              "create index idx_stock_out_detail_003 on t_stock_out_detail(sku_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "inventory",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "recordCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantityActual",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantityDifference",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountActual",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountDifference",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "otherInRecordId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "otherOutRecordId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_inventory_001 on t_inventory(record_code);",
+              "create index idx_inventory_002 on t_inventory(record_date);",
+              "create index idx_inventory_003 on t_inventory(store_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "inventory_detail",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "inventory_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantityActual",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantityDifference",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountActual",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountDifference",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_inventory_detail_001 on t_inventory_detail(inventory_id);",
+              "create index idx_inventory_detail_002 on t_inventory_detail(sku_id);",
+              "create index idx_inventory_detail_003 on t_inventory_detail(spu_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "other_out",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "recordCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_other_out_001 on t_other_out(store_id);",
+              "create index idx_other_out_002 on t_other_out(record_code);",
+              "create index idx_other_out_003 on t_other_out(record_date);",
+              "create index idx_other_out_004 on t_other_out(record_type);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "other_out_detail",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "other_out_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_other_out_detail_001 on t_other_out_detail(other_out_id);",
+              "create index idx_other_out_detail_002 on t_other_out_detail(sku_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "other_in",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "recordCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatus",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusUserName",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordStatusTime",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "totalAmountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_other_in_001 on t_other_in(store_id);",
+              "create index idx_other_in_002 on t_other_in(record_code);",
+              "create index idx_other_in_003 on t_other_in(record_date);",
+              "create index idx_other_in_004 on t_other_in(record_type);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "other_in_detail",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "other_in_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "quantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amount",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "amountList",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_other_in_detail_001 on t_other_in_detail(other_in_id);",
+              "create index idx_other_in_detail_002 on t_other_in_detail(sku_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "stock",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "availableStock",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "lockStock",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "onroadStock",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "residueStock",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "realStock",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_stock_001 on t_stock(store_id, spu_id);",
+              "create index idx_stock_002 on t_stock(store_id, sku_id);",
+              "create index idx_stock_spu_id on t_stock(spu_id);",
+              "create index idx_stock_sku_id on t_stock(sku_id);",
+            ],
+        }
+      - {
+          prefix: "t_",
+          name: "stock_flow",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "store_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "skuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spuCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "recordDetailId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "deliveryType",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "changeDate",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "changeQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "beforeChangeQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "afterChangeQuantity",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_stock_flow_001 on t_stock_flow(store_id, spu_id);",
+              "create index idx_stock_flow_002 on t_stock_flow(store_id, sku_id);",
+              "create index idx_stock_flow_spu_id on t_stock_flow(spu_id);",
+              "create index idx_stock_flow_sku_id on t_stock_flow(sku_id);",
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "supplier",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "brand_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "province",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "city",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "district",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "street",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "zipCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "mobile",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "email",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "cooperateStatus",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "enterpriseName",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bank",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bankAccount",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "goodsOwner",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "balance",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
               },
             ],
         }
+      - {
+          prefix: "b_",
+          name: "store",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "brand_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_type_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "store_grade_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "calculation",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "dateBegin",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "dateEnd",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "proportion",
+                type: "BigDecimal",
+                dbType: "numeric(10,4)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "employeeCount",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "mobilePayCustomerCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "province",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "city",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "district",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "street",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "contacts",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "mobile",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "email",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "zipCode",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isWarehouseNegative",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isRetail",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isMobileRetail",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isSale",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isMarket",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "templateGroupId",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_store_code on b_store(code);"],
+        }
+      - {
+          prefix: "b_",
+          name: "class",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              { name: "pid", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_class_pid on b_class(pid);"],
+        }
+      - {
+          prefix: "b_",
+          name: "category",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              { name: "pid", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "tax",
+                type: "BigDecimal",
+                dbType: "numeric(14,4)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls: ["create index idx_category_pid on b_category(pid);"],
+        }
+      - {
+          prefix: "b_",
+          name: "property",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "other_name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "value_type",
+                type: "Integer",
+                dbType: "INT4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "frame_type",
+                type: "Integer",
+                dbType: "INT4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "category_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "varchar(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "line_prop",
+                type: "Boolean",
+                dbType: "bool",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_property_category_id on b_property(category_id);",
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "property_value",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "property_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "value_type",
+                type: "Integer",
+                dbType: "INT4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_property_value_pid on b_property_value(property_id);",
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "band",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "kind",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "gender",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "year",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "season",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "brand",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "logo_url",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "detail",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "brand_initial",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "label",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "label",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "label_type",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "useway",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "additional_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "media",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "url",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "media_type",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "useway",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "additional_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "print_template",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "title",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR(500)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "print_type",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "template_json",
+                type: "String",
+                dbType: "text",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "spu",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "short_name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "title",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sub_title",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "detail",
+                type: "String",
+                dbType: "text",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "media_ids",
+                type: "String",
+                dbType: "varchar(255)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "label_ids",
+                type: "String",
+                dbType: "varchar(255)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "class_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "category_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "supplier_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "season_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "year_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "gender_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "kind_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "band_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "brand_id",
+                type: "Long",
+                dbType: "int8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "external_code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "six_nine_code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "unit",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "marketdate",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "retail_price",
+                type: "BigDecimal",
+                dbType: "numeric(14,2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "purchase_price",
+                type: "BigDecimal",
+                dbType: "numeric(14,2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "isOneSku",
+                type: "Boolean",
+                dbType: "bool",
+                dbTypeWith: "default true",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "is_online",
+                type: "Boolean",
+                dbType: "bool",
+                dbTypeWith: "default false",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "is_online_sale",
+                type: "Boolean",
+                dbType: "bool",
+                dbTypeWith: "default true",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "sku",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "bar_code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sku_type",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "sort",
+                type: "Integer",
+                dbType: "int4",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "external_code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "six_nine_code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "media_ids",
+                type: "String",
+                dbType: "varchar(255)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "label_ids",
+                type: "String",
+                dbType: "varchar(255)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "marketdate",
+                type: "Date",
+                dbType: "timestamp",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "price",
+                type: "BigDecimal",
+                dbType: "numeric(14,2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "retail_price",
+                type: "BigDecimal",
+                dbType: "numeric(14,2)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "purchase_price",
+                type: "BigDecimal",
+                dbType: "numeric(14,2)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "spu_property",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "property_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_spu_property_spu_id on b_spu_property(spu_id);",
+              "create index idx_spu_property_property_id on b_spu_property(property_id);",
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "spu_property_value",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "spu_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "property_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "property_value_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "text_value",
+                type: "String",
+                dbType: "VARCHAR(300)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_spu_property_value1 on b_spu_property_value(spu_id);",
+              "create index idx_spu_property_value2 on b_spu_property_value(property_id);",
+              "create index idx_spu_property_value3 on b_spu_property_value(property_value_id);",
+            ],
+        }
+      - {
+          prefix: "b_",
+          name: "sku_property_value",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "sku_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "property_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "property_value_id",
+                type: "Long",
+                dbType: "INT8",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+          ddls:
+            [
+              "create index idx_sku_property_value1 on b_sku_property_value(sku_id);",
+              "create index idx_sku_property_value2 on b_sku_property_value(property_id);",
+              "create index idx_sku_property_value3 on b_sku_property_value(property_value_id);",
+            ],
+        }
+
       - {
           prefix: "sys_",
           name: "tenant",
           skipAuto: true,
           columns:
             [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
               {
                 name: "name",
                 type: "String",
@@ -885,12 +3125,7 @@ project:
           skipAuto: true,
           columns:
             [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
               {
                 name: "name",
                 type: "String",
@@ -923,12 +3158,7 @@ project:
           name: "role",
           columns:
             [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
               {
                 name: "name",
                 type: "String",
@@ -949,18 +3179,8 @@ project:
           name: "menu",
           columns:
             [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
-              {
-                name: "pid",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              { name: "pid", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
               {
                 name: "menu_name",
                 type: "String",
@@ -1017,12 +3237,7 @@ project:
           name: "user_role",
           columns:
             [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
               {
                 name: "user_id",
                 type: "Long",
@@ -1049,12 +3264,7 @@ project:
           name: "role_menu",
           columns:
             [
-              {
-                name: "id",
-                type: "Long",
-                dbType: "INT8",
-                skip: [1, 1, 1, 1],
-              },
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
               {
                 name: "menu_id",
                 type: "Long",
