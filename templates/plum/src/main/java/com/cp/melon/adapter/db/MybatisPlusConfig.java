@@ -66,5 +66,14 @@ public class MybatisPlusConfig {
              }
          };
      }
+
+    /**
+     * 自定义 SqlInjector
+     * 里面包含自定义的全局方法
+     */
+    @Bean
+    public CustomerSqlInjector myLogicSqlInjector() {
+        return new CustomerSqlInjector();
+    }
 }
 
