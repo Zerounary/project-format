@@ -12,7 +12,7 @@ CACHE 1;
 
 create table {{prefix}}{{name}} (
 {{#each columns }}
-    {{name}} {{dbType}} {{dbTypeWith}},
+    {{snake name}} {{dbType}} {{dbTypeWith}},
 {{/each}}
     tenant_id INT8,
     created_time TIMESTAMP,
