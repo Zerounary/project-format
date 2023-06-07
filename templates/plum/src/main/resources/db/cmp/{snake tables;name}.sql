@@ -1,7 +1,7 @@
 -- liquibase formatted sql
 
 -- 创建表结构
--- changeset codegen:a
+-- changeset {{../project_name}}:a
 CREATE SEQUENCE seq_{{prefix}}{{name}}
 START WITH 1
 INCREMENT BY 1

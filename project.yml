@@ -6,6 +6,32 @@ project:
     project_name: "EfficiPro"
     tables:
       - {
+          prefix: "b_",
+          name: "unit",
+          columns:
+            [
+              { name: "id", type: "Long", dbType: "INT8", skip: [1, 1, 1, 1] },
+              {
+                name: "code",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "VARCHAR(120)",
+                skip: [1, 1, 1, 1],
+              },
+              {
+                name: "description",
+                type: "String",
+                dbType: "VARCHAR(320)",
+                skip: [1, 1, 1, 1],
+              },
+            ],
+        }
+      - {
           prefix: "t_",
           name: "purchase_return",
           columns:
