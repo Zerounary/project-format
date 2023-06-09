@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cp.melon.adapter.db.Page;
 import com.cp.melon.adapter.api.vo.*;
 import com.cp.melon.adapter.service.I{{upperCamel name}}Service;
 import com.cp.melon.entity.{{upperCamel name}}BO;
@@ -62,7 +62,7 @@ public class {{upperCamel name}}Controller{
     }
 
     @WebAuth
-    @GetMapping("/noPage")
+    @GetMapping("/list")
     @ApiImplicitParams({
         {{#each columns}}
         @ApiImplicitParam(name = "qp-{{camel name}}-eq", value = "{{camel name}}", paramType = "query"),
@@ -76,20 +76,20 @@ public class {{upperCamel name}}Controller{
     }
 
     @WebAuth
-    @GetMapping("/list")
+    @GetMapping("/page")
     @ApiImplicitParams({
         {{#each columns}}
         @ApiImplicitParam(name = "qp-{{camel name}}-eq", value = "{{camel name}}", paramType = "query"),
         {{/each}}
     })
-    public Page<{{upperCamel name}}VO> find{{upperCamel name}}Page(@RequestParam @ApiIgnore Map<String, Object> params, @RequestParam( "currentPage") Long currentPage, @RequestParam( "pageSize") Long pageSize){
+    public Resp<Page<{{upperCamel name}}VO>> find{{upperCamel name}}Page(@RequestParam @ApiIgnore Map<String, Object> params, @RequestParam( "currentPage") Long currentPage, @RequestParam( "pageSize") Long pageSize){
         QueryWrapper wrapper = QueryParamUtils.getEntityWrapper(params, {{upperCamel name}}BO.class);
         Page<{{upperCamel name}}BO> page = new Page(currentPage, pageSize);
         Page<{{upperCamel name}}BO> pageResult = {{camel name}}Service.page(page, wrapper);
         List<{{upperCamel name}}VO> vos = pageResult.getRecords().stream().map(bo -> {{upperCamel name}}VO.fromBO(bo)).collect(Collectors.toList());
         Page<{{upperCamel name}}VO> result = new Page(currentPage, pageSize, pageResult.getTotal());
         result.setRecords(vos);
-        return result;
+        return Resp.ok(result);
     }
     @WebAuth
     @PostMapping
