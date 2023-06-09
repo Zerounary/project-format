@@ -72,7 +72,7 @@ macro_rules! cache {
         {{else}}
         let table_name = crate::macros::repository::pure_name(stringify!($bo));
         let key  = if  let Some(user) = $self.user.clone() {
-            format!("{}-{}", user.tenant_id, $key.to_string())
+            format!("{}-{}-{}", user.tenant_id, table_name, $key.to_string())
         }else {
             $key.to_string()
         };
@@ -106,7 +106,11 @@ macro_rules! cache_invalidate {
         conn.del(&key).await?;
         {{else}}
         let table_name = crate::macros::repository::pure_name(stringify!($bo));
-        let key = $key.to_string();
+        let key  = if  let Some(user) = $self.user.clone() {
+            format!("{}-{}-{}", user.tenant_id, table_name, $key.to_string())
+        }else {
+            $key.to_string()
+        };
         let cache = $self.cache.get(&table_name).unwrap();
         cache.invalidate(&key);
         {{/if}}
