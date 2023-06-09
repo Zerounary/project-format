@@ -106,7 +106,6 @@ pub async fn create_{{snake this.name}}_batch(
 // create!(Vec<Create{{upperCamel this.name}}VO> > create_{{snake this.name}}_batch(Vec<Create{{upperCamel this.name}}Input>) > Vec<String>);
 
 pub async fn update_{{snake this.name}}(
-    Path(id): Path<i64>,
 {{#if auth}}
     GuavaSession::FoundUser((_user, service)): GuavaSession,
 {{else}}
@@ -114,7 +113,6 @@ pub async fn update_{{snake this.name}}(
 {{/if}}
     Json(mut params): Json<Update{{upperCamel this.name}}VO>,
 ) -> AppResult<bool> {
-    params.id = Some(id);
     let service_input: Update{{upperCamel this.name}}Input = params.into();
     service.update_{{snake this.name}}(service_input).await?;
     Resp::ok(true)
@@ -122,7 +120,6 @@ pub async fn update_{{snake this.name}}(
 // update!(Update{{upperCamel this.name}}VO -> update_{{snake this.name}}(Update{{upperCamel this.name}}Input) -> {{upperCamel this.name}}VO);
 
 pub async fn update_{{snake this.name}}_opt(
-    Path(id): Path<i64>,
 {{#if auth}}
     GuavaSession::FoundUser((_user, service)): GuavaSession,
 {{else}}
@@ -130,7 +127,6 @@ pub async fn update_{{snake this.name}}_opt(
 {{/if}}
     Json(mut params): Json<Update{{upperCamel this.name}}OptionVO>,
 ) -> AppResult<bool> {
-    params.id = Some(id);
     let service_input: Update{{upperCamel this.name}}OptionInput = params.into();
     service.update_{{snake this.name}}_opt(service_input).await?;
     Resp::ok(true)

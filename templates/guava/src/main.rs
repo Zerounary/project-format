@@ -13,6 +13,7 @@ use crate::{
     service::Service,
 };
 use axum::{
+    http::{HeaderValue, Method},
     Extension, Router,
 };
 use deadpool::managed::{Pool};
@@ -20,6 +21,7 @@ use deadpool_redis::{ Manager, Connection};
 use tower_http::{trace::TraceLayer};
 use std::{env, net::SocketAddr, sync::Arc};
 use tokio::signal;
+use tower_http::cors::CorsLayer;
 
 pub type Redis = Pool<Manager, Connection>;
 
@@ -59,6 +61,9 @@ async fn main() -> anyhow::Result<()> {
         .layer(Extension(service))
         .layer(Extension(redis))
         .layer(Extension(cache))
+        .layer(CorsLayer::new()
+                .allow_origin("http://localhost:4000".parse::<HeaderValue>().unwrap())
+                .allow_methods([Method::GET, Method::POST, Method::PATCH, Method::DELETE, Method::PUT]),)
         .layer(TraceLayer::new_for_http());
 
     // run it

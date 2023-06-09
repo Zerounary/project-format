@@ -12,13 +12,12 @@ pub fn {{{name}}}_routes() -> Router {
     Router::new()
         .route("/list", get(find_{{{name}}}_list))
         .route("/page", get(find_{{{name}}}_page))
+        .route("/:id", get(find_{{{name}}}_by_id).delete(delete_{{{name}}}_ids))
         .route(
-            "/:id",
-            get(find_{{{name}}}_by_id)
-                .delete(delete_{{{name}}}_ids)
+            "/",
+            post(create_{{{name}}})
                 .patch(update_{{{name}}}_opt)
                 .put(update_{{{name}}}),
         )
-        .route("/", post(create_{{{name}}}))
         .route("/batch", post(create_{{{name}}}_batch))
 }
