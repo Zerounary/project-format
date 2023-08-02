@@ -1,22 +1,19 @@
 project:
   template:
     dir: "templates/guava"
-    output: "../cardroom"
+    output: "../common-end"
   data:
-    project_name: "cardroom"
+    project_name: "common-end"
     auth: 1
     redis_session: 0
     overview: 1
     pages:
       - {
-          label: "基础信息",
+          label: "配置信息",
           url: "/",
           children:
             [
-              { label: "员工", tableName: "employee" },
-              { label: "桌次", tableName: "table" },
-              { label: "牌友", tableName: "customer" },
-              { label: "房间", tableName: "room" },
+              { label: "Json结构定义", tableName: "json_schema" },
             ],
         }
       - {
@@ -30,242 +27,10 @@ project:
             ],
         }
     tables:
-      # 费用流水
-      - {
-        prefix: "b_",
-        name: "fee_ftp",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "费用名称" },
-          },
-          {
-            name: "billdate",
-            type: "Date",
-            dbType: "date",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "日期" },
-          },
-          {
-            name: "taketime",
-            type: "FastDateTime",
-            dbType: "datetime",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "入座时间" },
-          },
-          {
-            name: "paytime",
-            type: "FastDateTime",
-            dbType: "datetime",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "付款时间" },
-          },
-          {
-            name: "table_id",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "桌次" },
-          },
-          {
-            name: "price",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "价格" },
-          },
-          {
-            name: "qty",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "数量" },
-          },
-          {
-            name: "amount",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "金额" },
-          },
-        ]
-      }
-      # 费用
-      - {
-        prefix: "b_",
-        name: "table_fee",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "费用名称" },
-          },
-          {
-            name: "table_id",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "桌次" },
-          },
-          {
-            name: "price",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "价格" },
-          },
-          {
-            name: "qty",
-            type: "i64",
-            dbType: "int8",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "数量" },
-          },
-          {
-            name: "amount",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "金额" },
-          },
-        ]
-      }
-      # 员工
-      - {
-        prefix: "b_",
-        name: "employee",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "名称" },
-          },
-          {
-            name: "sex",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "性别" },
-          },
-          {
-            name: "salary",
-            type: "Decimal",
-            dbType: "decimal(5,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "薪资" },
-          },
-        ]
-      }
-      # 桌次信息
-      - {
-        prefix: "b_",
-        name: "table",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "名称" },
-          },
-          {
-            name: "room",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "房间" },
-          },
-          {
-            name: "ty",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "类型" },
-          },
-          {
-            name: "status",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "状态" },
-          },
-          {
-            name: "amount",
-            type: "Decimal",
-            dbType: "decimal(10,2)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "待付金额" },
-          }
-        ]
-      }
-      # 牌友信息
-      - {
-        prefix: "b_",
-        name: "customer",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "名称" },
-          },
-          {
-            name: "sex",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "性别" },
-          },
-          {
-            name: "tel",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "电话" },
-          },
-          {
-            name: "blacklist",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "陪玩黑名单" },
-          },
-          {
-            name: "whitelist",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "白名单" },
-          },
-        ]
-      }
       # 房间信息
       - {
         prefix: "b_",
-        name: "room",
+        name: "json_schema",
         auth: 1,
         skipAuto: true,
         columns: [
@@ -278,32 +43,18 @@ project:
             ui: { type: "input-text", label: "名称" },
           },
           {
-            name: "level",
-            type: "i64",
-            dbType: "int8",
+            name: "remark",
+            type: "String",
+            dbType: "varchar(320)",
             skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-number", label: "楼层" },
+            ui: { type: "input-text", label: "备注" },
           },
           {
-            name: "position",
-            type: "String",
-            dbType: "VARCHAR(120)",
+            name: "json_schema",
+            type: "Json",
+            dbType: "json",
             skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "位置" },
-          },
-          {
-            name: "room_map",
-            type: "String",
-            dbType: "VARCHAR(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "房间尺寸" },
-          },
-          {
-            name: "table_map",
-            type: "String",
-            dbType: "VARCHAR(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "桌位分布" },
+            ui: { type: "json-schema-editor", label: "Schema" },
           },
         ]
       }
