@@ -232,11 +232,12 @@ pub fn get_slots_content(target: PathBuf) -> Vec<String> {
     };
     let pattern = &format!(r"{0}<slot>([\s\S]*?){0}</slot>", commet_keyword.to_string());
     let TAG_REGEX = Regex::new(pattern).unwrap();
-    let target_str = fs::read_to_string(target).expect("未能读取到文件");
     let mut result = vec![];
-    for captures in TAG_REGEX.captures_iter(&target_str) {
-        let tag_content = captures.get(1).unwrap().as_str();
-        result.push(tag_content.to_string());
+    if let Ok(target_str) = fs::read_to_string(target) {
+        for captures in TAG_REGEX.captures_iter(&target_str) {
+            let tag_content = captures.get(1).unwrap().as_str();
+            result.push(tag_content.to_string());
+        }
     }
     result
 }

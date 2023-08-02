@@ -75,7 +75,7 @@ export default {
                   },
                   api: 'patch:/api/{{name}}',
                   body: [
-                    ...{{name}}Update,
+                    ...{{camel name}}Update,
                   ]
                 }
               }

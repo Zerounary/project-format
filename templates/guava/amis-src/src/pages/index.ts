@@ -18,7 +18,7 @@ export default [
       {
         label: '{{label}}',
         url: '/{{camel tableName}}',
-        visible: hasPerm('{{camel tableName}}:view'),
+        visible: hasPerm('{{tableName}}:view'),
         schema: {{camel tableName}}Schema
       },
 {{/each}}
