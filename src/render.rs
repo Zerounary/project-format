@@ -34,6 +34,7 @@ handlebars_helper!(isFk: |s: String| s.to_lowercase().ends_with("_id") || s.to_l
 handlebars_helper!(isDate: |s: String| s.to_lowercase().eq("date"));
 handlebars_helper!(isDateTime: |s: String| s.to_lowercase().eq("datetime"));
 handlebars_helper!(isDecimal: |s: String| s.to_lowercase().starts_with("decimal"));
+handlebars_helper!(isEq: |a: String, b: String| a.to_lowercase().eq(&b.to_lowercase()));
 handlebars_helper!(defaultDbType: |s: String| {
     if s.to_lowercase().eq("date") {
         "Date(fastdate::Date::from(fastdate::DateTime::now()))".to_string()
@@ -69,6 +70,7 @@ impl<'a> Render<'a> {
         h.register_helper("camel", Box::new(camel));
         h.register_helper("upperCamel", Box::new(upperCamel));
         h.register_helper("kebab", Box::new(kebab));
+        h.register_helper("isEq", Box::new(isEq));
         h.register_helper("isId", Box::new(isId));
         h.register_helper("isIds", Box::new(isIds));
         h.register_helper("isFk", Box::new(isFk));

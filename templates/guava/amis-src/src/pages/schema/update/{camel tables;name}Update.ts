@@ -39,7 +39,15 @@ export default [
   {{else}}
   {
     name: '{{name}}',
-    ...{{{stringify ui}}}
+    ...{{{stringify ui}}},
+    {{#if (isEq ui.type "json-schema-editor")}}
+      pipeIn: (value, data) => {
+        if (typeof value === 'string') {
+          return JSON.parse(value);
+        }
+        return value;
+      },
+    {{/if}}
   },
   {{/if}}
   {{/if}}
