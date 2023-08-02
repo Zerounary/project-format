@@ -2,7 +2,7 @@
 
 use serde::{Serialize, Deserialize};
 use smart_default::SmartDefault;
-use rbatis::{rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date}, crud};
+use rbatis::{rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date, json::Json}, crud};
 
 use crate::macros::repository::to_sql_table_name;
 

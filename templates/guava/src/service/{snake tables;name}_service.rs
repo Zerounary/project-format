@@ -3,7 +3,7 @@ use itertools::Itertools;
 use redis::AsyncCommands;
 use serde::Deserialize;
 use smart_default::SmartDefault;
-use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date};
+use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date, json::Json};
 
 use crate::{
     drivers::{cache::ServiceResult}, cache_value, cache, cache_invalidate,

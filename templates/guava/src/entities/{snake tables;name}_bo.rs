@@ -2,7 +2,7 @@
 
 use serde::{Serialize, Deserialize};
 use smart_default::SmartDefault;
-use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date,};
+use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date, json::Json};
 
 #[derive(Debug, SmartDefault, Clone, Serialize, Deserialize)]
 pub struct {{upperCamel name}}BO {

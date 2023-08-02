@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use struct_convert::Convert;
 use smart_default::SmartDefault;
-use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date};
+use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date, json::Json};
 
 
 use crate::{

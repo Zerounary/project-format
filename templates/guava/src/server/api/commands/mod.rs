@@ -7,7 +7,7 @@ use axum::{response::Json, Extension};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use smart_default::SmartDefault;
-use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date};
+use rbatis::rbdc::{decimal::Decimal, datetime::FastDateTime, date::Date, json::Json};
 
 // TODO 用 serde_json::Value 来接所有不知道类型的，又要存起来的数据。 也可以看是否可以用Box
 
