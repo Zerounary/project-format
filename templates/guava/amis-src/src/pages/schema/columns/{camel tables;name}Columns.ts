@@ -29,6 +29,7 @@ export default [
     static: true,
     ...{{{stringify ui}}},
     {{#if (isEq ui.type "json-schema-editor")}}
+      enableAdvancedSetting: true,
       pipeIn: (value, data) => {
         if (typeof value === 'string') {
           return JSON.parse(value);
