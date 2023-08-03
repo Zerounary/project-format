@@ -16,6 +16,7 @@ export default {
           level: 'primary',
           dialog: {
             title: '新增表单',
+            size: "lg",
             body: {
               type: 'form',
               api: 'post:/api/{{name}}',
@@ -68,6 +69,7 @@ export default {
               actionType: 'dialog',
               dialog: {
                 title: '查看详情',
+                size: "lg",
                 body: {
                   type: 'form',
                   data: {
