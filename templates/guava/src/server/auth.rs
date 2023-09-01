@@ -208,12 +208,14 @@ impl SqlIntercept for UserIntercept {
         let current_time = match get_db_type() {
             crate::drivers::db::DB_TYPE::Mysql => "now()",
             crate::drivers::db::DB_TYPE::Pg => "sysdate",
+            crate::drivers::db::DB_TYPE::Oracle => "sysdate",
             crate::drivers::db::DB_TYPE::Sqlite => "datetime()",
         };
         if upper_sql.contains("SELECT") {
             let regex = match get_db_type() {
                 crate::drivers::db::DB_TYPE::Mysql => Regex::new("`[a-zA-Z0-9_]+`").unwrap(),
                 crate::drivers::db::DB_TYPE::Pg => Regex::new("\"[a-zA-Z0-9_]+\"").unwrap(),
+                crate::drivers::db::DB_TYPE::Oracle => Regex::new("[a-zA-Z0-9_]+").unwrap(),
                 crate::drivers::db::DB_TYPE::Sqlite => Regex::new("\"[a-zA-Z0-9_]+\"").unwrap(),
             };
             if let Some(_captures) = regex.captures(&sql.clone()) {

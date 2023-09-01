@@ -5,6 +5,7 @@ use rbatis::Rbatis;
 use rbdc_mysql::driver::MysqlDriver;
 use rbdc_pg::driver::PgDriver;
 use rbdc_pg::options::PgConnectOptions;
+use rbdc_oracle::driver::OracleDriver;
 use rbdc_sqlite::driver::SqliteDriver;
 use url::Url;
 use handlebars::Handlebars;
@@ -31,6 +32,7 @@ pub enum DB_TYPE {
     Mysql,
     Pg,
     Sqlite,
+    Oracle,
 }
 
 pub fn get_db_type() -> DB_TYPE {
@@ -40,6 +42,7 @@ pub fn get_db_type() -> DB_TYPE {
             "postgres" => DB_TYPE::Pg,
             "mysql" => DB_TYPE::Mysql,
             "sqlite" => DB_TYPE::Sqlite,
+            "oracle" => DB_TYPE::Oracle,
             _ => panic!("unsupport database"),
         },
         None => {
@@ -51,11 +54,13 @@ pub fn get_db_type() -> DB_TYPE {
 // 自动选择用数据库驱动
 pub fn init_db() -> Rbatis {
     let db = Rbatis::new();
-
+    let oracle_client_lib_dir = env::var("ORACLE_CLIENT_LIB_DIR").map(format_dir).unwrap();
+    env::set_var("PATH", oracle_client_lib_dir.clone());
     match get_db_type() {
         DB_TYPE::Pg => db.init(PgDriver {}, DATABASE_URL.as_str()).unwrap(),
         DB_TYPE::Mysql => db.init(MysqlDriver {}, DATABASE_URL.as_str()).unwrap(),
         DB_TYPE::Sqlite => db.init(SqliteDriver {}, DATABASE_URL.as_str()).unwrap(),
+        DB_TYPE::Oracle => db.init(OracleDriver {}, DATABASE_URL.as_str()).unwrap(),
     };
 
 
@@ -102,6 +107,9 @@ pub async fn migrate() {
             }
 
             println!("DB migrations finished!");
+        }
+        DB_TYPE::Oracle => {
+            
         }
         DB_TYPE::Sqlite => {
             todo!()
@@ -156,5 +164,21 @@ pub fn serde_json2rbs(val: Value) -> rbs::Value {
         },
         Value::Object(_) => rv::Null,
         Value::Null => rv::Null,
+    }
+}
+
+
+// 支持相对路径
+fn format_dir(dir: String) -> String {
+    if dir.starts_with(".") {
+        let cur_dir = env::current_dir().unwrap();
+        let abs_dir = format!(
+            "{}{}",
+            cur_dir.to_str().unwrap(),
+            dir.trim_start_matches(".")
+        );
+        abs_dir
+    } else {
+        dir
     }
 }

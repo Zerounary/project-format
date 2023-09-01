@@ -433,6 +433,7 @@ pub fn to_sql_table_name(table_name: &str) -> String {
     match get_db_type() {
         crate::drivers::db::DB_TYPE::Mysql => format!(r#"`{}`"#, name),
         crate::drivers::db::DB_TYPE::Pg => format!(r#""{}""#, name),
+        crate::drivers::db::DB_TYPE::Oracle => format!(r#"{}"#, name),
         crate::drivers::db::DB_TYPE::Sqlite => format!(r#""{}""#, name),
     }
 }
