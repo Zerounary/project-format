@@ -11,7 +11,11 @@ export default [
     multiple: true,
     source: {
       method: 'get',
+      {{#if ui.table}}
+      url: '/api/{{ui.table}}/list',
+      {{else}}
       url: '/api/{{fkTable name}}/list',
+      {{/if}}
       adaptor: function(payload, response) {
         return {
           ...payload,
@@ -29,7 +33,11 @@ export default [
     {{else}}
     source: {
       method: 'get',
+      {{#if ui.table}}
+      url: '/api/{{ui.table}}/list',
+      {{else}}
       url: '/api/{{fkTable name}}/list',
+      {{/if}}
     },
     {{/if}}
     labelField: 'name',
