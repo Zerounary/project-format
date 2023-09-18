@@ -10,6 +10,7 @@ use crate::{
 };
 
 #[derive(Convert)]
+#[convert(default)]
 #[convert(into = "Update{{upperCamel this.name}}Input")]
 #[derive(Debug, Deserialize)]
 pub struct Update{{upperCamel this.name}}VO {
@@ -25,6 +26,7 @@ pub struct Update{{upperCamel this.name}}VO {
 }
 
 #[derive(Convert, Default)]
+#[convert(default)]
 #[convert(into = "Update{{upperCamel this.name}}OptionInput")]
 #[derive(Debug, Deserialize)]
 pub struct Update{{upperCamel this.name}}OptionVO {

@@ -12,6 +12,7 @@ use crate::{
 #[derive(Debug, Deserialize)]
 #[allow(dead_code)]
 #[derive(Convert)]
+#[convert(default)]
 #[convert(into = "Create{{upperCamel this.name}}Input")]
 pub struct Create{{upperCamel this.name}}VO {
     {{#each columns}}
