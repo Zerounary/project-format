@@ -54,8 +54,12 @@ pub fn get_db_type() -> DB_TYPE {
 // 自动选择用数据库驱动
 pub fn init_db() -> Rbatis {
     let db = Rbatis::new();
-    let oracle_client_lib_dir = env::var("ORACLE_CLIENT_LIB_DIR").map(format_dir).unwrap();
-    env::set_var("PATH", oracle_client_lib_dir.clone());
+    match env::var("ORACLE_CLIENT_LIB_DIR").map(format_dir) {
+        Ok(oracle_client_lib_dir) => {
+            env::set_var("PATH", oracle_client_lib_dir.clone());
+        },
+        Err(_) => {},
+    }
     match get_db_type() {
         DB_TYPE::Pg => db.init(PgDriver {}, DATABASE_URL.as_str()).unwrap(),
         DB_TYPE::Mysql => db.init(MysqlDriver {}, DATABASE_URL.as_str()).unwrap(),
