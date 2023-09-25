@@ -1,19 +1,33 @@
 project:
   template:
     dir: "templates/guava"
-    output: "../common-end"
+    output: "../fic-end"
   data:
-    project_name: "common-end"
+    project_name: "fic-end"
     auth: 1
     redis_session: 0
     overview: 1
     pages:
       - {
-          label: "配置信息",
+          label: "人员和群体",
           url: "/",
           children:
             [
-              { label: "Json结构定义", tableName: "json_schema" },
+              { label: "行业", tableName: "industry"},
+              { label: "社会群体", tableName: "class" },
+              { label: "群体审核", tableName: "audit" },
+              { label: "人员", tableName: "member" },
+              { label: "关注", tableName: "member_watch" },
+              { label: "人员群体关系", tableName: "member_class" },
+              { label: "活动", tableName: "activity" },
+            ],
+        }
+      - {
+          label: "供需",
+          url: "/",
+          children:
+            [
+              { label: "供需", tableName: "supply" },
             ],
         }
       - {
@@ -27,37 +41,497 @@ project:
             ],
         }
     tables:
-      # 房间信息
+      # 群体审核关系
       - {
-        prefix: "b_",
-        name: "json_schema",
-        auth: 1,
-        skipAuto: true,
-        columns: [
-          { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1, 1] },
-          {
-            name: "name",
-            type: "String",
-            dbType: "varchar(120)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "名称" },
-          },
-          {
-            name: "remark",
-            type: "String",
-            dbType: "varchar(320)",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "input-text", label: "备注" },
-          },
-          {
-            name: "json_schema",
-            type: "Json",
-            dbType: "json",
-            skip: [1, 1, 1, 1, 1],
-            ui: { type: "json-schema-editor", label: "Schema" },
-          },
-        ]
-      }
+          prefix: "r_",
+          name: "audit",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "source_class_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { label: "申请群体", table: "class" },
+              },
+              {
+                name: "target_class_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { label: "审核群体", table: "class" },
+              },
+            ],
+        }
+      # 员工关注关系
+      - {
+          prefix: "r_",
+          name: "member_watch",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "member_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { label: "人员", table: "member" },
+              },
+              {
+                name: "watch_member_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { label: "粉丝", table: "member" },
+              },
+            ],
+        }
+      # 员工人群关系
+      - {
+          prefix: "r_",
+          name: "member_class",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "member_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { label: "人员" },
+              },
+              {
+                name: "class_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { label: "群体" },
+              },
+              {
+                name: "is_owner",
+                type: "i64",
+                dbType: "bool",
+                default: 0,
+                skip: [0, 0, 1, 1, 1],
+                ui:
+                  {
+                    type: "switch",
+                    label: "组织管理者",
+                    trueValue: 1,
+                    falseValue: 0,
+                    onText: "是",
+                    offText: "否",
+                  },
+              },
+            ],
+        }
+      # 图片处理
+      - {
+          prefix: "r_",
+          name: "img",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "pid",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "类型" },
+              },
+              {
+                name: "ty",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "类型" },
+              },
+              {
+                name: "url",
+                type: "String",
+                dbType: "varchar(320)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "链接地址" },
+              },
+            ],
+        }
+      # 行业
+      - {
+          prefix: "b_",
+          name: "industry",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+            ],
+        }
+
+      # 供需资料
+      - {
+          prefix: "b_",
+          name: "supply",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "标题" },
+              },
+
+              {
+                name: "industry_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "行业" },
+              },
+              {
+                name: "member_id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "所属人员" },
+              },
+
+              {
+                name: "content",
+                type: "String",
+                dbType: "varchar(1000)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "内容详情" },
+              },
+              {
+                name: "view",
+                type: "i64",
+                dbType: "int8",
+                skip: [0, 0, 1, 1, 1],
+                ui: { type: "input-text", label: "浏览" },
+              },
+              {
+                name: "coments",
+                type: "i64",
+                dbType: "int8",
+                skip: [0, 0, 1, 1, 1],
+                ui: { type: "input-text", label: "沟通" },
+              },
+              {
+                name: "submit_time",
+                type: "FastDateTime",
+                dbType: "datetime",
+                skip: [0, 0, 1, 1, 1],
+                ui:
+                  {
+                    type: "input-datetime",
+                    label: "提交时间",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                  },
+              },
+            ],
+        }
+      # 人员资料
+      - {
+          prefix: "b_",
+          name: "member",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "姓名" },
+              },
+              {
+                name: "sex",
+                type: "i64",
+                dbType: "int4",
+                skip: [1, 1, 1, 1, 1],
+                ui:
+                  {
+                    type: "select",
+                    label: "性别",
+                    options:
+                      [{ value: 0, label: "女" }, { value: 1, label: "男" }],
+                  },
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "varchar(300)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "个人简介" },
+              },
+              {
+                name: "job",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "职位" },
+              },
+              {
+                name: "phone",
+                type: "String",
+                dbType: "varchar(80)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "联系电话" },
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "varchar(320)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "联系地址" },
+              },
+              {
+                name: "birthday",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-date", label: "生日", format: "YYYY-MM-DD" },
+              },
+              {
+                name: "email",
+                type: "String",
+                dbType: "varchar(320)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "邮箱" },
+              },
+              {
+                name: "native",
+                type: "String",
+                dbType: "varchar(320)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "籍贯" },
+              },
+            ],
+        }
+      # 活动
+      - {
+          prefix: "b_",
+          name: "activity",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(320)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+              {
+                name: "address",
+                type: "String",
+                dbType: "varchar(320)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "地址" },
+              },
+              {
+                name: "content",
+                type: "String",
+                dbType: "text",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "活动内容" },
+              },
+              {
+                name: "join_beg_date",
+                type: "FastDateTime",
+                dbType: "datetime",
+                skip: [1, 1, 1, 1, 1],
+                ui:
+                  {
+                    type: "input-datetime",
+                    label: "报名开始时间",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                  },
+              },
+              {
+                name: "join_end_date",
+                type: "FastDateTime",
+                dbType: "datetime",
+                skip: [1, 1, 1, 1, 1],
+                ui:
+                  {
+                    type: "input-datetime",
+                    label: "报名结束时间",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                  },
+              },
+              {
+                name: "beg_date",
+                type: "FastDateTime",
+                dbType: "datetime",
+                skip: [1, 1, 1, 1, 1],
+                ui:
+                  {
+                    type: "input-datetime",
+                    label: "活动开始时间",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                  },
+              },
+              {
+                name: "end_date",
+                type: "FastDateTime",
+                dbType: "datetime",
+                skip: [1, 1, 1, 1, 1],
+                ui:
+                  {
+                    type: "input-datetime",
+                    label: "活动结束时间",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                  },
+              },
+            ],
+        }
+      # 客户资料
+      - {
+          prefix: "b_",
+          name: "class",
+          auth: 1,
+          skipAuto: true,
+          columns:
+            [
+              {
+                name: "id",
+                type: "i64",
+                dbType: "int8",
+                skip: [1, 1, 1, 1, 1],
+              },
+              {
+                name: "ty",
+                type: "String",
+                dbType: "varchar(10)",
+                skip: [1, 1, 1, 1],
+                ui:
+                  {
+                    type: "select",
+                    label: "类型",
+                    options:
+                      [
+                        { value: "village", label: "村干部" },
+                        { value: "company", label: "企业成员" },
+                        { value: "org", label: "商会管理员" },
+                      ],
+                  },
+              },
+              {
+                name: "name",
+                type: "String",
+                dbType: "varchar(320)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "名称" },
+              },
+              {
+                name: "logo",
+                type: "String",
+                dbType: "varchar(320)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-image", label: "logo" },
+              },
+              {
+                name: "remark",
+                type: "String",
+                dbType: "varchar(1000)",
+                skip: [1, 1, 1, 1, 1],
+                ui: { type: "input-text", label: "备注" },
+              },
+              {
+                name: "establish_date",
+                type: "Date",
+                dbType: "date",
+                skip: [1, 1, 1, 1, 1],
+                ui:
+                  {
+                    type: "input-date",
+                    label: "成立日期",
+                    format: "YYYY-MM-DD",
+                  },
+              },
+              {
+                name: "is_authed",
+                type: "i64",
+                dbType: "bool",
+                default: 0,
+                skip: [0, 1, 1, 1],
+                ui:
+                  {
+                    type: "switch",
+                    label: "已认证",
+                    trueValue: 1,
+                    falseValue: 0,
+                    onText: "是",
+                    offText: "否",
+                  },
+              },
+            ],
+        }
       # 系统参数
       - {
           prefix: "sys_",
@@ -105,61 +579,61 @@ project:
           skipAuto: true,
           ac: 1,
           acCode: '
-        let role_ids = bo.role_ids.clone();
-        use crate::entities::user_role_bo::UserRoleBO;
-        if !role_ids.is_empty() {
-          let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
-              UserRoleBO { id: 0, user_id: id.clone(), role_id: role_id.parse().unwrap(), description: "".to_string() }
-          }).collect();
+            let role_ids = bo.role_ids.clone();
+            use crate::entities::user_role_bo::UserRoleBO;
+            if !role_ids.is_empty() {
+            let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
+            UserRoleBO { id: 0, user_id: id.clone(), role_id: role_id.parse().unwrap(), description: "".to_string() }
+            }).collect();
 
-          self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
-        }
-          ',
+            self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+            }
+            ',
           am: 1,
           amCode: '
-        self.repo.delete_user_role_by_user_id(&mut conn, bo.id).await?;
+            self.repo.delete_user_role_by_user_id(&mut conn, bo.id).await?;
 
-        let role_ids = input.role_ids.clone();
+            let role_ids = input.role_ids.clone();
 
-        use crate::entities::user_role_bo::UserRoleBO;
-        if !role_ids.is_empty() {
-        let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
+            use crate::entities::user_role_bo::UserRoleBO;
+            if !role_ids.is_empty() {
+            let mut user_roles: Vec<UserRoleBO> = role_ids.split(",").map(|role_id| {
             UserRoleBO { id: 0, user_id: bo.id, role_id: role_id.parse().unwrap(), description: "".to_string() }
-        }).collect();
+            }).collect();
 
-        self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
-        }
-          ',
-        amOptCode: '
-                if bo.role_ids.is_some() {
+            self.repo.create_user_role_batch(&mut conn, &mut user_roles, 100).await?;
+            }
+            ',
+          amOptCode: '
+            if bo.role_ids.is_some() {
             let user_id = bo.id.unwrap();
             self.repo
-                .delete_user_role_by_user_id(&mut conn, user_id)
-                .await?;
+            .delete_user_role_by_user_id(&mut conn, user_id)
+            .await?;
             let role_ids = input.role_ids.unwrap().clone();
             use crate::entities::user_role_bo::UserRoleBO;
             if !role_ids.is_empty() {
-                let mut user_roles: Vec<UserRoleBO> = role_ids
-                    .split(",")
-                    .map(|role_id| UserRoleBO {
-                        id: 0,
-                        user_id,
-                        role_id: role_id.parse().unwrap(),
-                        description: "".to_string(),
-                    })
-                    .collect();
-                self.repo
-                    .create_user_role_batch(&mut conn, &mut user_roles, 100)
-                    .await?;
+            let mut user_roles: Vec<UserRoleBO> = role_ids
+            .split(",")
+            .map(|role_id| UserRoleBO {
+            id: 0,
+            user_id,
+            role_id: role_id.parse().unwrap(),
+            description: "".to_string(),
+            })
+            .collect();
+            self.repo
+            .create_user_role_batch(&mut conn, &mut user_roles, 100)
+            .await?;
             }
-        }
-          ',
+            }
+            ',
           bd: 1,
-          deleteCode: '
-                  self.repo
+          deleteCode: "
+            self.repo
             .delete_user_role_by_user_id(&mut conn, id)
             .await?;
-          ',
+            ",
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
@@ -182,7 +656,15 @@ project:
                 type: "i64",
                 dbType: "bool",
                 skip: [1, 1, 1, 1],
-                ui: { type: "switch", label: "是否管理员", trueValue: 1, falseValue: 0, onText: "是", offText: "否" },
+                ui:
+                  {
+                    type: "switch",
+                    label: "是否管理员",
+                    trueValue: 1,
+                    falseValue: 0,
+                    onText: "是",
+                    offText: "否",
+                  },
               },
               {
                 name: "role_ids",
@@ -203,30 +685,30 @@ project:
           ac: 1,
           acCode: '
 
-        let menu_ids = bo.perms.clone();
+            let menu_ids = bo.perms.clone();
 
-        use crate::entities::role_menu_bo::RoleMenuBO;
-        let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
+            use crate::entities::role_menu_bo::RoleMenuBO;
+            let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
             RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: id.clone(), description: "".to_string() }
-        }).collect_vec();
+            }).collect_vec();
 
-        self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
+            self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
 
-          ',
+            ',
           am: 1,
           amCode: '
-        self.repo.delete_role_menu_by_role_id(&mut conn, bo.id).await?;
+            self.repo.delete_role_menu_by_role_id(&mut conn, bo.id).await?;
 
-        use crate::entities::role_menu_bo::RoleMenuBO;
-        let menu_ids = bo.perms.clone();
+            use crate::entities::role_menu_bo::RoleMenuBO;
+            let menu_ids = bo.perms.clone();
 
-        let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
+            let mut role_menus: Vec<RoleMenuBO> = menu_ids.split(",").map(|menu_id| {
             RoleMenuBO { id: 0, menu_id: menu_id.parse().unwrap() , role_id: bo.id, description: "".to_string() }
-        }).collect_vec();
+            }).collect_vec();
 
-        self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
+            self.repo.create_role_menu_batch(&mut conn, &mut role_menus, 100).await?;
 
-          ',
+            ',
           columns:
             [
               { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
@@ -266,99 +748,31 @@ project:
           ddls: [],
         }
       # 菜单
-      - {
-          prefix: "sys_",
-          name: "menu",
-          auth: 1,
-          skipAuto: true,
-          listCode: '
+      - { prefix: "sys_", name: "menu", auth: 1, skipAuto: true, listCode: "
             let result = if let Some(user) = self.user.clone() {
 
-              let mut db = self.db.clone();
+            let mut db = self.db.clone();
 
-              db.set_sql_intercepts(vec![]);
-              
-              let mut conn = db.acquire().await.unwrap();
-              
-              if user.is_admin == 1 {
+            db.set_sql_intercepts(vec![]);
 
-                  self.repo.select_menu_list(&mut conn, bo).await?
+            let mut conn = db.acquire().await.unwrap();
 
-              }else {
+            if user.is_admin == 1 {
 
-                  self.repo.select_menu_by_ids(&mut conn, &user.role_ids).await?
-                  
-              }
+            self.repo.select_menu_list(&mut conn, bo).await?
+
+            }else {
+
+            self.repo.select_menu_by_ids(&mut conn, &user.role_ids).await?
+
+            }
 
             } else {
 
-                vec![]
+            vec![]
 
             };
-          ',
-          columns:
-            [
-              { name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] },
-              {
-                name: "menu_name",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "名称" },
-              },
-              {
-                name: "path",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "路径" },
-              },
-              {
-                name: "component",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "组件" },
-              },
-              {
-                name: "perms",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "权限" },
-              },
-              {
-                name: "icon",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "图标" },
-              },
-              {
-                name: "ty",
-                type: "String",
-                dbType: "CHAR(2)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "类型" },
-              },
-              {
-                name: "sort",
-                type: "i64",
-                dbType: "int8",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-number", label: "排序" },
-              },
-              {
-                name: "description",
-                type: "String",
-                dbType: "varchar(120)",
-                skip: [1, 1, 1, 1],
-                ui: { type: "input-text", label: "描述" },
-              },
-            ],
-          ddls: ["create index idx_menu_pid on sys_menu(pid);"],
-        }
+            ", columns: [{ name: "id", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] }, { name: "pid", type: "i64", dbType: "int8", skip: [1, 1, 1, 1] }, { name: "menu_name", type: "String", dbType: "varchar(120)", skip: [1, 1, 1, 1], ui: { type: "input-text", label: "名称" } }, { name: "path", type: "String", dbType: "varchar(120)", skip: [1, 1, 1, 1], ui: { type: "input-text", label: "路径" } }, { name: "component", type: "String", dbType: "varchar(120)", skip: [1, 1, 1, 1], ui: { type: "input-text", label: "组件" } }, { name: "perms", type: "String", dbType: "varchar(120)", skip: [1, 1, 1, 1], ui: { type: "input-text", label: "权限" } }, { name: "icon", type: "String", dbType: "varchar(120)", skip: [1, 1, 1, 1], ui: { type: "input-text", label: "图标" } }, { name: "ty", type: "String", dbType: "CHAR(2)", skip: [1, 1, 1, 1], ui: { type: "input-text", label: "类型" } }, { name: "sort", type: "i64", dbType: "int8", skip: [1, 1, 1, 1], ui: { type: "input-number", label: "排序" } }, { name: "description", type: "String", dbType: "varchar(120)", skip: [1, 1, 1, 1], ui: { type: "input-text", label: "描述" } }], ddls: ["create index idx_menu_pid on sys_menu(pid);"] }
       # 用户角色关系
       - {
           prefix: "sys_",
