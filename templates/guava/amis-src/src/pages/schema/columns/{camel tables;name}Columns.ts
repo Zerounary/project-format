@@ -7,7 +7,11 @@ export default [
     label: '{{ui.label}}',
     api: {
       method: 'get',
+      {{#if ui.table}}
+      url: '/api/{{ui.table}}/${ {{name}} }',
+      {{else}}
       url: '/api/{{fkTable name}}/${ {{name}} }',
+      {{/if}}
       adaptor: function (payload, response) {
         return {
           ...payload,
